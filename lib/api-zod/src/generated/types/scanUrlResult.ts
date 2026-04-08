@@ -10,5 +10,6 @@ import type { ScanViolation } from "./scanViolation";
 export interface ScanUrlResult {
   url: string;
   overallScore: number;
+  isDemo: boolean;
   violations: ScanViolation[];
 }

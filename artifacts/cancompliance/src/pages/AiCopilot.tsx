@@ -9,7 +9,10 @@ import {
   getListAnthropicMessagesQueryKey,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Plus, Trash2, Send, Bot } from "lucide-react";
+import { Plus, Trash2, Send, Bot, Globe, Shield } from "lucide-react";
+import { Link } from "wouter";
+
+const CONSENT_KEY = "cancompliance_ai_consent_v1";
 
 const QUICK_PROMPTS = [
   "Is my CASL consent compliant if I use a pre-checked checkbox?",
@@ -28,13 +31,77 @@ interface Message {
   createdAt: string;
 }
 
+function AiConsentGate({ onConsent }: { onConsent: () => void }) {
+  return (
+    <div className="flex-1 flex items-center justify-center p-8">
+      <div className="max-w-md w-full bg-card border border-border rounded-2xl p-8">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#c8f135" }}>
+            <Bot className="w-4 h-4 text-[#09090a]" />
+          </div>
+          <div>
+            <div className="font-semibold text-foreground text-sm">CanCompliance AI Copilot</div>
+            <div className="text-xs text-muted-foreground font-mono">Powered by Anthropic Claude</div>
+          </div>
+        </div>
+
+        <div className="space-y-4 mb-6">
+          <p className="text-sm text-foreground font-medium">Before using the AI Copilot, please review how your data is processed:</p>
+
+          <div className="bg-muted rounded-lg p-4 space-y-3 text-sm">
+            <div className="flex items-start gap-3">
+              <Globe className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <div className="text-foreground font-medium mb-0.5">Cross-border data transfer</div>
+                <div className="text-muted-foreground text-xs">Your questions are sent to <span className="text-foreground">Anthropic PBC</span> in the United States to generate responses. This is a cross-border transfer under PIPEDA.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Shield className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#c8f135" }} />
+              <div>
+                <div className="text-foreground font-medium mb-0.5">What we store</div>
+                <div className="text-muted-foreground text-xs">Your conversation history is stored in our database, scoped to your account. You can delete it anytime from Account settings.</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-xs text-muted-foreground bg-amber-500/5 border border-amber-500/10 rounded-lg px-3 py-2">
+            Do not enter personal information about third parties (e.g., employee names, client data) in the AI Copilot.
+          </div>
+        </div>
+
+        <button
+          data-testid="btn-ai-consent"
+          onClick={onConsent}
+          className="w-full py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity"
+          style={{ background: "#c8f135", color: "#09090a" }}
+        >
+          I understand — start asking compliance questions
+        </button>
+
+        <div className="text-center mt-3">
+          <Link href="/privacy-policy">
+            <span className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2">Read our Privacy Policy</span>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AiCopilot() {
   const [selectedConvId, setSelectedConvId] = useState<number | null>(null);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState("");
+  const [hasConsented, setHasConsented] = useState(() => localStorage.getItem(CONSENT_KEY) === "true");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
+
+  const handleConsent = () => {
+    localStorage.setItem(CONSENT_KEY, "true");
+    setHasConsented(true);
+  };
 
   const { data: conversations = [] } = useListAnthropicConversations();
   const { data: messages = [] } = useListAnthropicMessages(selectedConvId ?? 0, {
@@ -97,6 +164,7 @@ export default function AiCopilot() {
       const response = await fetch(`${apiBase}/api/anthropic/conversations/${convId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ content }),
       });
 
@@ -175,6 +243,9 @@ export default function AiCopilot() {
 
   return (
     <AppLayout title="AI Copilot" subtitle="Claude-powered compliance expert">
+      {!hasConsented ? (
+        <AiConsentGate onConsent={handleConsent} />
+      ) : (
       <div className="flex gap-6 h-[calc(100vh-10rem)]">
         {/* Sidebar */}
         <div className="w-56 flex-shrink-0 flex flex-col gap-3">
@@ -317,6 +388,7 @@ export default function AiCopilot() {
           )}
         </div>
       </div>
+      )}
     </AppLayout>
   );
 }

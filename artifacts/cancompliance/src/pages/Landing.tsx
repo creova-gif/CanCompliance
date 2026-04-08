@@ -11,6 +11,7 @@ export default function Landing() {
   const [scanResult, setScanResult] = useState<null | {
     url: string;
     overallScore: number;
+    isDemo: boolean;
     violations: Array<{ law: string; issue: string; severity: string; citation: string }>;
   }>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -186,7 +187,12 @@ export default function Landing() {
           <div className="bg-card border border-fail/30 rounded-2xl overflow-hidden">
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
               <div>
-                <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Scan Results</div>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Scan Results</div>
+                  {scanResult.isDemo && (
+                    <span className="font-mono text-[9px] px-2 py-0.5 rounded-full border border-flag/40 text-flag uppercase tracking-widest">Demo Simulation</span>
+                  )}
+                </div>
                 <div className="text-[13px] text-muted-foreground">{scanResult.url}</div>
               </div>
               <div className="text-right">

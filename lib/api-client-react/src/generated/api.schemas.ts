@@ -62,6 +62,7 @@ export interface ScanViolation {
 export interface ScanUrlResult {
   url: string;
   overallScore: number;
+  isDemo: boolean;
   violations: ScanViolation[];
 }
 

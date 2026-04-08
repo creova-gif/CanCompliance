@@ -255,6 +255,8 @@ components:
           type: string
         overallScore:
           type: number
+        isDemo:
+          type: boolean
         violations:
           type: array
           items:
@@ -262,6 +264,7 @@ components:
       required:
         - url
         - overallScore
+        - isDemo
         - violations
 
     ScanViolation:

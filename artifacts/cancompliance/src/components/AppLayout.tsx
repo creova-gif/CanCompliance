@@ -4,9 +4,10 @@ import {
   LayoutDashboard, ShieldCheck, Globe, Search, Leaf, Network,
   DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
-  TrendingUp, CreditCard, BookOpen
+  TrendingUp, CreditCard, BookOpen, LogOut, UserCircle, Shield
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
+import { useUser, useClerk } from "@clerk/react";
 
 const MODULES = [
   { href: "/ccpsa", label: "CCPSA", sub: "Product Safety", icon: ShieldCheck },
@@ -70,6 +71,12 @@ interface AppLayoutProps {
 export default function AppLayout({ children, title, subtitle, actions }: AppLayoutProps) {
   const { metrics, computeScore } = useAudit();
   const score = computeScore();
+  const { user } = useUser();
+  const { signOut } = useClerk();
+
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
+  const displayName = user?.firstName ?? email.split("@")[0] ?? "Account";
+  const initials = displayName.slice(0, 1).toUpperCase();
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -122,10 +129,37 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           </div>
         </nav>
 
-        <div className="p-3 border-t border-sidebar-border">
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono">
-            <div className="w-1.5 h-1.5 rounded-full bg-pass shadow-[0_0_5px_rgba(18,183,106,0.7)]" />
-            Engine online
+        {/* User footer */}
+        <div className="border-t border-sidebar-border">
+          <Link href="/account">
+            <div className="flex items-center gap-2 px-3 py-2.5 hover:bg-muted/40 transition-colors cursor-pointer">
+              <div
+                className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0"
+                style={{ background: "#c8f135", color: "#09090a" }}
+              >
+                {initials}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[11px] font-medium text-foreground truncate">{displayName}</div>
+                <div className="text-[9px] text-muted-foreground truncate font-mono">{email}</div>
+              </div>
+              <UserCircle className="w-3 h-3 text-muted-foreground flex-shrink-0" />
+            </div>
+          </Link>
+          <div className="border-t border-sidebar-border/50 px-3 py-2 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground font-mono">
+              <div className="w-1.5 h-1.5 rounded-full bg-pass shadow-[0_0_5px_rgba(18,183,106,0.7)]" />
+              Engine online
+            </div>
+            <button
+              data-testid="btn-sign-out"
+              onClick={() => signOut()}
+              className="flex items-center gap-1 text-[9px] text-muted-foreground hover:text-foreground transition-colors font-mono"
+              title="Sign out"
+            >
+              <LogOut className="w-3 h-3" />
+              Sign out
+            </button>
           </div>
         </div>
       </aside>
@@ -140,6 +174,12 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           )}
           <div className="ml-auto flex items-center gap-3">
             {actions}
+            <Link href="/privacy-policy">
+              <button className="flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground transition-colors">
+                <Shield className="w-3 h-3" />
+                Privacy
+              </button>
+            </Link>
             <Link href="/pricing">
               <button
                 data-testid="btn-upgrade"

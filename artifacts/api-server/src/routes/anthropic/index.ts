@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { conversations as conversationsTable, messages as messagesTable } from "@workspace/db";
+import { conversations as conversationsTable, messages as messagesTable, auditEvents } from "@workspace/db";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import {
   CreateAnthropicConversationBody,
   SendAnthropicMessageBody,
@@ -11,6 +11,7 @@ import {
   ListAnthropicMessagesParams,
   SendAnthropicMessageParams,
 } from "@workspace/api-zod";
+import { requireAuth } from "../../middlewares/requireAuth";
 
 const router = Router();
 
@@ -35,37 +36,49 @@ Response format:
 
 Be precise, professional, and helpful. SMB owners are counting on you to help them avoid costly fines.`;
 
-router.get("/anthropic/conversations", async (req, res) => {
+router.get("/anthropic/conversations", requireAuth, async (req, res) => {
+  const userId = (req as any).userId;
   const conversations = await db
     .select()
     .from(conversationsTable)
+    .where(eq(conversationsTable.userId, userId))
     .orderBy(conversationsTable.createdAt);
   res.json(conversations);
 });
 
-router.post("/anthropic/conversations", async (req, res) => {
+router.post("/anthropic/conversations", requireAuth, async (req, res) => {
   const parseResult = CreateAnthropicConversationBody.safeParse(req.body);
   if (!parseResult.success) {
     res.status(400).json({ error: "Invalid request body" });
     return;
   }
+  const userId = (req as any).userId;
   const [conversation] = await db
     .insert(conversationsTable)
-    .values({ title: parseResult.data.title })
+    .values({ title: parseResult.data.title, userId })
     .returning();
+
+  await db.insert(auditEvents).values({
+    userId,
+    action: "conversation_created",
+    module: "ai_copilot",
+    details: { conversationId: conversation.id, title: parseResult.data.title },
+  });
+
   res.status(201).json(conversation);
 });
 
-router.get("/anthropic/conversations/:id", async (req, res) => {
+router.get("/anthropic/conversations/:id", requireAuth, async (req, res) => {
   const params = GetAnthropicConversationParams.safeParse({ id: Number(req.params.id) });
   if (!params.success) {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
+  const userId = (req as any).userId;
   const [conversation] = await db
     .select()
     .from(conversationsTable)
-    .where(eq(conversationsTable.id, params.data.id));
+    .where(and(eq(conversationsTable.id, params.data.id), eq(conversationsTable.userId, userId)));
   if (!conversation) {
     res.status(404).json({ error: "Conversation not found" });
     return;
@@ -78,21 +91,47 @@ router.get("/anthropic/conversations/:id", async (req, res) => {
   res.json({ ...conversation, messages });
 });
 
-router.delete("/anthropic/conversations/:id", async (req, res) => {
+router.delete("/anthropic/conversations/:id", requireAuth, async (req, res) => {
   const params = DeleteAnthropicConversationParams.safeParse({ id: Number(req.params.id) });
   if (!params.success) {
     res.status(400).json({ error: "Invalid id" });
     return;
   }
+  const userId = (req as any).userId;
+  const [conversation] = await db
+    .select()
+    .from(conversationsTable)
+    .where(and(eq(conversationsTable.id, params.data.id), eq(conversationsTable.userId, userId)));
+  if (!conversation) {
+    res.status(404).json({ error: "Not found" });
+    return;
+  }
   await db.delete(messagesTable).where(eq(messagesTable.conversationId, params.data.id));
   await db.delete(conversationsTable).where(eq(conversationsTable.id, params.data.id));
+
+  await db.insert(auditEvents).values({
+    userId,
+    action: "conversation_deleted",
+    module: "ai_copilot",
+    details: { conversationId: params.data.id },
+  });
+
   res.status(204).send();
 });
 
-router.get("/anthropic/conversations/:id/messages", async (req, res) => {
+router.get("/anthropic/conversations/:id/messages", requireAuth, async (req, res) => {
   const params = ListAnthropicMessagesParams.safeParse({ id: Number(req.params.id) });
   if (!params.success) {
     res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+  const userId = (req as any).userId;
+  const [conversation] = await db
+    .select()
+    .from(conversationsTable)
+    .where(and(eq(conversationsTable.id, params.data.id), eq(conversationsTable.userId, userId)));
+  if (!conversation) {
+    res.status(404).json({ error: "Not found" });
     return;
   }
   const messages = await db
@@ -103,7 +142,7 @@ router.get("/anthropic/conversations/:id/messages", async (req, res) => {
   res.json(messages);
 });
 
-router.post("/anthropic/conversations/:id/messages", async (req, res) => {
+router.post("/anthropic/conversations/:id/messages", requireAuth, async (req, res) => {
   const params = SendAnthropicMessageParams.safeParse({ id: Number(req.params.id) });
   const bodyParse = SendAnthropicMessageBody.safeParse(req.body);
 
@@ -114,11 +153,12 @@ router.post("/anthropic/conversations/:id/messages", async (req, res) => {
 
   const conversationId = params.data.id;
   const userContent = bodyParse.data.content;
+  const userId = (req as any).userId;
 
   const [conversation] = await db
     .select()
     .from(conversationsTable)
-    .where(eq(conversationsTable.id, conversationId));
+    .where(and(eq(conversationsTable.id, conversationId), eq(conversationsTable.userId, userId)));
   if (!conversation) {
     res.status(404).json({ error: "Conversation not found" });
     return;
@@ -128,6 +168,13 @@ router.post("/anthropic/conversations/:id/messages", async (req, res) => {
     conversationId,
     role: "user",
     content: userContent,
+  });
+
+  await db.insert(auditEvents).values({
+    userId,
+    action: "ai_message_sent",
+    module: "ai_copilot",
+    details: { conversationId, contentLength: userContent.length },
   });
 
   const priorMessages = await db

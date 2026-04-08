@@ -1,5 +1,9 @@
 import { Router } from "express";
 import { RunComplianceCheckBody, ScanUrlBody } from "@workspace/api-zod";
+import { db } from "@workspace/db";
+import { complianceChecks, auditEvents, conversations as conversationsTable, messages as messagesTable } from "@workspace/db";
+import { eq, desc } from "drizzle-orm";
+import { getAuth } from "@clerk/express";
 
 const router = Router();
 
@@ -14,6 +18,7 @@ interface CheckData {
   dataAccessRights?: string;
   servesQuebec?: string;
   hasFreenchLabels?: string;
+  hasFrenchLabels?: string;
   websiteInFrench?: string;
   contractsInFrench?: string;
   [key: string]: string | undefined;
@@ -247,6 +252,33 @@ router.post("/compliance/check", async (req, res) => {
       };
   }
 
+  const auth = getAuth(req);
+  const userId = auth?.userId;
+
+  if (userId) {
+    try {
+      await db.insert(complianceChecks).values({
+        userId,
+        module,
+        province: province ?? null,
+        status: result.status,
+        score: result.score,
+        title: result.title,
+        statute: result.statute,
+        remediation: result.remediation,
+      });
+
+      await db.insert(auditEvents).values({
+        userId,
+        action: "compliance_check_run",
+        module,
+        details: { province, status: result.status, score: result.score },
+      });
+    } catch (_e) {
+      // Non-blocking — don't fail the response if persistence fails
+    }
+  }
+
   res.json({
     ...result,
     module,
@@ -267,6 +299,7 @@ router.post("/compliance/scan-url", async (req, res) => {
 
   res.json({
     url,
+    isDemo: true,
     overallScore: 38,
     violations: [
       {
@@ -289,6 +322,60 @@ router.post("/compliance/scan-url", async (req, res) => {
       },
     ],
   });
+});
+
+router.get("/compliance/history", async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth?.userId;
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  const checks = await db
+    .select()
+    .from(complianceChecks)
+    .where(eq(complianceChecks.userId, userId))
+    .orderBy(desc(complianceChecks.createdAt))
+    .limit(50);
+  res.json(checks);
+});
+
+router.get("/compliance/audit-log", async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth?.userId;
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  const events = await db
+    .select()
+    .from(auditEvents)
+    .where(eq(auditEvents.userId, userId))
+    .orderBy(desc(auditEvents.createdAt))
+    .limit(100);
+  res.json(events);
+});
+
+router.delete("/compliance/account", async (req, res) => {
+  const auth = getAuth(req);
+  const userId = auth?.userId;
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+  await db.delete(complianceChecks).where(eq(complianceChecks.userId, userId));
+  const userConversations = await db.select().from(conversationsTable).where(eq(conversationsTable.userId, userId));
+  for (const conv of userConversations) {
+    await db.delete(messagesTable).where(eq(messagesTable.conversationId, conv.id));
+  }
+  await db.delete(conversationsTable).where(eq(conversationsTable.userId, userId));
+  await db.insert(auditEvents).values({
+    userId,
+    action: "account_data_deleted",
+    module: null,
+    details: { deletedAt: new Date().toISOString() },
+  });
+  res.json({ success: true });
 });
 
 export default router;
