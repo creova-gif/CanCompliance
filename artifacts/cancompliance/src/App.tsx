@@ -96,7 +96,7 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left branding panel */}
-      <div className="hidden lg:flex flex-col justify-between w-[420px] flex-shrink-0 border-r border-border px-10 py-12"
+      <div className="hidden sm:flex flex-col justify-between w-[320px] flex-shrink-0 border-r border-border px-8 py-10"
         style={{ background: "linear-gradient(160deg, rgba(200,241,53,0.04) 0%, transparent 60%)" }}>
         <div>
           <a href={basePath || "/"} className="font-serif italic text-xl text-foreground hover:opacity-80 transition-opacity">
