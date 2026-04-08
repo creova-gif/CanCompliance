@@ -2,7 +2,7 @@
 
 ## Overview
 
-**CanCompliance** — a full-stack Canadian compliance SaaS web app for SMBs.
+**CanCompliance v2** — a full-stack Canadian compliance SaaS web app for SMBs. 13 compliance modules with live score engine, CASL consent ledger, audit trail, deadlines calendar, jurisdiction intelligence, and control mapper.
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 

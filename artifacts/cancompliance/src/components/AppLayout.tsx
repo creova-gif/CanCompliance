@@ -1,23 +1,64 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard, Mail, Shield, Globe, Briefcase, HardHat,
-  DollarSign, Bot, Award, TrendingUp, CreditCard, ChevronRight
+  LayoutDashboard, ShieldCheck, Globe, Search, Leaf, Network,
+  DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
+  Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
+  TrendingUp, CreditCard, BookOpen
 } from "lucide-react";
+import { useAudit } from "../context/AuditContext";
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/casl", label: "CASL Checker", icon: Mail },
-  { href: "/pipeda", label: "PIPEDA Checker", icon: Shield },
-  { href: "/bill96", label: "Bill 96 (Quebec)", icon: Globe },
-  { href: "/casl", label: "Employment", icon: Briefcase, override: true },
-  { href: "/casl", label: "WSIB", icon: HardHat, override: true },
-  { href: "/casl", label: "Payroll / CRA", icon: DollarSign, override: true },
-  { href: "/ai-copilot", label: "AI Copilot", icon: Bot },
-  { href: "/compliance-score", label: "Compliance Score", icon: Award },
+const MODULES = [
+  { href: "/ccpsa", label: "CCPSA", sub: "Product Safety", icon: ShieldCheck },
+  { href: "/cpla", label: "CPLA", sub: "Packaging / Bilingualism", icon: Globe },
+  { href: "/fintrac", label: "FINTRAC", sub: "AML / KYC", icon: Search },
+  { href: "/esg", label: "ESG", sub: "Greenwashing", icon: Leaf },
+  { href: "/supply-chain", label: "S-211", sub: "Supply Chain", icon: Network },
+  { href: "/payroll", label: "Payroll", sub: "CPP / EI / Tax", icon: DollarSign },
+  { href: "/gst-hst", label: "GST / HST", sub: "Tax Filing", icon: Receipt },
+  { href: "/employment", label: "Employment", sub: "Standards", icon: Users },
+  { href: "/privacy", label: "Privacy", sub: "PIPEDA / Law 25", icon: Lock },
+  { href: "/safety", label: "Safety", sub: "OHS", icon: HardHat },
+  { href: "/customs", label: "Customs", sub: "CBSA / CARM", icon: Package },
+  { href: "/ai-governance", label: "AI Gov.", sub: "AIDA / Workers IV", icon: Brain },
+  { href: "/epr", label: "EPR", sub: "Environmental", icon: Recycle },
+];
+
+const TOOLS = [
+  { href: "/casl-ledger", label: "CASL Ledger", icon: Mail },
+  { href: "/compliance-score", label: "Score Engine", icon: Target },
+  { href: "/audit-trail", label: "Audit Trail", icon: FileText },
+  { href: "/deadlines", label: "Deadlines", icon: Clock },
+  { href: "/jurisdiction", label: "Jurisdiction", icon: MapPin },
+  { href: "/control-mapper", label: "Control Mapper", icon: BookOpen },
+  { href: "/ai-copilot", label: "AI Copilot", icon: Bot, badge: "CLAUDE" },
   { href: "/growth", label: "Growth Tools", icon: TrendingUp },
   { href: "/pricing", label: "Pricing", icon: CreditCard },
 ];
+
+function NavItem({ href, label, sub, icon: Icon, badge }: { href: string; label: string; sub?: string; icon: any; badge?: string }) {
+  const [location] = useLocation();
+  const isActive = location === href;
+  return (
+    <Link href={href}>
+      <div
+        data-testid={`nav-${label.toLowerCase().replace(/[\s/.]+/g, "-")}`}
+        className={cn(
+          "flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] transition-all duration-100 border",
+          isActive
+            ? "bg-muted text-foreground border-border"
+            : "text-muted-foreground hover:bg-muted hover:text-foreground border-transparent"
+        )}
+      >
+        <div className={cn("w-1 h-1 rounded-full flex-shrink-0", isActive ? "bg-primary" : "bg-muted-foreground/20")} />
+        <Icon className="w-3 h-3 flex-shrink-0" />
+        <span className="font-medium">{label}</span>
+        {sub && <span className="text-muted-foreground text-[10px] truncate hidden xl:block">{sub}</span>}
+        {badge && <span className="ml-auto font-mono text-[9px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{badge}</span>}
+      </div>
+    </Link>
+  );
+}
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -27,77 +68,68 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children, title, subtitle, actions }: AppLayoutProps) {
-  const [location] = useLocation();
+  const { metrics, computeScore } = useAudit();
+  const score = computeScore();
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="w-60 min-h-screen bg-sidebar border-r border-sidebar-border fixed top-0 left-0 z-50 flex flex-col">
-        <div className="px-5 py-6 border-b border-sidebar-border">
-          <div className="font-mono text-[10px] text-primary tracking-widest uppercase mb-1">CANCOMPLIANCE</div>
-          <div className="font-serif italic text-xl text-foreground">CanCompliance</div>
+      <aside className="w-52 min-h-screen bg-sidebar border-r border-sidebar-border fixed top-0 left-0 z-50 flex flex-col">
+        <div className="px-4 py-4 border-b border-sidebar-border">
+          <div className="font-mono text-[9px] text-primary tracking-widest uppercase mb-0.5">CANCOMPLIANCE v2</div>
+          <div className="font-serif italic text-lg text-foreground leading-tight">CanCompliance</div>
+          <div className="font-mono text-[9px] text-muted-foreground mt-1">Canadian Compliance SaaS</div>
         </div>
 
-        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mb-2">Compliance Modules</div>
-          {navItems.slice(0, 7).map((item) => {
-            const Icon = item.icon;
-            const isActive = !item.override && location === item.href;
-            return (
-              <Link key={item.label} href={item.href}>
-                <div
-                  data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
-                  className={cn(
-                    "flex items-center gap-2.5 px-3 py-2 rounded-lg cursor-pointer text-[13px] font-normal transition-all duration-150 border",
-                    isActive
-                      ? "bg-muted text-foreground border-border"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground border-transparent"
-                  )}
-                >
-                  <div className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", isActive ? "bg-primary" : "bg-muted-foreground/30")} />
-                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span>{item.label}</span>
-                </div>
-              </Link>
-            );
-          })}
+        {/* Score mini badge */}
+        <div className="px-4 py-2.5 border-b border-sidebar-border">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-[9px] text-muted-foreground">LIVE SCORE</span>
+            <span className="font-mono text-[11px]" style={{
+              color: score === null ? "var(--text3)" : score >= 80 ? "var(--green)" : score >= 60 ? "var(--amber)" : "var(--red)"
+            }}>
+              {score !== null ? score : "—"}
+            </span>
+          </div>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="font-mono text-[9px] text-muted-foreground">{metrics.total} checks</span>
+            <span className="font-mono text-[9px]" style={{ color: "var(--green)" }}>{metrics.pass}P</span>
+            <span className="font-mono text-[9px]" style={{ color: "var(--amber)" }}>{metrics.fail}F</span>
+            <span className="font-mono text-[9px]" style={{ color: "var(--red)" }}>{metrics.flag}X</span>
+          </div>
+        </div>
 
-          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mb-2 mt-4">Tools</div>
-          {navItems.slice(7).map((item) => {
-            const Icon = item.icon;
-            const isActive = location === item.href;
-            return (
-              <Link key={item.label} href={item.href}>
-                <div
-                  data-testid={`nav-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
-                  className={cn(
-                    "flex items-center gap-2.5 px-3 py-2 rounded-lg cursor-pointer text-[13px] font-normal transition-all duration-150 border",
-                    isActive
-                      ? "bg-muted text-foreground border-border"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground border-transparent"
-                  )}
-                >
-                  <div className={cn("w-1.5 h-1.5 rounded-full flex-shrink-0", isActive ? "bg-primary" : "bg-muted-foreground/30")} />
-                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span>{item.label}</span>
-                  {item.label === "AI Copilot" && (
-                    <span className="ml-auto font-mono text-[9px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">CLAUDE</span>
-                  )}
-                </div>
-              </Link>
-            );
-          })}
+        <nav className="flex-1 px-2 py-3 overflow-y-auto">
+          <Link href="/dashboard">
+            <div
+              data-testid="nav-dashboard"
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] font-semibold transition-all duration-100 border border-transparent hover:bg-muted hover:text-foreground text-muted-foreground mb-1"
+            >
+              <LayoutDashboard className="w-3 h-3" />
+              Dashboard
+            </div>
+          </Link>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-2 mb-1">13 Compliance Modules</div>
+          <div className="space-y-0.5">
+            {MODULES.map(m => <NavItem key={m.href} {...m} />)}
+          </div>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Tools &amp; Reporting</div>
+          <div className="space-y-0.5">
+            {TOOLS.map(t => <NavItem key={t.href} {...t} />)}
+          </div>
         </nav>
 
-        <div className="p-5 border-t border-sidebar-border">
-          <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-mono">
+        <div className="p-3 border-t border-sidebar-border">
+          <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono">
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.8)]" />
             Engine online
           </div>
         </div>
       </aside>
 
-      <div className="ml-60 flex-1 flex flex-col min-h-screen">
-        <header className="h-14 bg-card border-b border-border flex items-center px-7 gap-4 sticky top-0 z-40">
+      <div className="ml-52 flex-1 flex flex-col min-h-screen">
+        <header className="h-12 bg-card border-b border-border flex items-center px-6 gap-4 sticky top-0 z-40">
           {title && (
             <>
               <div className="text-[13px] font-medium text-foreground">{title}</div>
@@ -109,7 +141,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
             <Link href="/pricing">
               <button
                 data-testid="btn-upgrade"
-                className="px-3 py-1.5 rounded-lg text-[12px] font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="px-3 py-1.5 rounded-md text-[11px] font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               >
                 Upgrade
               </button>
@@ -117,7 +149,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           </div>
         </header>
 
-        <main className="flex-1 p-7">
+        <main className="flex-1 p-6">
           {children}
         </main>
       </div>

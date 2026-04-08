@@ -146,6 +146,144 @@
   }
 }
 
+/* ── Module page utilities ── */
+:root, .dark {
+  --green: #36c97e;
+  --amber: #f5a623;
+  --red: #ff4d3a;
+  --blue: #4db8ff;
+  --text1: hsl(40 15% 90%);
+  --text2: hsl(40 10% 65%);
+  --text3: hsl(40 8% 40%);
+  --bg2: hsl(50 10% 8%);
+  --bg3: hsl(50 8% 11%);
+  --bg4: hsl(50 8% 13%);
+  --border: hsl(50 8% 13%);
+  --primary: hsl(74 91% 61%);
+  --mono: 'IBM Plex Mono', monospace;
+}
+
+.page-content {
+  max-width: 820px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text1);
+  margin-bottom: 8px;
+  font-family: var(--app-font-sans);
+}
+
+.page-header svg {
+  color: hsl(74 91% 61%);
+}
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.65;
+  margin-bottom: 24px;
+  max-width: 680px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--app-font-mono);
+  letter-spacing: 0.02em;
+}
+
+.form-input, .form-select {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  color: var(--text1);
+  font-family: var(--app-font-sans);
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus, .form-select:focus {
+  border-color: hsl(74 91% 61% / 0.5);
+}
+
+.form-input::placeholder { color: var(--text3); }
+
+.checks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 8px;
+}
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text2);
+  cursor: pointer;
+  padding: 6px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  line-height: 1.5;
+  transition: border-color 0.15s;
+}
+
+.check-row:hover { border-color: hsl(74 91% 61% / 0.3); }
+
+.check-row input[type="checkbox"] {
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: hsl(74 91% 61%);
+}
+
+.run-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 20px;
+  padding: 9px 20px;
+  background: hsl(74 91% 61%);
+  color: hsl(50 10% 5%);
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: var(--app-font-sans);
+}
+
+.run-btn:hover { opacity: 0.9; }
+.run-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 @layer utilities {
   input[type="search"]::-webkit-search-cancel-button {
     @apply hidden;

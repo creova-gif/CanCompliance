@@ -1,200 +1,133 @@
-import { useState, useEffect } from "react";
-import AppLayout from "@/components/AppLayout";
-import { Award, Copy, Share2, ExternalLink } from "lucide-react";
+import { useAudit } from "../context/AuditContext";
+import { Target } from "lucide-react";
 
-const MODULES = [
-  { name: "CASL", score: 40, status: "fail" },
-  { name: "PIPEDA", score: 75, status: "flag" },
-  { name: "Bill 96 (Quebec)", score: 60, status: "flag" },
-  { name: "Employment Standards", score: 85, status: "pass" },
-  { name: "WSIB", score: 90, status: "pass" },
-  { name: "Payroll / CRA", score: 88, status: "pass" },
-];
-
-const OVERALL_SCORE = Math.round(MODULES.reduce((a, m) => a + m.score, 0) / MODULES.length);
-
-const CERT_ID = `CC-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-
-function ScoreRing({ score, animated }: { score: number; animated: boolean }) {
-  const size = 200;
-  const strokeWidth = 14;
-  const r = (size - strokeWidth) / 2;
-  const circ = 2 * Math.PI * r;
-  const displayScore = animated ? score : 0;
-  const offset = circ - (displayScore / 100) * circ;
-
-  const color = score >= 80 ? "#36c97e" : score >= 60 ? "#f5a623" : "#ff4d3a";
-
-  return (
-    <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={strokeWidth} />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={r}
-          fill="none"
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeDasharray={circ}
-          strokeDashoffset={animated ? offset : circ}
-          style={{ transition: "stroke-dashoffset 1.5s ease-out" }}
-        />
-      </svg>
-      <div className="absolute text-center">
-        <div className="text-4xl font-semibold" style={{ color }}>{animated ? score : 0}</div>
-        <div className="font-mono text-[11px] text-muted-foreground">/100</div>
-      </div>
-    </div>
-  );
+function getColor(s: number) {
+  if (s >= 80) return "var(--green)";
+  if (s >= 60) return "var(--amber)";
+  return "var(--red)";
 }
 
+function getTier(s: number) {
+  if (s >= 90) return "Excellent — strong compliance posture";
+  if (s >= 75) return "Good — minor gaps to address";
+  if (s >= 55) return "Fair — several compliance items need action";
+  if (s >= 35) return "At risk — significant violations present";
+  return "Critical — immediate legal review required";
+}
+
+const PRIORITY_COLORS: Record<string, string> = { BLOCK: "var(--red)", FAIL: "var(--amber)", FLAG: "var(--primary)" };
+
 export default function ComplianceScore() {
-  const [animated, setAnimated] = useState(false);
-  const [showCert, setShowCert] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const today = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
+  const { metrics, auditLog, computeScore, currentJurisdiction } = useAudit();
+  const score = computeScore();
 
-  useEffect(() => {
-    const t = setTimeout(() => setAnimated(true), 200);
-    return () => clearTimeout(t);
-  }, []);
+  const modTotals: Record<string, { pass: number; fail: number; flag: number; block: number; total: number }> = {};
+  auditLog.forEach(e => {
+    if (!modTotals[e.module]) modTotals[e.module] = { pass: 0, fail: 0, flag: 0, block: 0, total: 0 };
+    const r = e.result.toLowerCase() as "pass" | "fail" | "flag" | "block";
+    modTotals[e.module][r] = (modTotals[e.module][r] || 0) + 1;
+    modTotals[e.module].total++;
+  });
 
-  const certUrl = `https://cancompliance.ca/cert/${CERT_ID.toLowerCase()}`;
+  const actions: { priority: string; mod: string; msg: string; points: string }[] = [];
+  Object.entries(modTotals).forEach(([mod, d]) => {
+    if (d.block > 0) actions.push({ priority: "BLOCK", mod, msg: `${d.block} hard block(s) in ${mod} — immediate action required`, points: "+20 pts" });
+    if (d.fail > 0) actions.push({ priority: "FAIL", mod, msg: `${d.fail} failure(s) in ${mod} — resolve to gain points`, points: "+12 pts" });
+    if (d.flag > 0) actions.push({ priority: "FLAG", mod, msg: `${d.flag} flagged item(s) in ${mod} — lawyer review recommended`, points: "+6 pts" });
+  });
+  actions.sort((a, b) => { const o: Record<string, number> = { BLOCK: 0, FAIL: 1, FLAG: 2 }; return o[a.priority] - o[b.priority]; });
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(certUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const scoreColor = OVERALL_SCORE >= 80 ? "text-green-400" : OVERALL_SCORE >= 60 ? "text-amber-400" : "text-red-400";
+  const RADIUS = 68;
+  const CIRC = 2 * Math.PI * RADIUS;
+  const offset = score !== null ? CIRC - (CIRC * score / 100) : CIRC;
+  const color = score !== null ? getColor(score) : "var(--text3)";
 
   return (
-    <AppLayout title="Compliance Score" subtitle="Overall standing">
-      <div className="max-w-3xl">
-        <div className="mb-7">
-          <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-2">Your Compliance Standing</div>
-          <h1 className="font-serif italic text-3xl text-foreground mb-2">Compliance Score</h1>
-          <p className="text-[13px] text-muted-foreground">Based on your most recent checks across all active modules.</p>
+    <div className="page-content">
+      <div className="page-header">
+        <Target size={20} />
+        <span>Live Compliance Score</span>
+      </div>
+      <p className="page-desc">Real-time compliance score computed from all checks run this session. Score = (pass + flag×0.5) / total × 100, minus block penalty (15 pts each, max −30). Run module checks to populate your score.</p>
+
+      <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginTop: 8 }}>
+        <div style={{ background: "var(--bg2)", border: "1px solid var(--border)", borderRadius: 12, padding: 32, display: "flex", flexDirection: "column", alignItems: "center", minWidth: 220 }}>
+          <svg width={160} height={160} style={{ transform: "rotate(-90deg)" }}>
+            <circle cx={80} cy={80} r={RADIUS} fill="none" stroke="var(--bg4)" strokeWidth={10} />
+            <circle cx={80} cy={80} r={RADIUS} fill="none" stroke={color} strokeWidth={10}
+              strokeDasharray={CIRC} strokeDashoffset={offset} strokeLinecap="round"
+              style={{ transition: "stroke-dashoffset 1s ease, stroke 0.5s ease" }} />
+            <text x={80} y={80} textAnchor="middle" dominantBaseline="central"
+              fill={color} fontSize={score !== null ? 36 : 24} fontFamily="var(--mono)" fontWeight="bold"
+              style={{ transform: "rotate(90deg)", transformOrigin: "80px 80px" }}>
+              {score !== null ? score : "—"}
+            </text>
+          </svg>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 12, color, textAlign: "center", marginTop: 8 }}>
+            {score !== null ? getTier(score) : "Run checks to generate score"}
+          </div>
+          {currentJurisdiction && (
+            <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--mono)", marginTop: 6 }}>
+              Jurisdiction: {currentJurisdiction}
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-5 gap-6 mb-6">
-          {/* Score Ring */}
-          <div className="col-span-2 bg-card border border-border rounded-xl p-6 flex flex-col items-center justify-center gap-4">
-            <ScoreRing score={OVERALL_SCORE} animated={animated} />
-            <div className="text-center">
-              <div className={`text-[15px] font-semibold ${scoreColor} mb-1`}>
-                {OVERALL_SCORE >= 80 ? "Good standing" : OVERALL_SCORE >= 60 ? "Needs attention" : "At risk"}
-              </div>
-              <div className="text-[12px] text-muted-foreground">as of {today}</div>
+        <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12, alignContent: "start", minWidth: 200 }}>
+          {[
+            { label: "Total Checks", val: metrics.total, color: "var(--text1)" },
+            { label: "Pass", val: metrics.pass, color: "var(--green)" },
+            { label: "Fail", val: metrics.fail, color: "var(--amber)" },
+            { label: "Flag", val: metrics.flag, color: "var(--red)" },
+          ].map((s, i) => (
+            <div key={i} style={{ background: "var(--bg2)", border: "1px solid var(--border)", borderRadius: 8, padding: "14px 16px" }}>
+              <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--mono)", marginBottom: 4 }}>{s.label.toUpperCase()}</div>
+              <div style={{ fontSize: 28, fontFamily: "var(--mono)", color: s.color, fontWeight: 700 }}>{s.val}</div>
             </div>
-            <button
-              data-testid="btn-generate-certificate"
-              onClick={() => setShowCert(true)}
-              className="w-full py-2.5 rounded-lg border border-border text-[12px] text-muted-foreground hover:bg-muted hover:text-foreground transition-colors flex items-center justify-center gap-2"
-            >
-              <Award className="w-4 h-4" />
-              Generate Certificate
-            </button>
-          </div>
-
-          {/* Module Breakdown */}
-          <div className="col-span-3 bg-card border border-border rounded-xl p-6">
-            <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-4">Module Breakdown</div>
-            <div className="space-y-4">
-              {MODULES.map((m) => {
-                const mc = m.status === "pass" ? "bg-green-500" : m.status === "flag" ? "bg-amber-500" : "bg-red-500";
-                const tc = m.status === "pass" ? "text-green-400" : m.status === "flag" ? "text-amber-400" : "text-red-400";
-                const bc = m.status === "pass" ? "bg-green-500/10 text-green-400 border-green-500/20" : m.status === "flag" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : "bg-red-500/10 text-red-400 border-red-500/20";
-                return (
-                  <div key={m.name}>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[13px] text-foreground">{m.name}</span>
-                        <span className={`font-mono text-[9px] px-1.5 py-0.5 rounded border ${bc} uppercase`}>{m.status}</span>
-                      </div>
-                      <span className={`font-mono text-[12px] font-medium ${tc}`}>{animated ? m.score : 0}%</span>
-                    </div>
-                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className={`h-full ${mc} rounded-full`}
-                        style={{ width: animated ? `${m.score}%` : "0%", transition: "width 1.2s ease-out" }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+          ))}
         </div>
+      </div>
 
-        {/* Certificate Modal */}
-        {showCert && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-            <div className="bg-card border border-primary/30 rounded-2xl w-full max-w-md overflow-hidden">
-              <div className="bg-primary/10 border-b border-primary/20 px-6 py-5 text-center">
-                <Award className="w-8 h-8 text-primary mx-auto mb-2" />
-                <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-1">CanCompliance Verified</div>
-                <div className="font-serif italic text-xl text-foreground">Compliance Certificate</div>
-              </div>
-              <div className="p-6 space-y-4">
-                <div className="bg-muted rounded-lg p-4 space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Score</span>
-                    <span className={`font-semibold ${scoreColor}`}>{OVERALL_SCORE}/100</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Certificate ID</span>
-                    <span className="font-mono text-[12px] text-foreground">{CERT_ID}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Issued</span>
-                    <span className="text-[12px] text-foreground">{today}</span>
-                  </div>
-                  <div>
-                    <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Active Modules</div>
-                    <div className="flex flex-wrap gap-1">
-                      {MODULES.filter(m => m.status === "pass").map(m => (
-                        <span key={m.name} className="font-mono text-[10px] px-2 py-0.5 rounded bg-green-500/10 text-green-400">{m.name}</span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    data-testid="btn-copy-cert-link"
-                    onClick={handleCopy}
-                    className="flex-1 py-2.5 rounded-lg border border-border text-[12px] text-muted-foreground hover:bg-muted hover:text-foreground transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Copy className="w-3.5 h-3.5" />
-                    {copied ? "Copied!" : "Copy Link"}
-                  </button>
-                  <a
-                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(certUrl)}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-[12px] font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <Share2 className="w-3.5 h-3.5" />
-                    Share on LinkedIn
-                  </a>
-                </div>
-
-                <button
-                  data-testid="btn-close-cert"
-                  onClick={() => setShowCert(false)}
-                  className="w-full py-2 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
+      <div style={{ marginTop: 24, background: "var(--bg2)", border: "1px solid var(--border)", borderRadius: 12, padding: 20 }}>
+        <div style={{ fontSize: 11, color: "var(--text3)", fontFamily: "var(--mono)", marginBottom: 16 }}>MODULE BREAKDOWN</div>
+        {Object.keys(modTotals).length === 0 ? (
+          <div style={{ color: "var(--text3)", fontSize: 12, fontFamily: "var(--mono)", textAlign: "center", padding: "24px 0" }}>
+            No checks run yet — visit the 13 module pages to run compliance checks
           </div>
+        ) : (
+          Object.entries(modTotals).map(([mod, d]) => {
+            const ms = Math.round(((d.pass + d.flag * 0.5) / d.total) * 100);
+            const mc = getColor(ms);
+            return (
+              <div key={mod} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 0", borderBottom: "1px solid var(--border)" }}>
+                <div style={{ width: 110, fontSize: 12, color: "var(--text2)", flexShrink: 0 }}>{mod}</div>
+                <div style={{ flex: 1, height: 5, background: "var(--bg4)", borderRadius: 3, overflow: "hidden" }}>
+                  <div style={{ width: ms + "%", height: "100%", background: mc, borderRadius: 3, transition: "width 0.8s ease" }} />
+                </div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: mc, width: 32, textAlign: "right" }}>{ms}</div>
+                <div style={{ fontSize: 10, color: "var(--text3)", width: 55 }}>{d.total} check{d.total !== 1 ? "s" : ""}</div>
+              </div>
+            );
+          })
         )}
       </div>
-    </AppLayout>
+
+      <div style={{ marginTop: 20, background: "var(--bg2)", border: "1px solid var(--border)", borderRadius: 12, padding: 20 }}>
+        <div style={{ fontSize: 11, color: "var(--text3)", fontFamily: "var(--mono)", marginBottom: 16 }}>PRIORITY ACTIONS</div>
+        {actions.length === 0 ? (
+          <div style={{ color: metrics.total === 0 ? "var(--text3)" : "var(--green)", fontSize: 13, textAlign: "center", padding: "16px 0" }}>
+            {metrics.total === 0 ? "Run checks to generate priority actions" : "All checks passing — great compliance posture"}
+          </div>
+        ) : (
+          actions.slice(0, 8).map((a, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
+              <span style={{ fontFamily: "var(--mono)", fontSize: 9, padding: "2px 7px", borderRadius: 3, background: PRIORITY_COLORS[a.priority] + "22", color: PRIORITY_COLORS[a.priority] }}>{a.priority}</span>
+              <span style={{ flex: 1, fontSize: 12, color: "var(--text2)" }}>{a.msg}</span>
+              <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--green)" }}>{a.points}</span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
