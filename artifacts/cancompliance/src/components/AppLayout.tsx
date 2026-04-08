@@ -141,7 +141,8 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
             <Link href="/pricing">
               <button
                 data-testid="btn-upgrade"
-                className="px-3 py-1.5 rounded-md text-[11px] font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="px-3 py-1.5 rounded-md text-[11px] font-semibold hover:opacity-90 transition-opacity"
+                style={{ background: "#c8f135", color: "#09090a" }}
               >
                 Upgrade
               </button>

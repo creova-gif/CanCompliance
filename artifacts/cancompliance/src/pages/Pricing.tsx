@@ -26,7 +26,7 @@ const TIERS = [
     description: "For growing SMBs with compliance needs",
     features: [
       "Unlimited compliance checks",
-      "All 8 compliance modules",
+      "All 13 compliance modules",
       "Full remediation plans",
       "PDF reports",
       "Email support",
@@ -117,12 +117,13 @@ export default function Pricing() {
                     ? "border-2 border-primary relative"
                     : "border border-border"
                 }`}
+                style={tier.featured ? { boxShadow: "0 0 40px rgba(200,241,53,0.10), 0 4px 24px rgba(0,0,0,0.5)" } : undefined}
               >
                 {tier.featured && (
                   <div className="absolute top-0 left-0 right-0 h-0.5 bg-primary" />
                 )}
                 {tier.featured && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-primary text-primary-foreground font-mono text-[10px] uppercase tracking-widest">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full font-mono text-[10px] uppercase tracking-widest" style={{ background: "#c8f135", color: "#09090a" }}>
                     Most Popular
                   </div>
                 )}
@@ -153,9 +154,10 @@ export default function Pricing() {
                     data-testid={`btn-cta-${tier.id}`}
                     className={`w-full py-2.5 rounded-lg text-[12px] font-semibold transition-colors ${
                       tier.featured
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                        ? "hover:opacity-90"
                         : "border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
                     }`}
+                    style={tier.featured ? { background: "#c8f135", color: "#09090a" } : undefined}
                   >
                     {tier.cta}
                   </button>

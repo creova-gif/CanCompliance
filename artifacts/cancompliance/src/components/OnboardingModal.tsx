@@ -95,7 +95,8 @@ export default function OnboardingModal({ onComplete, onClose }: OnboardingModal
                 data-testid="btn-step1-continue"
                 disabled={!province}
                 onClick={() => setStep(2)}
-                className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-[13px] hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
               >
                 Continue <ChevronRight className="w-4 h-4" />
               </button>
@@ -130,7 +131,8 @@ export default function OnboardingModal({ onComplete, onClose }: OnboardingModal
               <button
                 data-testid="btn-step2-continue"
                 onClick={() => setStep(3)}
-                className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-[13px] hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
               >
                 Continue <ChevronRight className="w-4 h-4" />
               </button>
@@ -165,7 +167,8 @@ export default function OnboardingModal({ onComplete, onClose }: OnboardingModal
                 data-testid="btn-run-demo"
                 onClick={handleStep3Continue}
                 disabled={checkMutation.isPending}
-                className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-[13px] hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
               >
                 {checkMutation.isPending ? (
                   <>
@@ -207,7 +210,8 @@ export default function OnboardingModal({ onComplete, onClose }: OnboardingModal
               <button
                 data-testid="btn-enter-dashboard"
                 onClick={onComplete}
-                className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-[13px] hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
               >
                 See full dashboard <ChevronRight className="w-4 h-4" />
               </button>

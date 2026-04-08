@@ -182,7 +182,8 @@ export default function AiCopilot() {
             data-testid="btn-new-conversation"
             onClick={() => startNewConversation()}
             disabled={createConv.isPending}
-            className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-[12px] hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+            className="w-full py-2.5 rounded-lg font-semibold text-[12px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            style={{ background: "#c8f135", color: "#09090a" }}
           >
             <Plus className="w-4 h-4" />
             New Conversation
@@ -265,9 +266,10 @@ export default function AiCopilot() {
                     <div
                       className={`max-w-[75%] rounded-xl px-4 py-3 text-[13px] leading-relaxed ${
                         msg.role === "user"
-                          ? "bg-primary text-primary-foreground"
+                          ? "text-[#09090a]"
                           : "bg-muted text-foreground"
                       }`}
+                      style={msg.role === "user" ? { background: "#c8f135" } : undefined}
                     >
                       {msg.id === -1 && isStreaming && (
                         <div className="flex items-center gap-2 mb-2">
@@ -304,7 +306,8 @@ export default function AiCopilot() {
                     data-testid="btn-send-message"
                     onClick={handleSend}
                     disabled={!input.trim() || isStreaming}
-                    className="px-4 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
+                    className="px-4 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+                    style={{ background: "#c8f135", color: "#09090a" }}
                   >
                     <Send className="w-4 h-4" />
                   </button>

@@ -124,7 +124,8 @@ export default function CaslChecker() {
               data-testid="btn-run-casl-check"
               type="submit"
               disabled={mutation.isPending}
-              className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold text-[13px] hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+              style={{ background: "#c8f135", color: "#09090a" }}
             >
               {mutation.isPending ? (
                 <>

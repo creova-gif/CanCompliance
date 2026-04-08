@@ -85,7 +85,8 @@ export default function Growth() {
                 target="_blank"
                 rel="noreferrer"
                 data-testid="btn-share-linkedin"
-                className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-lg text-[12px] font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Share on LinkedIn
@@ -163,7 +164,8 @@ export default function Growth() {
                 target="_blank"
                 rel="noreferrer"
                 data-testid="btn-share-referral-linkedin"
-                className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-lg text-[12px] font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Share on LinkedIn
