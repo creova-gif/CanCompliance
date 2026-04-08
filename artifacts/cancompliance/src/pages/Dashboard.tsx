@@ -146,7 +146,7 @@ export default function Dashboard() {
                 { label: "Run CASL check", href: "/casl" },
                 { label: "Check PIPEDA compliance", href: "/pipeda" },
                 { label: "Quebec Bill 96 review", href: "/bill96" },
-                { label: "Ask AI Copilot", href: "/ai-copilot" },
+                { label: "Ask AI Copilot", href: "/copilot" },
                 { label: "View compliance score", href: "/compliance-score" },
               ].map((a) => (
                 <Link key={a.label} href={a.href}>

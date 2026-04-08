@@ -4,7 +4,7 @@ import {
   LayoutDashboard, ShieldCheck, Globe, Search, Leaf, Network,
   DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
-  TrendingUp, CreditCard, BookOpen, LogOut, UserCircle, Shield,
+  TrendingUp, BookOpen, LogOut, UserCircle, Shield,
   Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
@@ -33,10 +33,9 @@ const TOOLS = [
   { href: "/deadlines", label: "Deadlines", icon: Clock },
   { href: "/jurisdiction", label: "Jurisdiction", icon: MapPin },
   { href: "/control-mapper", label: "Control Mapper", icon: BookOpen },
-  { href: "/ai-copilot", label: "AI Copilot", icon: Bot, badge: "AI" },
+  { href: "/copilot", label: "AI Copilot", icon: Bot, badge: "AI" },
   { href: "/document-scanner", label: "Doc Scanner", icon: ScanLine, badge: "AI" },
   { href: "/growth", label: "Growth Tools", icon: TrendingUp },
-  { href: "/pricing", label: "Pricing", icon: CreditCard },
 ];
 
 const INTELLIGENCE = [

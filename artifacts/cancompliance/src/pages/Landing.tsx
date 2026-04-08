@@ -55,9 +55,9 @@ export default function Landing() {
           <span className="font-serif italic text-lg text-foreground cursor-pointer hover:opacity-80 transition-opacity">CanCompliance</span>
         </Link>
         <div className="ml-auto flex items-center gap-3">
-          <a href="#features" className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
-            Features
-          </a>
+          <Link href="/features">
+            <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">Features</button>
+          </Link>
           <Link href="/pricing">
             <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
               Pricing

@@ -13,9 +13,11 @@ import CaslChecker from "@/pages/CaslChecker";
 import PipedaChecker from "@/pages/PipedaChecker";
 import Bill96Checker from "@/pages/Bill96Checker";
 import AiCopilot from "@/pages/AiCopilot";
+import AiCopilotPage from "@/pages/AiCopilotPage";
+import Features from "@/pages/Features";
+import PricingPage from "@/pages/PricingPage";
 import ComplianceScore from "@/pages/ComplianceScore";
 import Growth from "@/pages/Growth";
-import Pricing from "@/pages/Pricing";
 import CCPSA from "@/pages/CCPSA";
 import CPLA from "@/pages/CPLA";
 import Fintrac from "@/pages/Fintrac";
@@ -202,12 +204,14 @@ function AppBody() {
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
-      <Route path="/pricing" component={Pricing} />
+      <Route path="/features" component={Features} />
+      <Route path="/pricing" component={PricingPage} />
+      <Route path="/ai-copilot" component={AiCopilotPage} />
       <Route path="/dashboard" component={() => <ProtectedRoute component={Dashboard} />} />
       <Route path="/casl" component={() => <ProtectedRoute component={CaslChecker} />} />
       <Route path="/pipeda" component={() => <ProtectedRoute component={PipedaChecker} />} />
       <Route path="/bill96" component={() => <ProtectedRoute component={Bill96Checker} />} />
-      <Route path="/ai-copilot" component={() => <ProtectedRoute component={AiCopilot} />} />
+      <Route path="/copilot" component={() => <ProtectedRoute component={AiCopilot} />} />
       <Route path="/compliance-score" component={() => <ProtectedRoute component={WrappedComplianceScore} />} />
       <Route path="/growth" component={() => <ProtectedRoute component={Growth} />} />
       <Route path="/ccpsa" component={() => <ProtectedRoute component={WrappedCCSPA} />} />
