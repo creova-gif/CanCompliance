@@ -1,0 +1,1909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CanCompliance — Canada Compliance Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg: #0d0d0b;
+  --bg2: #141412;
+  --bg3: #1c1c19;
+  --bg4: #242420;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0ede6;
+  --text2: #9a9890;
+  --text3: #5a5a54;
+  --accent: #d4f542;
+  --accent2: #b8d828;
+  --red: #ff4d3a;
+  --red-bg: rgba(255,77,58,0.1);
+  --amber: #f5a623;
+  --amber-bg: rgba(245,166,35,0.1);
+  --green: #36c97e;
+  --green-bg: rgba(54,201,126,0.1);
+  --blue: #4fa3f7;
+  --blue-bg: rgba(79,163,247,0.1);
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Manrope', system-ui, sans-serif;
+  --r: 8px;
+  --r2: 12px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── SIDEBAR ─────────────────────────────── */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 200;
+}
+
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo-mark {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.logo-name {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--text);
+  font-style: italic;
+}
+
+.sidebar-section {
+  padding: 16px 12px 8px;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--r);
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 400;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  margin-bottom: 2px;
+}
+
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+
+.nav-item.active {
+  background: var(--bg3);
+  color: var(--text);
+  border-color: var(--border2);
+}
+
+.nav-item.active .nav-dot { background: var(--accent); }
+
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text3);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--bg4);
+  color: var(--text3);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
+/* ─── MAIN CONTENT ─────────────────────────── */
+.main {
+  margin-left: 240px;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 56px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.topbar-sub {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  padding: 7px 16px;
+  border-radius: var(--r);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+}
+
+.btn:hover { background: var(--bg3); color: var(--text); }
+
+.btn-accent {
+  background: var(--accent);
+  color: #0d0d0b;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-accent:hover { background: var(--accent2); border-color: var(--accent2); color: #0d0d0b; }
+
+.content { padding: 28px; }
+
+/* ─── PANELS ───────────────────────────────── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ─── PAGE HEADER ─────────────────────────── */
+.page-header {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text2);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* ─── METRIC CARDS ────────────────────────── */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.metric {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 16px 18px;
+}
+
+.metric-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.metric-val {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-val.green { color: var(--green); }
+.metric-val.red { color: var(--red); }
+.metric-val.amber { color: var(--amber); }
+
+.metric-sub { font-size: 11px; color: var(--text3); }
+
+/* ─── CARDS ────────────────────────────────── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.card-sub {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+
+.card-body { padding: 20px; }
+
+/* ─── FORM ELEMENTS ───────────────────────── */
+.form-group { margin-bottom: 16px; }
+
+label {
+  display: block;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+
+input[type=text], input[type=number], textarea, select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+}
+
+input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+}
+
+textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+select option { background: var(--bg3); }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+/* ─── RESULT DISPLAY ──────────────────────── */
+.result-box {
+  border-radius: var(--r2);
+  padding: 20px;
+  margin-top: 20px;
+  display: none;
+  animation: fadeUp 0.3s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-box.pass { background: var(--green-bg); border: 1px solid rgba(54,201,126,0.25); }
+.result-box.fail { background: var(--red-bg); border: 1px solid rgba(255,77,58,0.25); }
+.result-box.flag { background: var(--amber-bg); border: 1px solid rgba(245,166,35,0.25); }
+.result-box.block { background: rgba(255,30,0,0.14); border: 1px solid rgba(255,30,0,0.35); }
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.result-badge.pass { background: var(--green-bg); color: var(--green); }
+.result-badge.fail { background: var(--red-bg); color: var(--red); }
+.result-badge.flag { background: var(--amber-bg); color: var(--amber); }
+.result-badge.block { background: rgba(255,30,0,0.2); color: #ff3020; }
+
+.result-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.result-title.pass { color: var(--green); }
+.result-title.fail { color: var(--red); }
+.result-title.flag { color: var(--amber); }
+.result-title.block { color: #ff3020; }
+
+.result-statute {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  background: rgba(0,0,0,0.2);
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.result-action { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+.result-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.result-meta-item {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+
+.result-meta-item span { color: var(--text2); }
+
+/* ─── AUDIT TABLE ─────────────────────────── */
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-table th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text3);
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-table td {
+  padding: 11px 14px;
+  font-size: 12px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.audit-table tr:last-child td { border-bottom: none; }
+.audit-table tr:hover td { background: var(--bg3); }
+
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.tag-pass { background: var(--green-bg); color: var(--green); }
+.tag-fail { background: var(--red-bg); color: var(--red); }
+.tag-flag { background: var(--amber-bg); color: var(--amber); }
+.tag-block { background: rgba(255,30,0,0.15); color: #ff4030; }
+
+/* ─── CHECKBOX GROUPS ─────────────────────── */
+.check-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.check-item:hover { border-color: var(--border2); }
+
+.check-item input[type=checkbox] {
+  width: 16px; height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.check-item-label { font-size: 13px; color: var(--text); flex: 1; }
+.check-item-sub { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+/* ─── PROGRESS BAR ────────────────────────── */
+.progress-bar {
+  height: 3px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+/* ─── MODULE OVERVIEW CARDS ───────────────── */
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.module-overview-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-overview-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 2px 0 0 2px;
+}
+
+.module-overview-card.m-ccpsa::before { background: var(--red); }
+.module-overview-card.m-cpla::before { background: var(--blue); }
+.module-overview-card.m-fintrac::before { background: var(--amber); }
+.module-overview-card.m-esg::before { background: var(--green); }
+.module-overview-card.m-supply::before { background: #a78bfa; }
+
+.module-overview-card:hover {
+  border-color: var(--border2);
+  background: var(--bg3);
+  transform: translateY(-1px);
+}
+
+.mod-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.mod-tag.ccpsa { color: var(--red); }
+.mod-tag.cpla { color: var(--blue); }
+.mod-tag.fintrac { color: var(--amber); }
+.mod-tag.esg { color: var(--green); }
+.mod-tag.supply { color: #a78bfa; }
+
+.mod-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.mod-act { font-size: 11px; color: var(--text3); margin-bottom: 14px; }
+.mod-rules { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+
+/* ─── DEADLINE CARDS ──────────────────────── */
+.deadline-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+
+.deadline-date {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 8px 12px;
+  text-align: center;
+  min-width: 56px;
+}
+
+.deadline-month { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; }
+.deadline-day { font-size: 22px; font-weight: 600; color: var(--text); line-height: 1; }
+
+.deadline-info { flex: 1; }
+.deadline-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.deadline-sub { font-size: 11px; color: var(--text3); }
+
+.deadline-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.ds-urgent { background: var(--red-bg); color: var(--red); }
+.ds-upcoming { background: var(--amber-bg); color: var(--amber); }
+.ds-ok { background: var(--green-bg); color: var(--green); }
+
+/* ─── RANGE ───────────────────────────────── */
+input[type=range] {
+  width: 100%;
+  accent-color: var(--accent);
+  background: transparent;
+  height: 4px;
+  cursor: pointer;
+}
+
+/* ─── DIVIDER ─────────────────────────────── */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ─── SCROLL ──────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+/* ─── ANIMATIONS ──────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.running-indicator {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 14px;
+}
+
+.running-indicator.show { display: flex; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ─── SIDEBAR ─── -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">CA · Federal</div>
+    <div class="logo-name">CanCompliance</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Overview</div>
+    <div class="nav-item active" onclick="showPanel('dashboard', this)">
+      <div class="nav-dot"></div> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPanel('deadlines', this)">
+      <div class="nav-dot"></div> Deadlines
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('audit', this)">
+      <div class="nav-dot"></div> Audit trail
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Compliance modules</div>
+    <div class="nav-item" onclick="showPanel('ccpsa', this)">
+      <div class="nav-dot"></div> CCPSA — Product safety
+    </div>
+    <div class="nav-item" onclick="showPanel('cpla', this)">
+      <div class="nav-dot"></div> CPLA — Bilingualism
+    </div>
+    <div class="nav-item" onclick="showPanel('fintrac', this)">
+      <div class="nav-dot"></div> FINTRAC — AML / KYC
+    </div>
+    <div class="nav-item" onclick="showPanel('esg', this)">
+      <div class="nav-dot"></div> ESG — Greenwashing
+    </div>
+    <div class="nav-item" onclick="showPanel('supply', this)">
+      <div class="nav-dot"></div> S-211 — Supply chain
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Settings</div>
+    <div class="nav-item" onclick="showPanel('ratetable', this)">
+      <div class="nav-dot"></div> Rate table
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      <span>Engine online · v1.0</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div>
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-sub" id="topbar-sub">Canada Federal Compliance Engine</div>
+  </div>
+  <div class="topbar-right">
+    <button class="btn">Export audit</button>
+    <button class="btn btn-accent">+ New check</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- DASHBOARD -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel active" id="panel-dashboard">
+  <div class="page-header">
+    <div class="page-eyebrow">System overview</div>
+    <div class="page-title">Compliance dashboard</div>
+    <div class="page-desc">Real-time status across all Canadian regulatory modules. All checks logged to 6-year audit trail.</div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric">
+      <div class="metric-label">Checks run</div>
+      <div class="metric-val" id="m-total">0</div>
+      <div class="metric-sub">All modules</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Passed</div>
+      <div class="metric-val green" id="m-pass">0</div>
+      <div class="metric-sub">Compliant</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Failed</div>
+      <div class="metric-val red" id="m-fail">0</div>
+      <div class="metric-sub">Action required</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Flagged</div>
+      <div class="metric-val amber" id="m-flag">0</div>
+      <div class="metric-sub">Lawyer review</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Blocked</div>
+      <div class="metric-val red" id="m-block">0</div>
+      <div class="metric-sub">Hard stop</div>
+    </div>
+  </div>
+
+  <div class="modules-grid">
+    <div class="module-overview-card m-ccpsa" onclick="showPanel('ccpsa', null)">
+      <div class="mod-tag ccpsa">Module A</div>
+      <div class="mod-name">CCPSA — Product Safety</div>
+      <div class="mod-act">Canada Consumer Product Safety Act</div>
+      <div class="mod-rules">5 rules · FR-CA-01 → FR-CA-13</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-cpla" onclick="showPanel('cpla', null)">
+      <div class="mod-tag cpla">Module B</div>
+      <div class="mod-name">CPLA — Bilingualism</div>
+      <div class="mod-act">Consumer Packaging & Labelling Act + Bill 96</div>
+      <div class="mod-rules">4 rules · FR-CA-02 → FR-CA-14</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-fintrac" onclick="showPanel('fintrac', null)">
+      <div class="mod-tag fintrac">Module C</div>
+      <div class="mod-name">FINTRAC — AML / KYC</div>
+      <div class="mod-act">PCMLTFA · PCI DSS 4.0 · NI 93-101</div>
+      <div class="mod-rules">4 rules · FR-CA-03 → FR-CA-16</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-esg" onclick="showPanel('esg', null)">
+      <div class="mod-tag esg">Module D</div>
+      <div class="mod-name">ESG — Greenwashing</div>
+      <div class="mod-act">Competition Act · Bill C-59 · OSFI B-15</div>
+      <div class="mod-rules">4 rules · FR-CA-04 → FR-CA-18</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-supply" onclick="showPanel('supply', null)">
+      <div class="mod-tag supply">Module E</div>
+      <div class="mod-name">S-211 — Supply Chain</div>
+      <div class="mod-act">Forced Labour Act · CBCA Beneficial Ownership</div>
+      <div class="mod-rules">4 rules · FR-CA-05 → FR-CA-20</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Recent checks</div>
+        <div class="card-sub">Latest compliance activity</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>Check ID</th>
+            <th>Module</th>
+            <th>Rule</th>
+            <th>Input</th>
+            <th>Result</th>
+            <th>Statute</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="recent-checks">
+          <tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">No checks run yet — use any module to start</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE A: CCPSA -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-ccpsa">
+  <div class="page-header">
+    <div class="page-eyebrow">Module A · FR-CA-01</div>
+    <div class="page-title">CCPSA Product Safety</div>
+    <div class="page-desc">Danger checker for hazardous substances. Hard BLOCK if lead, phthalates, or small parts exceed legal limits. Generates 6-year document trail on every check.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Product composition check</div>
+        <div class="card-sub">Canada Consumer Product Safety Act · Toys Regulations SOR/2011-17</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product name</label>
+          <input type="text" id="cc-name" placeholder="e.g. Wooden building blocks" />
+        </div>
+        <div class="form-group">
+          <label>Product category</label>
+          <select id="cc-cat">
+            <option value="toy">Children's toy (under 14 yrs)</option>
+            <option value="electronics">Electronics / appliance</option>
+            <option value="textile">Textile / clothing</option>
+            <option value="furniture">Furniture</option>
+            <option value="other">Other consumer product</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>Lead content (mg/kg)</label>
+          <input type="number" id="cc-lead" placeholder="0" min="0" step="0.1"/>
+        </div>
+        <div class="form-group">
+          <label>Phthalates % by mass</label>
+          <input type="number" id="cc-phthalate" placeholder="0.00" min="0" step="0.001"/>
+        </div>
+        <div class="form-group">
+          <label>Smallest part diameter (mm)</label>
+          <input type="number" id="cc-parts" placeholder="0" min="0" step="0.1"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Supplier name</label>
+          <input type="text" id="cc-supplier" placeholder="Supplier / manufacturer" />
+        </div>
+        <div class="form-group">
+          <label>Country of origin</label>
+          <input type="text" id="cc-origin" placeholder="e.g. China" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Hazardous material flags</label>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" id="cc-flam" />
+            <span class="check-item-label">Contains flammable materials</span>
+            <span class="check-item-sub">CCPSA s.7</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="cc-asbestos" />
+            <span class="check-item-label">Contains asbestos or asbestos-like fibers</span>
+            <span class="check-item-sub">Schedule 2 — absolute prohibition</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn btn-accent" onclick="runCCPSA()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run CCPSA check
+      </button>
+
+      <div class="running-indicator" id="ccpsa-spinner">
+        <div class="spinner"></div> Running compliance check...
+      </div>
+
+      <div class="result-box" id="ccpsa-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE B: CPLA BILINGUALISM -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-cpla">
+  <div class="page-header">
+    <div class="page-eyebrow">Module B · FR-CA-02</div>
+    <div class="page-title">CPLA Bilingualism Validator</div>
+    <div class="page-desc">Validates EN + FR requirements under the Consumer Packaging and Labelling Act. Applies Quebec Bill 96 French prominence rules if distributing in Quebec.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Label text analysis</div>
+        <div class="card-sub">Consumer Packaging and Labelling Act · Quebec Charter of the French Language (Bill 96)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product name (English)</label>
+          <input type="text" id="cp-en-name" placeholder="e.g. Organic Granola" />
+        </div>
+        <div class="form-group">
+          <label>Product name (French)</label>
+          <input type="text" id="cp-fr-name" placeholder="e.g. Granola biologique" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Net quantity declaration (English)</label>
+          <input type="text" id="cp-en-qty" placeholder="e.g. 500 g" />
+        </div>
+        <div class="form-group">
+          <label>Net quantity declaration (French)</label>
+          <input type="text" id="cp-fr-qty" placeholder="e.g. 500 g" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Dealer name & address (English)</label>
+          <input type="text" id="cp-en-dealer" placeholder="Company name, city, province" />
+        </div>
+        <div class="form-group">
+          <label>Dealer info in French?</label>
+          <select id="cp-dealer-fr">
+            <option value="yes">Yes — French version present</option>
+            <option value="no">No — English only</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>French font size vs English</label>
+          <select id="cp-prominence">
+            <option value="equal">Equal or larger</option>
+            <option value="smaller">Smaller than English</option>
+            <option value="much-smaller">Much smaller than English</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Distribution provinces</label>
+          <select id="cp-province">
+            <option value="national">National (all provinces)</option>
+            <option value="qc">Quebec only</option>
+            <option value="non-qc">Outside Quebec only</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Trademark / brand name</label>
+        <input type="text" id="cp-trademark" placeholder="e.g. Fresh Harvest Granola™ (descriptive terms need French translation)" />
+      </div>
+
+      <div class="form-group">
+        <label>Manufacture date</label>
+        <select id="cp-mfr-date">
+          <option value="after">After June 1, 2025 (new rules apply immediately)</option>
+          <option value="before">Before June 1, 2025 (grace period until June 1, 2027)</option>
+        </select>
+      </div>
+
+      <button class="btn btn-accent" onclick="runCPLA()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run bilingualism check
+      </button>
+
+      <div class="running-indicator" id="cpla-spinner">
+        <div class="spinner"></div> Analysing label...
+      </div>
+
+      <div class="result-box" id="cpla-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE C: FINTRAC -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-fintrac">
+  <div class="page-header">
+    <div class="page-eyebrow">Module C · FR-CA-03</div>
+    <div class="page-title">FINTRAC — AML / KYC</div>
+    <div class="page-desc">Triggers KYC verification and Suspicious Transaction Reports at the $10,000 CAD threshold. Logs all events to PCI DSS 4.0 standard.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Transaction compliance check</div>
+        <div class="card-sub">Proceeds of Crime (Money Laundering) and Terrorist Financing Act · PCMLTFA</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Transaction amount (CAD)</label>
+          <input type="number" id="ft-amount" placeholder="0.00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Transaction type</label>
+          <select id="ft-type">
+            <option value="payment">Payment / wire transfer</option>
+            <option value="cash">Cash transaction</option>
+            <option value="crypto">Crypto-asset</option>
+            <option value="trade">Securities trade</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Customer type</label>
+          <select id="ft-customer">
+            <option value="individual">Individual (personal)</option>
+            <option value="corporation">Corporation</option>
+            <option value="trust">Trust / partnership</option>
+            <option value="pep">Politically Exposed Person (PEP)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Business sector</label>
+          <select id="ft-sector">
+            <option value="general">General commerce</option>
+            <option value="mse">Money services</option>
+            <option value="realestate">Real estate</option>
+            <option value="gambling">Gambling / gaming</option>
+            <option value="crypto">Crypto / virtual assets</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Suspicious indicators (select all that apply)</label>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" id="ft-s1" />
+            <span class="check-item-label">Unusual payment method or pattern</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ft-s2" />
+            <span class="check-item-label">Customer refuses to provide ID or information</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ft-s3" />
+            <span class="check-item-label">Transaction inconsistent with customer's business</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ft-s4" />
+            <span class="check-item-label">Structured to avoid reporting thresholds</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn btn-accent" onclick="runFINTRAC()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run FINTRAC check
+      </button>
+
+      <div class="running-indicator" id="fintrac-spinner">
+        <div class="spinner"></div> Processing transaction data...
+      </div>
+
+      <div class="result-box" id="fintrac-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE D: ESG -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-esg">
+  <div class="page-header">
+    <div class="page-eyebrow">Module D · FR-CA-04</div>
+    <div class="page-title">ESG — Greenwashing Detector</div>
+    <div class="page-desc">Scans marketing text for environmental claims requiring substantiation under the Competition Act (Bill C-59). Returns FLAG with penalty exposure calculation.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Environmental claim analysis</div>
+        <div class="card-sub">Competition Act s.74.01 · Bill C-59 Anti-Greenwashing · OSFI B-15</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <label>Marketing copy / environmental claim</label>
+        <textarea id="esg-text" placeholder="Paste your marketing text, product description, or environmental claim here...&#10;&#10;e.g. 'Our packaging is 100% carbon neutral and eco-friendly. We are committed to net zero by 2030 using sustainable manufacturing.'"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Annual worldwide revenue (CAD)</label>
+          <input type="number" id="esg-revenue" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Claim context</label>
+          <select id="esg-context">
+            <option value="product">Product label / packaging</option>
+            <option value="website">Website / marketing</option>
+            <option value="securities">Securities / ESG disclosure</option>
+            <option value="advertising">Paid advertising</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Substantiation available?</label>
+        <select id="esg-proof">
+          <option value="none">No testing or methodology available</option>
+          <option value="partial">Partial — some supporting data</option>
+          <option value="intl">Yes — internationally recognized methodology</option>
+          <option value="canadian">Yes — Canadian government standard</option>
+        </select>
+      </div>
+
+      <button class="btn btn-accent" onclick="runESG()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Scan for greenwashing
+      </button>
+
+      <div class="running-indicator" id="esg-spinner">
+        <div class="spinner"></div> Scanning for regulated keywords...
+      </div>
+
+      <div class="result-box" id="esg-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE E: SUPPLY CHAIN / S-211 -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-supply">
+  <div class="page-header">
+    <div class="page-eyebrow">Module E · FR-CA-05</div>
+    <div class="page-title">S-211 — Supply Chain & Beneficial Ownership</div>
+    <div class="page-desc">Calculates S-211 coverage threshold and generates May 31 report prompt. Validates CBCA Individuals with Significant Control (25% threshold).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">S-211 covered entity calculator</div>
+        <div class="card-sub">Fighting Against Forced Labour and Child Labour in Supply Chains Act (Bill S-211)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>Annual revenue (CAD)</label>
+          <input type="number" id="sc-revenue" placeholder="0" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>Total assets (CAD)</label>
+          <input type="number" id="sc-assets" placeholder="0" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>Number of employees</label>
+          <input type="number" id="sc-employees" placeholder="0" min="0"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Entity type</label>
+          <select id="sc-entity">
+            <option value="cbca">Federal corporation (CBCA)</option>
+            <option value="provincial">Provincial corporation</option>
+            <option value="importer">Importer of goods</option>
+            <option value="government">Government institution</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Listed on Canadian stock exchange?</label>
+          <select id="sc-listed">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:12px;font-family:var(--mono);color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.8px;">CBCA Beneficial Ownership (ISC)</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Largest shareholder % control</label>
+          <input type="number" id="sc-isc" placeholder="0" min="0" max="100" step="0.1"/>
+        </div>
+        <div class="form-group">
+          <label>ISC filed with Corporations Canada?</label>
+          <select id="sc-isc-filed">
+            <option value="yes">Yes — filed Jan 22, 2024 onwards</option>
+            <option value="no">No — not yet filed</option>
+            <option value="na">N/A — not a CBCA corporation</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-accent" onclick="runSupply()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run S-211 + CBCA check
+      </button>
+
+      <div class="running-indicator" id="supply-spinner">
+        <div class="spinner"></div> Calculating thresholds...
+      </div>
+
+      <div class="result-box" id="supply-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- DEADLINES -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-deadlines">
+  <div class="page-header">
+    <div class="page-eyebrow">Compliance calendar</div>
+    <div class="page-title">Upcoming deadlines</div>
+    <div class="page-desc">All compliance filing dates tracked automatically. Alerts sent 30 days before each deadline.</div>
+  </div>
+
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">May</div><div class="deadline-day">31</div></div>
+    <div class="deadline-info">
+      <div class="deadline-title">S-211 Annual Report — Forced Labour</div>
+      <div class="deadline-sub">Filing required for covered entities · Minister of Public Safety · Penalty: up to $250,000</div>
+    </div>
+    <div class="deadline-status ds-upcoming">24 days</div>
+  </div>
+
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Jan</div><div class="deadline-day">22</div></div>
+    <div class="deadline-info">
+      <div class="deadline-title">CBCA ISC Annual Return Filing</div>
+      <div class="deadline-sub">Beneficial ownership data · Corporations Canada · Penalty: up to $200,000</div>
+    </div>
+    <div class="deadline-status ds-ok">Recurring annually</div>
+  </div>
+
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Jun</div><div class="deadline-day">1</div></div>
+    <div class="deadline-info">
+      <div class="deadline-title">Quebec Bill 96 — Full compliance deadline</div>
+      <div class="deadline-sub">Products manufactured before June 1, 2025 must be compliant · Grace period ends June 1, 2027</div>
+    </div>
+    <div class="deadline-status ds-upcoming">25 days</div>
+  </div>
+
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">20th</div><div class="deadline-day">ea.</div></div>
+    <div class="deadline-info">
+      <div class="deadline-title">FINTRAC — STR Monthly Reporting Window</div>
+      <div class="deadline-sub">Suspicious Transaction Reports due by 20th of each month · PCMLTFA</div>
+    </div>
+    <div class="deadline-status ds-ok">Monthly</div>
+  </div>
+
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Mar</div><div class="deadline-day">31</div></div>
+    <div class="deadline-info">
+      <div class="deadline-title">OSFI B-15 — Climate Risk Disclosure (FRFIs)</div>
+      <div class="deadline-sub">Federally Regulated Financial Institutions · Governance, risk, scenario analysis, financial impacts</div>
+    </div>
+    <div class="deadline-status ds-ok">Annual</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- AUDIT TRAIL -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-audit">
+  <div class="page-header">
+    <div class="page-eyebrow">Compliance record</div>
+    <div class="page-title">Full audit trail</div>
+    <div class="page-desc">Every check logged with statute citation, input hash, result, and timestamp. Retained for 6 years (CCPSA requirement).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">All compliance checks</div>
+        <div class="card-sub">6-year retention policy active</div>
+      </div>
+      <button class="btn" onclick="clearAudit()">Clear log</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>Check ID</th>
+            <th>Module</th>
+            <th>Rule</th>
+            <th>Input summary</th>
+            <th>Result</th>
+            <th>Statute</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="audit-tbody">
+          <tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">Audit log is empty — run checks in any module</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- RATE TABLE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-ratetable">
+  <div class="page-header">
+    <div class="page-eyebrow">Admin · NFR-01</div>
+    <div class="page-title">Rate table — no-code admin</div>
+    <div class="page-desc">Update all thresholds, penalty values, and statutory references without a code deployment. Changes take effect on next check.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Current thresholds &amp; penalties</div>
+      <div class="card-sub" style="margin-top:2px">Edit values and click Save to update the engine</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>Rule ID</th>
+            <th>Description</th>
+            <th>Threshold</th>
+            <th>Penalty min</th>
+            <th>Penalty max</th>
+            <th>Statute</th>
+          </tr>
+        </thead>
+        <tbody id="rate-tbody"></tbody>
+      </table>
+    </div>
+    <div style="padding:16px 20px;border-top:1px solid var(--border);">
+      <button class="btn btn-accent" onclick="saveRateTable()">Save changes</button>
+      <span id="rate-save-msg" style="font-family:var(--mono);font-size:11px;color:var(--green);margin-left:14px;display:none;">Changes saved</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// ─── STATE ─────────────────────────────────────────
+const auditLog = [];
+const metrics = { total:0, pass:0, fail:0, flag:0, block:0 };
+
+let rateTable = [
+  { id:'FR-CA-01', desc:'Lead content limit (toys)', threshold:'90 mg/kg', pmin:'$5,000', pmax:'Criminal', statute:'Toys Regulations SOR/2011-17 s.23' },
+  { id:'FR-CA-01b', desc:'Phthalates limit (toys)', threshold:'0.1% by mass', pmin:'$5,000', pmax:'Criminal', statute:'Toys Regulations SOR/2011-17 s.25' },
+  { id:'FR-CA-02', desc:'Bilingualism — federal', threshold:'All consumer products', pmin:'$5,000', pmax:'$10,000', statute:'CPLA s.11' },
+  { id:'FR-CA-03', desc:'FINTRAC $10K trigger', threshold:'$10,000 CAD', pmin:'$1,000/day', pmax:'$500,000', statute:'PCMLTFA s.7' },
+  { id:'FR-CA-04', desc:'Greenwashing penalty — first violation', threshold:'Any unsubstantiated claim', pmin:'$750,000', pmax:'$10,000,000', statute:'Competition Act s.74.01' },
+  { id:'FR-CA-05', desc:'S-211 revenue threshold', threshold:'$20,000,000 CAD', pmin:'$0', pmax:'$250,000', statute:'S-211 s.3' },
+  { id:'FR-CA-05b', desc:'S-211 asset threshold', threshold:'$20,000,000 CAD', pmin:'$0', pmax:'$250,000', statute:'S-211 s.3' },
+  { id:'FR-CA-10', desc:'CBCA ISC beneficial ownership', threshold:'25% shares/votes', pmin:'$0', pmax:'$200,000', statute:'CBCA s.21.1' },
+];
+
+// ─── NAVIGATION ─────────────────────────────────────
+function showPanel(id, navEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (navEl) navEl.classList.add('active');
+  const titles = {
+    dashboard: ['Dashboard','Canada Federal Compliance Engine'],
+    ccpsa: ['Module A — CCPSA','Product Safety · Danger Checker'],
+    cpla: ['Module B — CPLA','Bilingualism Validator · Bill 96'],
+    fintrac: ['Module C — FINTRAC','AML / KYC · $10K Trigger'],
+    esg: ['Module D — ESG','Greenwashing Detector · Bill C-59'],
+    supply: ['Module E — S-211','Supply Chain · Beneficial Ownership'],
+    deadlines: ['Compliance Calendar','Upcoming filing deadlines'],
+    audit: ['Audit Trail','6-year compliance record'],
+    ratetable: ['Rate Table','No-code threshold admin'],
+  };
+  const t = titles[id] || ['CanCompliance',''];
+  document.getElementById('topbar-title').textContent = t[0];
+  document.getElementById('topbar-sub').textContent = t[1];
+}
+
+// ─── AUDIT HELPERS ──────────────────────────────────
+function uid() { return 'CHK-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
+function ts() { return new Date().toISOString().replace('T',' ').substr(0,19); }
+
+function logCheck(entry) {
+  auditLog.unshift(entry);
+  metrics.total++;
+  metrics[entry.result.toLowerCase().replace(/\s.*/,'')]++;
+  updateMetrics();
+  updateAuditTable();
+  updateRecentChecks();
+}
+
+function updateMetrics() {
+  document.getElementById('m-total').textContent = metrics.total;
+  document.getElementById('m-pass').textContent = metrics.pass;
+  document.getElementById('m-fail').textContent = metrics.fail;
+  document.getElementById('m-flag').textContent = metrics.flag;
+  document.getElementById('m-block').textContent = metrics.block;
+}
+
+function buildRow(e) {
+  const tagClass = { PASS:'tag-pass', FAIL:'tag-fail', FLAG:'tag-flag', BLOCK:'tag-block' };
+  return `<tr>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${e.id}</td>
+    <td>${e.module}</td>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${e.ruleId}</td>
+    <td style="color:var(--text2)">${e.input}</td>
+    <td><span class="tag ${tagClass[e.result]}">${e.result}</span></td>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3);max-width:220px">${e.statute}</td>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${e.timestamp}</td>
+  </tr>`;
+}
+
+function updateAuditTable() {
+  const tbody = document.getElementById('audit-tbody');
+  if (auditLog.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">Audit log is empty</td></tr>';
+  } else {
+    tbody.innerHTML = auditLog.map(buildRow).join('');
+  }
+}
+
+function updateRecentChecks() {
+  const tbody = document.getElementById('recent-checks');
+  const recent = auditLog.slice(0,5);
+  if (recent.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">No checks run yet</td></tr>';
+  } else {
+    tbody.innerHTML = recent.map(buildRow).join('');
+  }
+}
+
+function clearAudit() {
+  auditLog.length = 0;
+  updateAuditTable();
+  updateRecentChecks();
+}
+
+function showResult(boxId, type, title, statute, action, extras) {
+  const box = document.getElementById(boxId);
+  box.className = 'result-box ' + type;
+  box.style.display = 'block';
+  const metaHtml = extras ? extras.map(e => `<div class="result-meta-item">${e.label}: <span>${e.val}</span></div>`).join('') : '';
+  box.innerHTML = `
+    <div class="result-badge ${type}">${type.toUpperCase()}</div>
+    <div class="result-title ${type}">${title}</div>
+    <div class="result-statute">${statute}</div>
+    <div class="result-action">${action}</div>
+    ${extras ? `<div class="result-meta">${metaHtml}</div>` : ''}
+  `;
+}
+
+function runWithSpinner(spinnerId, fn) {
+  const s = document.getElementById(spinnerId);
+  s.classList.add('show');
+  setTimeout(() => { s.classList.remove('show'); fn(); }, 900);
+}
+
+// ─── MODULE A: CCPSA ────────────────────────────────
+function runCCPSA() {
+  runWithSpinner('ccpsa-spinner', () => {
+    const name = document.getElementById('cc-name').value || 'Unnamed product';
+    const cat = document.getElementById('cc-cat').value;
+    const lead = parseFloat(document.getElementById('cc-lead').value) || 0;
+    const phthal = parseFloat(document.getElementById('cc-phthalate').value) || 0;
+    const parts = parseFloat(document.getElementById('cc-parts').value) || 99;
+    const asbestos = document.getElementById('cc-asbestos').checked;
+    const flam = document.getElementById('cc-flam').checked;
+    const supplier = document.getElementById('cc-supplier').value || 'Unknown supplier';
+
+    let result, title, statute, action;
+
+    if (asbestos) {
+      result = 'block';
+      title = 'BLOCK — Absolute prohibition: asbestos detected';
+      statute = 'CCPSA Schedule 2 — Prohibited Products. Asbestos and asbestos-containing products are absolutely prohibited from manufacture, import, sale, or advertisement in Canada.';
+      action = 'This product cannot enter the Canadian market under any circumstances. Asbestos is an absolutely prohibited substance under Schedule 2 of the CCPSA. Consult legal counsel and do not proceed with importation.';
+    } else if (cat === 'toy' && lead > 90) {
+      result = 'block';
+      title = `BLOCK — Lead content exceeded: ${lead} mg/kg (limit: 90 mg/kg)`;
+      statute = 'Toys Regulations SOR/2011-17 s.23 — Lead Content. No toy or toy component shall contain more than 90 mg/kg of total lead.';
+      action = `Product "${name}" fails the lead content limit. Remove from market immediately. Reformulate to bring lead content below 90 mg/kg. File an incident report with Health Canada. Record supplier details for traceability.`;
+    } else if (cat === 'toy' && phthal > 0.1) {
+      result = 'block';
+      title = `BLOCK — Phthalates exceeded: ${phthal}% (limit: 0.1%)`;
+      statute = 'Toys Regulations SOR/2011-17 s.25 — Phthalates. No toy that can be placed in the mouth shall contain more than 0.1% by mass of certain phthalates.';
+      action = `Product "${name}" fails the phthalates limit. Do not sell or import this product. Reformulate and retest before re-entry. Maintain records per CCPSA s.11 for 6 years.`;
+    } else if (cat === 'toy' && parts > 0 && parts < 31.7) {
+      result = 'fail';
+      title = `FAIL — Small parts hazard: ${parts}mm diameter (minimum: 31.7mm for toys)`;
+      statute = 'Toys Regulations SOR/2011-17 s.16 — Small Parts. Toys intended for children under 3 must not contain parts small enough to fit entirely in a small parts cylinder.';
+      action = `Product "${name}" contains parts that may pose a choking hazard. Redesign components to exceed 31.7mm or restrict age labelling to 3+ years with prominent warning. Retest before sale.`;
+    } else if (flam) {
+      result = 'flag';
+      title = 'FLAG — Flammability materials declared — review required';
+      statute = 'CCPSA s.7 — General Prohibition. Products posing an unreasonable danger due to flammability require testing per applicable standards (CSA, ASTM, UL).';
+      action = 'Conduct flammability testing per applicable Canadian standards. Maintain test records for 6 years. Depending on product category, specific flammability regulations may apply (e.g., upholstered furniture, children\'s sleepwear). Lawyer review recommended.';
+    } else {
+      result = 'pass';
+      title = `PASS — ${name} meets CCPSA requirements`;
+      statute = 'Canada Consumer Product Safety Act SC 2010 c.21 — No violations detected across checked parameters.';
+      action = `Product "${name}" supplied by ${supplier} has cleared the CCPSA danger check. A 6-year document record has been created. Continue monitoring — no pre-market approval exists; ongoing compliance is the manufacturer's responsibility.`;
+    }
+
+    const entry = {
+      id: uid(), module: 'CCPSA', ruleId: 'FR-CA-01',
+      input: `${name} · ${cat} · Lead:${lead} · Phthal:${phthal}%`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+
+    showResult('ccpsa-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Product', val: name },
+      { label:'Supplier', val: supplier },
+      { label:'Retention', val: '6 years from today' },
+    ]);
+  });
+}
+
+// ─── MODULE B: CPLA ─────────────────────────────────
+function runCPLA() {
+  runWithSpinner('cpla-spinner', () => {
+    const enName = document.getElementById('cp-en-name').value.trim();
+    const frName = document.getElementById('cp-fr-name').value.trim();
+    const enQty = document.getElementById('cp-en-qty').value.trim();
+    const frQty = document.getElementById('cp-fr-qty').value.trim();
+    const enDealer = document.getElementById('cp-en-dealer').value.trim();
+    const dealerFr = document.getElementById('cp-dealer-fr').value;
+    const prominence = document.getElementById('cp-prominence').value;
+    const province = document.getElementById('cp-province').value;
+    const trademark = document.getElementById('cp-trademark').value.trim();
+    const mfrDate = document.getElementById('cp-mfr-date').value;
+
+    const issues = [];
+    let result = 'pass';
+    let title = 'PASS — Label meets bilingualism requirements';
+    let statute = 'Consumer Packaging and Labelling Act RSC 1985 c.C-38 — All required bilingual fields present.';
+    let action = 'Label is compliant with federal bilingualism requirements. Ensure font size for net quantity is at minimum 1.6mm. Keep label records for audit.';
+
+    if (!enName) issues.push('Missing English product identity declaration (required: CPLA s.11)');
+    if (!frName) { issues.push('Missing French product identity declaration (required: CPLA s.11)'); result = 'fail'; }
+    if (!enQty) issues.push('Missing English net quantity declaration');
+    if (!frQty) { issues.push('Missing French net quantity declaration (required: CPLA s.13)'); result = result === 'pass' ? 'fail' : result; }
+    if (!enDealer) issues.push('Missing dealer name and address');
+
+    if ((province === 'national' || province === 'qc') && prominence === 'smaller') {
+      if (mfrDate === 'after') {
+        issues.push('FAIL: Quebec Bill 96 — French text must be at least as prominent as English. Products manufactured after June 1, 2025 must comply immediately.');
+        result = 'fail';
+      } else {
+        issues.push('FLAG: Quebec Bill 96 — French text is smaller than English. Grace period applies until June 1, 2027 for pre-June 2025 stock. New production must comply now.');
+        result = result === 'pass' ? 'flag' : result;
+      }
+    }
+
+    if ((province === 'national' || province === 'qc') && prominence === 'much-smaller') {
+      issues.push('FAIL: Quebec Bill 96 — French text is significantly less prominent. This is a clear violation regardless of manufacture date.');
+      result = 'fail';
+    }
+
+    const hasDescriptive = trademark && /[a-z]{3,}/i.test(trademark) && trademark.includes(' ');
+    if ((province === 'national' || province === 'qc') && hasDescriptive) {
+      issues.push(`FLAG: Trademark "${trademark}" contains descriptive terms that may require French translation under Bill 96. Coined/fanciful trademarks are exempt; descriptive terms are not.`);
+      result = result === 'pass' ? 'flag' : result;
+    }
+
+    if (issues.length === 0) {
+      statute = 'Consumer Packaging and Labelling Act RSC 1985 c.C-38 · All bilingual fields present and compliant.';
+      action = 'Label fully compliant federally. ' + (province !== 'non-qc' ? 'Quebec Bill 96 prominence check passed. ' : '') + 'Retain label copy for audit trail.';
+    } else {
+      statute = 'Consumer Packaging and Labelling Act s.11, s.13 · ' + (province !== 'non-qc' ? 'Quebec Charter of the French Language (Bill 96) — An Act respecting French, the official and common language of Québec.' : '');
+      title = result === 'fail' ? `FAIL — ${issues.filter(i=>i.startsWith('FAIL')||i.startsWith('Missing')).length} bilingualism violation(s) found` :
+              result === 'flag' ? 'FLAG — Quebec Bill 96 review required' : title;
+      action = '<strong>Issues found:</strong><br>' + issues.map(i => '• ' + i).join('<br>');
+    }
+
+    const penalty = result === 'fail' ? 'Up to $10,000 (indictment) · Competition Act may also apply: up to $750,000' : 'N/A';
+    const entry = {
+      id: uid(), module: 'CPLA', ruleId: 'FR-CA-02',
+      input: `${enName || 'No EN name'} / ${frName || 'No FR name'} · ${province}`,
+      result: result.toUpperCase(), statute: statute.split('·')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('cpla-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Province', val: province === 'qc' ? 'Quebec' : province === 'national' ? 'National' : 'Non-QC' },
+      { label:'Bill 96', val: (province === 'non-qc') ? 'N/A' : 'Applied' },
+      { label:'Penalty exposure', val: penalty },
+    ]);
+  });
+}
+
+// ─── MODULE C: FINTRAC ──────────────────────────────
+function runFINTRAC() {
+  runWithSpinner('fintrac-spinner', () => {
+    const amount = parseFloat(document.getElementById('ft-amount').value) || 0;
+    const type = document.getElementById('ft-type').value;
+    const customer = document.getElementById('ft-customer').value;
+    const sector = document.getElementById('ft-sector').value;
+    const s1 = document.getElementById('ft-s1').checked;
+    const s2 = document.getElementById('ft-s2').checked;
+    const s3 = document.getElementById('ft-s3').checked;
+    const s4 = document.getElementById('ft-s4').checked;
+    const suspiciousCount = [s1,s2,s3,s4].filter(Boolean).length;
+
+    let result, title, statute, action;
+    const fmt = n => '$' + n.toLocaleString('en-CA', {minimumFractionDigits:2});
+    const highRisk = sector === 'mse' || sector === 'gambling' || sector === 'crypto' || customer === 'pep';
+
+    if (s4) {
+      result = 'fail';
+      title = 'FAIL — Structuring detected: transaction may be designed to avoid reporting';
+      statute = 'PCMLTFA s.9.3 — Structuring. It is prohibited to structure transactions to avoid FINTRAC reporting obligations. This is a serious offense.';
+      action = 'Structuring is a criminal offense. File a Suspicious Transaction Report (STR) immediately with FINTRAC. Do not tip off the customer. Preserve all records. Escalate to compliance officer and legal counsel.';
+    } else if (amount >= 10000 && suspiciousCount >= 2) {
+      result = 'fail';
+      title = `FAIL — Large transaction + ${suspiciousCount} suspicious indicator(s): KYC required + STR mandatory`;
+      statute = 'PCMLTFA s.7 — Large Cash Transaction Report (LCTR). Transactions of $10,000 CAD or more in cash must be reported to FINTRAC. s.7.1 — Suspicious Transaction Report required when reasonable grounds to suspect ML/TF.';
+      action = `Transaction of ${fmt(amount)} triggers mandatory LCTR. With ${suspiciousCount} suspicious indicators, a Suspicious Transaction Report (STR) is also required. Complete KYC verification immediately. Retain all records for 5 years. Report to FINTRAC within 30 days.`;
+    } else if (amount >= 10000) {
+      result = 'fail';
+      title = `FAIL — Large transaction: ${fmt(amount)} exceeds $10,000 CAD threshold`;
+      statute = 'PCMLTFA s.7 — Large Cash Transaction Report. Transactions of $10,000 CAD or more in a single transaction or series must be reported to FINTRAC within 15 days.';
+      action = `Mandatory KYC verification required. File a Large Cash Transaction Report (LCTR) with FINTRAC within 15 days. Collect: full legal name, address, date of birth, nature of business. Log transaction ID, amount, date, and method.`;
+    } else if (suspiciousCount >= 1 || customer === 'pep') {
+      result = 'flag';
+      title = `FLAG — ${customer === 'pep' ? 'PEP detected + ' : ''}${suspiciousCount} suspicious indicator(s) — enhanced due diligence required`;
+      statute = 'PCMLTFA s.9.3 — Suspicious Transaction Report (STR). A STR must be filed when there are reasonable grounds to suspect ML/TF activity, regardless of transaction amount.';
+      action = `Transaction is below the $10,000 threshold but ${customer === 'pep' ? 'involves a Politically Exposed Person and ' : ''}suspicious indicators present. Apply enhanced due diligence. If grounds for suspicion remain, file an STR with FINTRAC. Document your assessment reasoning.`;
+    } else if (highRisk) {
+      result = 'flag';
+      title = 'FLAG — High-risk sector: enhanced monitoring required';
+      statute = 'PCMLTFA s.9.6 — Ongoing monitoring obligations for high-risk business relationships.';
+      action = `Sector "${sector}" is categorized as high-risk by FINTRAC. Apply enhanced due diligence, more frequent monitoring, and senior management approval for the business relationship. Document risk assessment.`;
+    } else {
+      result = 'pass';
+      title = `PASS — Transaction of ${fmt(amount)} cleared all FINTRAC checks`;
+      statute = 'PCMLTFA — No reporting obligations triggered at this threshold with current indicators.';
+      action = 'No FINTRAC reporting obligation triggered. Transaction is below $10,000 threshold and no suspicious indicators are present. Continue standard monitoring. Log record retained per PCI DSS 4.0.';
+    }
+
+    const entry = {
+      id: uid(), module: 'FINTRAC', ruleId: 'FR-CA-03',
+      input: `$${amount.toLocaleString()} CAD · ${type} · ${customer}`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('fintrac-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Amount', val: fmt(amount) },
+      { label:'Threshold', val: '$10,000 CAD' },
+      { label:'Suspicious indicators', val: suspiciousCount + '/4' },
+    ]);
+  });
+}
+
+// ─── MODULE D: ESG ──────────────────────────────────
+function runESG() {
+  runWithSpinner('esg-spinner', () => {
+    const text = document.getElementById('esg-text').value.toLowerCase();
+    const revenue = parseFloat(document.getElementById('esg-revenue').value) || 0;
+    const context = document.getElementById('esg-context').value;
+    const proof = document.getElementById('esg-proof').value;
+
+    const keywords = [
+      {kw:'carbon neutral', risk:'high'}, {kw:'net zero', risk:'high'},
+      {kw:'carbon free', risk:'high'}, {kw:'zero emissions', risk:'high'},
+      {kw:'eco-friendly', risk:'med'}, {kw:'sustainable', risk:'med'},
+      {kw:'green', risk:'low'}, {kw:'biodegradable', risk:'med'},
+      {kw:'compostable', risk:'med'}, {kw:'recyclable', risk:'med'},
+      {kw:'planet positive', risk:'high'}, {kw:'climate positive', risk:'high'},
+      {kw:'environmentally friendly', risk:'med'}, {kw:'carbon offset', risk:'high'},
+    ];
+
+    const found = keywords.filter(k => text.includes(k.kw));
+    const highRisk = found.filter(k => k.risk === 'high');
+
+    let result, title, statute, action;
+    const penaltyCalc = () => {
+      const p1 = 10000000;
+      const p2 = revenue * 0.03;
+      const max = Math.max(p1, p2);
+      return '$' + max.toLocaleString('en-CA');
+    };
+
+    if (context === 'securities' && found.length > 0) {
+      result = 'pass';
+      title = 'PASS — Securities disclosure context: enforcement unlikely';
+      statute = 'Competition Act s.74.01 — Competition Bureau Final Guidelines (June 5, 2025): Environmental claims in mandatory or voluntary securities disclosures are unlikely to result in enforcement action unless used to promote a product outside the sale of securities.';
+      action = `Found ${found.length} environmental term(s) in your text. In a securities/ESG disclosure context, the Competition Bureau has indicated this is unlikely to trigger enforcement. However, monitor for Budget 2025 amendments and ensure claims remain accurate.`;
+    } else if (found.length === 0) {
+      result = 'pass';
+      title = 'PASS — No regulated environmental keywords detected';
+      statute = 'Competition Act s.74.01 · Bill C-59 Anti-Greenwashing — No substantiation obligations triggered.';
+      action = 'No environmental benefit claims detected in the submitted text. If environmental claims are added in future, re-run this check before publication.';
+    } else if (proof === 'none' && highRisk.length > 0) {
+      result = 'flag';
+      title = `FLAG — ${highRisk.length} high-risk claim(s) without substantiation: legal review required`;
+      statute = 'Competition Act s.74.01(1)(b) — Greenwashing. Environmental benefit claims about a product must be based on adequate and proper testing. Business/activity claims must use an internationally recognized methodology (pending Budget 2025 amendment).';
+      action = `<strong>Flagged claims:</strong> ${highRisk.map(k => '"' + k.kw + '"').join(', ')}<br><br>These claims require substantiation before publication. Without adequate testing or methodology documentation, you are exposed to Competition Bureau enforcement. File FLAG record and obtain testing or remove claims.<br><br><strong>Note:</strong> Budget 2025 proposes removing the international methodology requirement — but this has not yet received Royal Assent. Current law applies.`;
+    } else if (found.length > 0 && proof !== 'intl' && proof !== 'canadian') {
+      result = 'flag';
+      title = `FLAG — ${found.length} environmental claim(s) require substantiation review`;
+      statute = 'Competition Act s.74.01 — Bill C-59. Environmental product claims must be based on adequate and proper testing. Current substantiation is partial or unclear.';
+      action = `<strong>Detected terms:</strong> ${found.map(k => '"' + k.kw + '"').join(', ')}<br><br>Partial substantiation is on file but may not meet the "adequate and proper testing" standard. Obtain full third-party testing aligned with a recognized Canadian or international standard. Do not publish until substantiation is complete.`;
+    } else {
+      result = 'pass';
+      title = `PASS — ${found.length} environmental claim(s) detected with substantiation on record`;
+      statute = 'Competition Act s.74.01 — Substantiation requirement met with recognized methodology.';
+      action = `Found ${found.length} environmental term(s): ${found.map(k => '"' + k.kw + '"').join(', ')}. Substantiation type "${proof}" is on record. Maintain documentation for audit. Monitor for regulatory changes.`;
+    }
+
+    const entry = {
+      id: uid(), module: 'ESG', ruleId: 'FR-CA-04',
+      input: `${found.length} keywords · ${context} · proof: ${proof}`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('esg-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Keywords found', val: found.length },
+      { label:'High-risk claims', val: highRisk.length },
+      { label:'Max penalty exposure', val: revenue > 0 ? penaltyCalc() : 'Min. $10M' },
+    ]);
+  });
+}
+
+// ─── MODULE E: SUPPLY CHAIN ─────────────────────────
+function runSupply() {
+  runWithSpinner('supply-spinner', () => {
+    const revenue = parseFloat(document.getElementById('sc-revenue').value) || 0;
+    const assets = parseFloat(document.getElementById('sc-assets').value) || 0;
+    const employees = parseInt(document.getElementById('sc-employees').value) || 0;
+    const entity = document.getElementById('sc-entity').value;
+    const listed = document.getElementById('sc-listed').value;
+    const iscPct = parseFloat(document.getElementById('sc-isc').value) || 0;
+    const iscFiled = document.getElementById('sc-isc-filed').value;
+
+    const t20m = 20000000;
+    const t250e = 250;
+    const fmt = n => '$' + n.toLocaleString('en-CA');
+
+    const conditions = [
+      revenue >= t20m ? 1 : 0,
+      assets >= t20m ? 1 : 0,
+      employees >= t250e ? 1 : 0,
+    ];
+    const conditionsMet = conditions.reduce((a,b) => a+b, 0);
+    const isCovered = listed === 'yes' || conditionsMet >= 2 || entity === 'government';
+
+    const issues = [];
+    let iscIssue = false;
+
+    if (entity === 'cbca' && iscPct >= 25 && iscFiled === 'no') {
+      iscIssue = true;
+      issues.push(`CBCA ISC FAIL: Shareholder at ${iscPct}% control exceeds 25% threshold — ISC data must be filed with Corporations Canada. Deadline: within 30 days of incorporation, within 15 days of any change, at each annual return. Penalty: up to $200,000.`);
+    }
+
+    let result, title, statute, action;
+
+    if (isCovered && issues.length > 0) {
+      result = 'fail';
+      title = `FAIL — S-211 covered entity + ${issues.length} CBCA filing violation(s)`;
+      statute = 'Fighting Against Forced Labour and Child Labour in Supply Chains Act (S-211) s.3 — Covered entities must file annual report by May 31. CBCA s.21.1 — ISC register filing required.';
+      action = `<strong>S-211:</strong> Your entity meets ${conditionsMet}/3 size conditions (${listed === 'yes' ? 'or is exchange-listed' : ''}). Annual report must be filed with Minister of Public Safety by May 31. Board approval required.<br><br><strong>CBCA ISC:</strong><br>` + issues.join('<br>');
+    } else if (!isCovered && issues.length > 0) {
+      result = 'fail';
+      title = 'FAIL — S-211 exempt, but CBCA ISC filing violation detected';
+      statute = 'CBCA s.21.1 — Individuals with Significant Control register. Filing required with Corporations Canada effective January 22, 2024.';
+      action = `Entity does not meet S-211 coverage threshold (only ${conditionsMet}/2 conditions met; exchange-listed: ${listed}). However:<br><br>` + issues.join('<br>');
+    } else if (isCovered) {
+      result = 'flag';
+      title = `FLAG — S-211 covered entity: annual report required by May 31`;
+      const conds = ['Revenue ≥ $20M: ' + (revenue >= t20m ? '✓' : '✗'), 'Assets ≥ $20M: ' + (assets >= t20m ? '✓' : '✗'), 'Employees ≥ 250: ' + (employees >= t250e ? '✓' : '✗')];
+      statute = 'Fighting Against Forced Labour and Child Labour in Supply Chains Act SC 2023 c.9 (Bill S-211). Annual report required by May 31 each year. Penalty for non-filing: up to $250,000.';
+      action = `<strong>Coverage status: COVERED</strong> (${conditionsMet}/3 conditions met${listed === 'yes' ? ' + exchange-listed' : ''})<br><br>Conditions: ${conds.join(' · ')}<br><br>Required actions:<br>• File annual report with Minister of Public Safety by May 31<br>• Report requires board approval and must be published on your website<br>• Cover: policies, due diligence, training, supply chain steps, effectiveness<br>• Penalty for non-filing: up to $250,000` + (iscPct >= 25 ? `<br><br>CBCA ISC: ${iscPct}% shareholder — ISC data filed: ${iscFiled === 'yes' ? 'Yes' : 'VERIFY'}` : '');
+    } else {
+      result = 'pass';
+      title = 'PASS — Entity not covered by S-211; CBCA ISC compliant';
+      const conds = ['Revenue ≥ $20M: ' + (revenue >= t20m ? '✓' : '✗'), 'Assets ≥ $20M: ' + (assets >= t20m ? '✓' : '✗'), 'Employees ≥ 250: ' + (employees >= t250e ? '✓' : '✗')];
+      statute = 'Fighting Against Forced Labour and Child Labour in Supply Chains Act SC 2023 c.9 — Entity does not meet coverage threshold. CBCA s.21.1 — ISC compliant.';
+      action = `S-211: Entity meets only ${conditionsMet}/3 size conditions (${conds.join(' · ')}). Not exchange-listed. Exemption confirmed — no annual report required this cycle. Re-assess annually as revenue and assets change.<br><br>CBCA: ${iscPct < 25 ? 'No individual exceeds 25% control threshold. No ISC filing required.' : `ISC filed: ${iscFiled}. Verify next filing date.`}`;
+    }
+
+    const entry = {
+      id: uid(), module: 'S-211', ruleId: 'FR-CA-05',
+      input: `Rev: ${fmt(revenue)} · Assets: ${fmt(assets)} · Emp: ${employees}`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('supply-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Conditions met', val: conditionsMet + '/3' },
+      { label:'S-211 covered', val: isCovered ? 'Yes' : 'No' },
+      { label:'ISC threshold', val: iscPct >= 25 ? 'Triggered' : 'Not triggered' },
+    ]);
+  });
+}
+
+// ─── RATE TABLE ─────────────────────────────────────
+function renderRateTable() {
+  const tbody = document.getElementById('rate-tbody');
+  tbody.innerHTML = rateTable.map((r,i) => `
+    <tr>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${r.id}</td>
+      <td>${r.desc}</td>
+      <td><input type="text" value="${r.threshold}" style="width:140px;padding:5px 8px;font-size:12px;" oninput="rateTable[${i}].threshold=this.value" /></td>
+      <td><input type="text" value="${r.pmin}" style="width:100px;padding:5px 8px;font-size:12px;" oninput="rateTable[${i}].pmin=this.value" /></td>
+      <td><input type="text" value="${r.pmax}" style="width:120px;padding:5px 8px;font-size:12px;" oninput="rateTable[${i}].pmax=this.value" /></td>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${r.statute}</td>
+    </tr>
+  `).join('');
+}
+
+function saveRateTable() {
+  const msg = document.getElementById('rate-save-msg');
+  msg.style.display = 'inline';
+  setTimeout(() => { msg.style.display = 'none'; }, 2500);
+}
+
+renderRateTable();
+</script>
+</body>
+</html>

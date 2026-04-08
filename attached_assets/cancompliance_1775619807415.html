@@ -1,0 +1,2768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CanCompliance — Canada Compliance Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg: #0d0d0b;
+  --bg2: #141412;
+  --bg3: #1c1c19;
+  --bg4: #242420;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0ede6;
+  --text2: #9a9890;
+  --text3: #5a5a54;
+  --accent: #d4f542;
+  --accent2: #b8d828;
+  --red: #ff4d3a;
+  --red-bg: rgba(255,77,58,0.1);
+  --amber: #f5a623;
+  --amber-bg: rgba(245,166,35,0.1);
+  --green: #36c97e;
+  --green-bg: rgba(54,201,126,0.1);
+  --blue: #4fa3f7;
+  --blue-bg: rgba(79,163,247,0.1);
+  --mono: 'IBM Plex Mono', monospace;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Manrope', system-ui, sans-serif;
+  --r: 8px;
+  --r2: 12px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── SIDEBAR ─────────────────────────────── */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 200;
+}
+
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo-mark {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.logo-name {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--text);
+  font-style: italic;
+}
+
+.sidebar-section {
+  padding: 16px 12px 8px;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--r);
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 400;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  margin-bottom: 2px;
+}
+
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+
+.nav-item.active {
+  background: var(--bg3);
+  color: var(--text);
+  border-color: var(--border2);
+}
+
+.nav-item.active .nav-dot { background: var(--accent); }
+
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text3);
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.nav-badge {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--bg4);
+  color: var(--text3);
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
+
+/* ─── MAIN CONTENT ─────────────────────────── */
+.main {
+  margin-left: 240px;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.topbar {
+  height: 56px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.topbar-sub {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+}
+
+.topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn {
+  padding: 7px 16px;
+  border-radius: var(--r);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text2);
+}
+
+.btn:hover { background: var(--bg3); color: var(--text); }
+
+.btn-accent {
+  background: var(--accent);
+  color: #0d0d0b;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-accent:hover { background: var(--accent2); border-color: var(--accent2); color: #0d0d0b; }
+
+.content { padding: 28px; }
+
+/* ─── PANELS ───────────────────────────────── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* ─── PAGE HEADER ─────────────────────────── */
+.page-header {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.page-title {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.page-desc {
+  font-size: 13px;
+  color: var(--text2);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* ─── METRIC CARDS ────────────────────────── */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.metric {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 16px 18px;
+}
+
+.metric-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.metric-val {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-val.green { color: var(--green); }
+.metric-val.red { color: var(--red); }
+.metric-val.amber { color: var(--amber); }
+
+.metric-sub { font-size: 11px; color: var(--text3); }
+
+/* ─── CARDS ────────────────────────────────── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.card-sub {
+  font-size: 11px;
+  color: var(--text3);
+  font-family: var(--mono);
+  margin-top: 2px;
+}
+
+.card-body { padding: 20px; }
+
+/* ─── FORM ELEMENTS ───────────────────────── */
+.form-group { margin-bottom: 16px; }
+
+label {
+  display: block;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 6px;
+}
+
+input[type=text], input[type=number], textarea, select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: none;
+}
+
+input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus {
+  border-color: var(--accent);
+}
+
+textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+select option { background: var(--bg3); }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+/* ─── RESULT DISPLAY ──────────────────────── */
+.result-box {
+  border-radius: var(--r2);
+  padding: 20px;
+  margin-top: 20px;
+  display: none;
+  animation: fadeUp 0.3s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-box.pass { background: var(--green-bg); border: 1px solid rgba(54,201,126,0.25); }
+.result-box.fail { background: var(--red-bg); border: 1px solid rgba(255,77,58,0.25); }
+.result-box.flag { background: var(--amber-bg); border: 1px solid rgba(245,166,35,0.25); }
+.result-box.block { background: rgba(255,30,0,0.14); border: 1px solid rgba(255,30,0,0.35); }
+
+.result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.result-badge.pass { background: var(--green-bg); color: var(--green); }
+.result-badge.fail { background: var(--red-bg); color: var(--red); }
+.result-badge.flag { background: var(--amber-bg); color: var(--amber); }
+.result-badge.block { background: rgba(255,30,0,0.2); color: #ff3020; }
+
+.result-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.result-title.pass { color: var(--green); }
+.result-title.fail { color: var(--red); }
+.result-title.flag { color: var(--amber); }
+.result-title.block { color: #ff3020; }
+
+.result-statute {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text2);
+  background: rgba(0,0,0,0.2);
+  border-radius: 5px;
+  padding: 8px 12px;
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+.result-action { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+.result-meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+.result-meta-item {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text3);
+}
+
+.result-meta-item span { color: var(--text2); }
+
+/* ─── AUDIT TABLE ─────────────────────────── */
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.audit-table th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text3);
+  padding: 10px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-table td {
+  padding: 11px 14px;
+  font-size: 12px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.audit-table tr:last-child td { border-bottom: none; }
+.audit-table tr:hover td { background: var(--bg3); }
+
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.tag-pass { background: var(--green-bg); color: var(--green); }
+.tag-fail { background: var(--red-bg); color: var(--red); }
+.tag-flag { background: var(--amber-bg); color: var(--amber); }
+.tag-block { background: rgba(255,30,0,0.15); color: #ff4030; }
+
+/* ─── CHECKBOX GROUPS ─────────────────────── */
+.check-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.check-item:hover { border-color: var(--border2); }
+
+.check-item input[type=checkbox] {
+  width: 16px; height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.check-item-label { font-size: 13px; color: var(--text); flex: 1; }
+.check-item-sub { font-size: 11px; color: var(--text3); font-family: var(--mono); }
+
+/* ─── PROGRESS BAR ────────────────────────── */
+.progress-bar {
+  height: 3px;
+  background: var(--bg4);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+/* ─── MODULE OVERVIEW CARDS ───────────────── */
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.module-overview-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.module-overview-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 2px 0 0 2px;
+}
+
+.module-overview-card.m-ccpsa::before { background: var(--red); }
+.module-overview-card.m-cpla::before { background: var(--blue); }
+.module-overview-card.m-fintrac::before { background: var(--amber); }
+.module-overview-card.m-esg::before { background: var(--green); }
+.module-overview-card.m-supply::before { background: #a78bfa; }
+
+.module-overview-card:hover {
+  border-color: var(--border2);
+  background: var(--bg3);
+  transform: translateY(-1px);
+}
+
+.mod-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.mod-tag.ccpsa { color: var(--red); }
+.mod-tag.cpla { color: var(--blue); }
+.mod-tag.fintrac { color: var(--amber); }
+.mod-tag.esg { color: var(--green); }
+.mod-tag.supply { color: #a78bfa; }
+
+.mod-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.mod-act { font-size: 11px; color: var(--text3); margin-bottom: 14px; }
+.mod-rules { font-family: var(--mono); font-size: 10px; color: var(--text3); }
+
+/* ─── DEADLINE CARDS ──────────────────────── */
+.deadline-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+
+.deadline-date {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 8px 12px;
+  text-align: center;
+  min-width: 56px;
+}
+
+.deadline-month { font-family: var(--mono); font-size: 9px; color: var(--text3); text-transform: uppercase; }
+.deadline-day { font-size: 22px; font-weight: 600; color: var(--text); line-height: 1; }
+
+.deadline-info { flex: 1; }
+.deadline-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.deadline-sub { font-size: 11px; color: var(--text3); }
+
+.deadline-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.ds-urgent { background: var(--red-bg); color: var(--red); }
+.ds-upcoming { background: var(--amber-bg); color: var(--amber); }
+.ds-ok { background: var(--green-bg); color: var(--green); }
+
+/* ─── RANGE ───────────────────────────────── */
+input[type=range] {
+  width: 100%;
+  accent-color: var(--accent);
+  background: transparent;
+  height: 4px;
+  cursor: pointer;
+}
+
+/* ─── DIVIDER ─────────────────────────────── */
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ─── SCROLL ──────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 2px; }
+
+/* ─── ANIMATIONS ──────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.running-indicator {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 14px;
+}
+
+.running-indicator.show { display: flex; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- ─── SIDEBAR ─── -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">CA · Federal</div>
+    <div class="logo-name">CanCompliance</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Overview</div>
+    <div class="nav-item active" onclick="showPanel('dashboard', this)">
+      <div class="nav-dot"></div> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPanel('deadlines', this)">
+      <div class="nav-dot"></div> Deadlines
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPanel('audit', this)">
+      <div class="nav-dot"></div> Audit trail
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Federal — built</div>
+    <div class="nav-item" onclick="showPanel('ccpsa', this)">
+      <div class="nav-dot"></div> CCPSA — Product safety
+    </div>
+    <div class="nav-item" onclick="showPanel('cpla', this)">
+      <div class="nav-dot"></div> CPLA — Bilingualism
+    </div>
+    <div class="nav-item" onclick="showPanel('fintrac', this)">
+      <div class="nav-dot"></div> FINTRAC — AML / KYC
+    </div>
+    <div class="nav-item" onclick="showPanel('esg', this)">
+      <div class="nav-dot"></div> ESG — Greenwashing
+    </div>
+    <div class="nav-item" onclick="showPanel('supply', this)">
+      <div class="nav-dot"></div> S-211 — Supply chain
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Federal — new</div>
+    <div class="nav-item" onclick="showPanel('payroll', this)">
+      <div class="nav-dot"></div> Payroll — CPP / EI / CRA
+    </div>
+    <div class="nav-item" onclick="showPanel('gsthst', this)">
+      <div class="nav-dot"></div> GST / HST engine
+    </div>
+    <div class="nav-item" onclick="showPanel('privacy', this)">
+      <div class="nav-dot"></div> Privacy — PIPEDA / Law 25
+    </div>
+    <div class="nav-item" onclick="showPanel('customs', this)">
+      <div class="nav-dot"></div> CBSA — Import / export
+    </div>
+    <div class="nav-item" onclick="showPanel('ai', this)">
+      <div class="nav-dot"></div> AI governance
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Provincial — new</div>
+    <div class="nav-item" onclick="showPanel('employment', this)">
+      <div class="nav-dot"></div> Employment standards
+    </div>
+    <div class="nav-item" onclick="showPanel('safety', this)">
+      <div class="nav-dot"></div> Workplace safety / WSIB
+    </div>
+    <div class="nav-item" onclick="showPanel('epr', this)">
+      <div class="nav-dot"></div> EPR — Environment
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-label">Settings</div>
+    <div class="nav-item" onclick="showPanel('ratetable', this)">
+      <div class="nav-dot"></div> Rate table
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      <span>Engine online · v2.0 · 13 modules</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div>
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-sub" id="topbar-sub">Canada Federal Compliance Engine</div>
+  </div>
+  <div class="topbar-right">
+    <button class="btn">Export audit</button>
+    <button class="btn btn-accent">+ New check</button>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ═══════════════════════════════════════ -->
+<!-- DASHBOARD -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel active" id="panel-dashboard">
+  <div class="page-header">
+    <div class="page-eyebrow">System overview</div>
+    <div class="page-title">Compliance dashboard</div>
+    <div class="page-desc">Real-time status across all Canadian regulatory modules. All checks logged to 6-year audit trail.</div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric">
+      <div class="metric-label">Checks run</div>
+      <div class="metric-val" id="m-total">0</div>
+      <div class="metric-sub">All modules</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Passed</div>
+      <div class="metric-val green" id="m-pass">0</div>
+      <div class="metric-sub">Compliant</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Failed</div>
+      <div class="metric-val red" id="m-fail">0</div>
+      <div class="metric-sub">Action required</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Flagged</div>
+      <div class="metric-val amber" id="m-flag">0</div>
+      <div class="metric-sub">Lawyer review</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Blocked</div>
+      <div class="metric-val red" id="m-block">0</div>
+      <div class="metric-sub">Hard stop</div>
+    </div>
+  </div>
+
+  <div class="modules-grid">
+    <div class="module-overview-card m-ccpsa" onclick="showPanel('ccpsa', null)">
+      <div class="mod-tag ccpsa">Module A</div><div class="mod-name">CCPSA — Product Safety</div>
+      <div class="mod-act">Canada Consumer Product Safety Act</div><div class="mod-rules">FR-CA-01 → FR-CA-13 · Built</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-cpla" onclick="showPanel('cpla', null)">
+      <div class="mod-tag cpla">Module B</div><div class="mod-name">CPLA — Bilingualism</div>
+      <div class="mod-act">Consumer Packaging & Labelling Act + Bill 96</div><div class="mod-rules">FR-CA-02 → FR-CA-14 · Built</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-fintrac" onclick="showPanel('fintrac', null)">
+      <div class="mod-tag fintrac">Module C</div><div class="mod-name">FINTRAC — AML / KYC</div>
+      <div class="mod-act">PCMLTFA · PCI DSS 4.0 · NI 93-101</div><div class="mod-rules">FR-CA-03 → FR-CA-16 · Built</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-esg" onclick="showPanel('esg', null)">
+      <div class="mod-tag esg">Module D</div><div class="mod-name">ESG — Greenwashing</div>
+      <div class="mod-act">Competition Act · Bill C-59 · OSFI B-15</div><div class="mod-rules">FR-CA-04 → FR-CA-18 · Built</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card m-supply" onclick="showPanel('supply', null)">
+      <div class="mod-tag supply">Module E</div><div class="mod-name">S-211 — Supply Chain</div>
+      <div class="mod-act">Forced Labour Act · CBCA Beneficial Ownership</div><div class="mod-rules">FR-CA-05 → FR-CA-20 · Built</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid var(--amber)" onclick="showPanel('payroll', null)">
+      <div class="mod-tag" style="color:var(--amber)">Module F</div><div class="mod-name">Payroll — CPP / EI / CRA</div>
+      <div class="mod-act">Income Tax Act · EI Act · CPP Act</div><div class="mod-rules">FR-CA-F01 · 1.2M employers in scope</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid var(--blue)" onclick="showPanel('gsthst', null)">
+      <div class="mod-tag" style="color:var(--blue)">Module G</div><div class="mod-name">GST / HST Engine</div>
+      <div class="mod-act">Excise Tax Act · CRA · $30K threshold</div><div class="mod-rules">FR-CA-G01 · 900K businesses in scope</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid var(--green)" onclick="showPanel('employment', null)">
+      <div class="mod-tag" style="color:var(--green)">Module H</div><div class="mod-name">Employment Standards</div>
+      <div class="mod-act">ESA (ON) · Canada Labour Code · Bill 30</div><div class="mod-rules">FR-CA-H01 · All 1.2M employers</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid #a78bfa" onclick="showPanel('privacy', null)">
+      <div class="mod-tag" style="color:#a78bfa">Module I</div><div class="mod-name">Privacy — PIPEDA / Law 25</div>
+      <div class="mod-act">PIPEDA · Quebec Law 25 · Incoming CPPA</div><div class="mod-rules">FR-CA-I01 · 1.1M businesses</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid var(--red)" onclick="showPanel('safety', null)">
+      <div class="mod-tag" style="color:var(--red)">Module J</div><div class="mod-name">Workplace Safety — OHSA</div>
+      <div class="mod-act">OHSA · WorkSafeBC · WCB · CNESST</div><div class="mod-rules">FR-CA-J01 · 800K employers</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid var(--amber)" onclick="showPanel('customs', null)">
+      <div class="mod-tag" style="color:var(--amber)">Module K</div><div class="mod-name">CBSA — Import / Export</div>
+      <div class="mod-act">Customs Act · CARM (Oct 2024) · CUSMA</div><div class="mod-rules">FR-CA-K01 · 60K importers</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid var(--blue)" onclick="showPanel('ai', null)">
+      <div class="mod-tag" style="color:var(--blue)">Module L</div><div class="mod-name">AI Governance</div>
+      <div class="mod-act">Workers for Workers IV · Law 25 · AIDA</div><div class="mod-rules">FR-CA-L01 · 200K+ businesses</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+    <div class="module-overview-card" style="border-left:3px solid var(--green)" onclick="showPanel('epr', null)">
+      <div class="mod-tag" style="color:var(--green)">Module M</div><div class="mod-name">EPR — Environment</div>
+      <div class="mod-act">Blue Box (ON) · CEPA · Product Stewardship</div><div class="mod-rules">FR-CA-M01 · 100K producers</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Recent checks</div>
+        <div class="card-sub">Latest compliance activity</div>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>Check ID</th>
+            <th>Module</th>
+            <th>Rule</th>
+            <th>Input</th>
+            <th>Result</th>
+            <th>Statute</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="recent-checks">
+          <tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">No checks run yet — use any module to start</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE A: CCPSA -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-ccpsa">
+  <div class="page-header">
+    <div class="page-eyebrow">Module A · FR-CA-01</div>
+    <div class="page-title">CCPSA Product Safety</div>
+    <div class="page-desc">Danger checker for hazardous substances. Hard BLOCK if lead, phthalates, or small parts exceed legal limits. Generates 6-year document trail on every check.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Product composition check</div>
+        <div class="card-sub">Canada Consumer Product Safety Act · Toys Regulations SOR/2011-17</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product name</label>
+          <input type="text" id="cc-name" placeholder="e.g. Wooden building blocks" />
+        </div>
+        <div class="form-group">
+          <label>Product category</label>
+          <select id="cc-cat">
+            <option value="toy">Children's toy (under 14 yrs)</option>
+            <option value="electronics">Electronics / appliance</option>
+            <option value="textile">Textile / clothing</option>
+            <option value="furniture">Furniture</option>
+            <option value="other">Other consumer product</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>Lead content (mg/kg)</label>
+          <input type="number" id="cc-lead" placeholder="0" min="0" step="0.1"/>
+        </div>
+        <div class="form-group">
+          <label>Phthalates % by mass</label>
+          <input type="number" id="cc-phthalate" placeholder="0.00" min="0" step="0.001"/>
+        </div>
+        <div class="form-group">
+          <label>Smallest part diameter (mm)</label>
+          <input type="number" id="cc-parts" placeholder="0" min="0" step="0.1"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Supplier name</label>
+          <input type="text" id="cc-supplier" placeholder="Supplier / manufacturer" />
+        </div>
+        <div class="form-group">
+          <label>Country of origin</label>
+          <input type="text" id="cc-origin" placeholder="e.g. China" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Hazardous material flags</label>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" id="cc-flam" />
+            <span class="check-item-label">Contains flammable materials</span>
+            <span class="check-item-sub">CCPSA s.7</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="cc-asbestos" />
+            <span class="check-item-label">Contains asbestos or asbestos-like fibers</span>
+            <span class="check-item-sub">Schedule 2 — absolute prohibition</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn btn-accent" onclick="runCCPSA()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run CCPSA check
+      </button>
+
+      <div class="running-indicator" id="ccpsa-spinner">
+        <div class="spinner"></div> Running compliance check...
+      </div>
+
+      <div class="result-box" id="ccpsa-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE B: CPLA BILINGUALISM -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-cpla">
+  <div class="page-header">
+    <div class="page-eyebrow">Module B · FR-CA-02</div>
+    <div class="page-title">CPLA Bilingualism Validator</div>
+    <div class="page-desc">Validates EN + FR requirements under the Consumer Packaging and Labelling Act. Applies Quebec Bill 96 French prominence rules if distributing in Quebec.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Label text analysis</div>
+        <div class="card-sub">Consumer Packaging and Labelling Act · Quebec Charter of the French Language (Bill 96)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Product name (English)</label>
+          <input type="text" id="cp-en-name" placeholder="e.g. Organic Granola" />
+        </div>
+        <div class="form-group">
+          <label>Product name (French)</label>
+          <input type="text" id="cp-fr-name" placeholder="e.g. Granola biologique" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Net quantity declaration (English)</label>
+          <input type="text" id="cp-en-qty" placeholder="e.g. 500 g" />
+        </div>
+        <div class="form-group">
+          <label>Net quantity declaration (French)</label>
+          <input type="text" id="cp-fr-qty" placeholder="e.g. 500 g" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Dealer name & address (English)</label>
+          <input type="text" id="cp-en-dealer" placeholder="Company name, city, province" />
+        </div>
+        <div class="form-group">
+          <label>Dealer info in French?</label>
+          <select id="cp-dealer-fr">
+            <option value="yes">Yes — French version present</option>
+            <option value="no">No — English only</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>French font size vs English</label>
+          <select id="cp-prominence">
+            <option value="equal">Equal or larger</option>
+            <option value="smaller">Smaller than English</option>
+            <option value="much-smaller">Much smaller than English</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Distribution provinces</label>
+          <select id="cp-province">
+            <option value="national">National (all provinces)</option>
+            <option value="qc">Quebec only</option>
+            <option value="non-qc">Outside Quebec only</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Trademark / brand name</label>
+        <input type="text" id="cp-trademark" placeholder="e.g. Fresh Harvest Granola™ (descriptive terms need French translation)" />
+      </div>
+
+      <div class="form-group">
+        <label>Manufacture date</label>
+        <select id="cp-mfr-date">
+          <option value="after">After June 1, 2025 (new rules apply immediately)</option>
+          <option value="before">Before June 1, 2025 (grace period until June 1, 2027)</option>
+        </select>
+      </div>
+
+      <button class="btn btn-accent" onclick="runCPLA()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run bilingualism check
+      </button>
+
+      <div class="running-indicator" id="cpla-spinner">
+        <div class="spinner"></div> Analysing label...
+      </div>
+
+      <div class="result-box" id="cpla-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE C: FINTRAC -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-fintrac">
+  <div class="page-header">
+    <div class="page-eyebrow">Module C · FR-CA-03</div>
+    <div class="page-title">FINTRAC — AML / KYC</div>
+    <div class="page-desc">Triggers KYC verification and Suspicious Transaction Reports at the $10,000 CAD threshold. Logs all events to PCI DSS 4.0 standard.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Transaction compliance check</div>
+        <div class="card-sub">Proceeds of Crime (Money Laundering) and Terrorist Financing Act · PCMLTFA</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Transaction amount (CAD)</label>
+          <input type="number" id="ft-amount" placeholder="0.00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Transaction type</label>
+          <select id="ft-type">
+            <option value="payment">Payment / wire transfer</option>
+            <option value="cash">Cash transaction</option>
+            <option value="crypto">Crypto-asset</option>
+            <option value="trade">Securities trade</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Customer type</label>
+          <select id="ft-customer">
+            <option value="individual">Individual (personal)</option>
+            <option value="corporation">Corporation</option>
+            <option value="trust">Trust / partnership</option>
+            <option value="pep">Politically Exposed Person (PEP)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Business sector</label>
+          <select id="ft-sector">
+            <option value="general">General commerce</option>
+            <option value="mse">Money services</option>
+            <option value="realestate">Real estate</option>
+            <option value="gambling">Gambling / gaming</option>
+            <option value="crypto">Crypto / virtual assets</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Suspicious indicators (select all that apply)</label>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" id="ft-s1" />
+            <span class="check-item-label">Unusual payment method or pattern</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ft-s2" />
+            <span class="check-item-label">Customer refuses to provide ID or information</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ft-s3" />
+            <span class="check-item-label">Transaction inconsistent with customer's business</span>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ft-s4" />
+            <span class="check-item-label">Structured to avoid reporting thresholds</span>
+          </label>
+        </div>
+      </div>
+
+      <button class="btn btn-accent" onclick="runFINTRAC()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run FINTRAC check
+      </button>
+
+      <div class="running-indicator" id="fintrac-spinner">
+        <div class="spinner"></div> Processing transaction data...
+      </div>
+
+      <div class="result-box" id="fintrac-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE D: ESG -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-esg">
+  <div class="page-header">
+    <div class="page-eyebrow">Module D · FR-CA-04</div>
+    <div class="page-title">ESG — Greenwashing Detector</div>
+    <div class="page-desc">Scans marketing text for environmental claims requiring substantiation under the Competition Act (Bill C-59). Returns FLAG with penalty exposure calculation.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Environmental claim analysis</div>
+        <div class="card-sub">Competition Act s.74.01 · Bill C-59 Anti-Greenwashing · OSFI B-15</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-group">
+        <label>Marketing copy / environmental claim</label>
+        <textarea id="esg-text" placeholder="Paste your marketing text, product description, or environmental claim here...&#10;&#10;e.g. 'Our packaging is 100% carbon neutral and eco-friendly. We are committed to net zero by 2030 using sustainable manufacturing.'"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Annual worldwide revenue (CAD)</label>
+          <input type="number" id="esg-revenue" placeholder="0" min="0" />
+        </div>
+        <div class="form-group">
+          <label>Claim context</label>
+          <select id="esg-context">
+            <option value="product">Product label / packaging</option>
+            <option value="website">Website / marketing</option>
+            <option value="securities">Securities / ESG disclosure</option>
+            <option value="advertising">Paid advertising</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Substantiation available?</label>
+        <select id="esg-proof">
+          <option value="none">No testing or methodology available</option>
+          <option value="partial">Partial — some supporting data</option>
+          <option value="intl">Yes — internationally recognized methodology</option>
+          <option value="canadian">Yes — Canadian government standard</option>
+        </select>
+      </div>
+
+      <button class="btn btn-accent" onclick="runESG()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Scan for greenwashing
+      </button>
+
+      <div class="running-indicator" id="esg-spinner">
+        <div class="spinner"></div> Scanning for regulated keywords...
+      </div>
+
+      <div class="result-box" id="esg-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE E: SUPPLY CHAIN / S-211 -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-supply">
+  <div class="page-header">
+    <div class="page-eyebrow">Module E · FR-CA-05</div>
+    <div class="page-title">S-211 — Supply Chain & Beneficial Ownership</div>
+    <div class="page-desc">Calculates S-211 coverage threshold and generates May 31 report prompt. Validates CBCA Individuals with Significant Control (25% threshold).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">S-211 covered entity calculator</div>
+        <div class="card-sub">Fighting Against Forced Labour and Child Labour in Supply Chains Act (Bill S-211)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row-3">
+        <div class="form-group">
+          <label>Annual revenue (CAD)</label>
+          <input type="number" id="sc-revenue" placeholder="0" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>Total assets (CAD)</label>
+          <input type="number" id="sc-assets" placeholder="0" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>Number of employees</label>
+          <input type="number" id="sc-employees" placeholder="0" min="0"/>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Entity type</label>
+          <select id="sc-entity">
+            <option value="cbca">Federal corporation (CBCA)</option>
+            <option value="provincial">Provincial corporation</option>
+            <option value="importer">Importer of goods</option>
+            <option value="government">Government institution</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Listed on Canadian stock exchange?</label>
+          <select id="sc-listed">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div style="font-size:12px;font-family:var(--mono);color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.8px;">CBCA Beneficial Ownership (ISC)</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Largest shareholder % control</label>
+          <input type="number" id="sc-isc" placeholder="0" min="0" max="100" step="0.1"/>
+        </div>
+        <div class="form-group">
+          <label>ISC filed with Corporations Canada?</label>
+          <select id="sc-isc-filed">
+            <option value="yes">Yes — filed Jan 22, 2024 onwards</option>
+            <option value="no">No — not yet filed</option>
+            <option value="na">N/A — not a CBCA corporation</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-accent" onclick="runSupply()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">
+        Run S-211 + CBCA check
+      </button>
+
+      <div class="running-indicator" id="supply-spinner">
+        <div class="spinner"></div> Calculating thresholds...
+      </div>
+
+      <div class="result-box" id="supply-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- DEADLINES -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-deadlines">
+  <div class="page-header">
+    <div class="page-eyebrow">Compliance calendar</div>
+    <div class="page-title">Upcoming deadlines</div>
+    <div class="page-desc">All compliance filing dates tracked automatically. Alerts sent 30 days before each deadline.</div>
+  </div>
+
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">May</div><div class="deadline-day">31</div></div>
+    <div class="deadline-info"><div class="deadline-title">S-211 — Forced Labour Annual Report</div><div class="deadline-sub">Module E · Covered entities file with Minister of Public Safety · Penalty: up to $250,000</div></div>
+    <div class="deadline-status ds-upcoming">Mod E</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Mar</div><div class="deadline-day">31</div></div>
+    <div class="deadline-info"><div class="deadline-title">ON Blue Box EPR — Tonnage Report</div><div class="deadline-sub">Module M · Packaging producers file annual tonnage with Circular Materials Ontario · Penalty: $500K</div></div>
+    <div class="deadline-status ds-ok">Mod M</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">15th</div><div class="deadline-day">mo.</div></div>
+    <div class="deadline-info"><div class="deadline-title">CRA Payroll Remittance — Regular remitters</div><div class="deadline-sub">Module F · CPP + EI + income tax deductions · Penalty: 10% of unpaid + interest</div></div>
+    <div class="deadline-status ds-ok">Mod F</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">20th</div><div class="deadline-day">mo.</div></div>
+    <div class="deadline-info"><div class="deadline-title">FINTRAC — STR Monthly Reporting</div><div class="deadline-sub">Module C · Suspicious Transaction Reports · PCMLTFA s.7.1</div></div>
+    <div class="deadline-status ds-ok">Mod C</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Jun</div><div class="deadline-day">1</div></div>
+    <div class="deadline-info"><div class="deadline-title">Quebec Bill 96 — Full compliance deadline</div><div class="deadline-sub">Module B · Products manufactured before June 1 2025 · Grace period ends June 1 2027</div></div>
+    <div class="deadline-status ds-upcoming">Mod B</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Jan</div><div class="deadline-day">22</div></div>
+    <div class="deadline-info"><div class="deadline-title">CBCA ISC Annual Return Filing</div><div class="deadline-sub">Module E · Beneficial ownership data · Corporations Canada · Penalty: up to $200,000</div></div>
+    <div class="deadline-status ds-ok">Mod E</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">2026</div><div class="deadline-day">Q1</div></div>
+    <div class="deadline-info"><div class="deadline-title">Ontario AI Hiring Disclosure — Workers for Workers IV</div><div class="deadline-sub">Module L · Employers must disclose AI use in job postings · ESA obligation for all sizes</div></div>
+    <div class="deadline-status ds-upcoming">Mod L</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Nov</div><div class="deadline-day">1</div></div>
+    <div class="deadline-info"><div class="deadline-title">BC Pay Transparency Report — 50+ employees</div><div class="deadline-sub">Module H · Gender pay gap reporting · BC Pay Transparency Act · By Nov 1 2026</div></div>
+    <div class="deadline-status ds-ok">Mod H</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">GST</div><div class="deadline-day">var.</div></div>
+    <div class="deadline-info"><div class="deadline-title">GST / HST Filing — Monthly / quarterly / annual</div><div class="deadline-sub">Module G · 1 month after period end · Penalty: 5% unpaid + 1%/month interest</div></div>
+    <div class="deadline-status ds-ok">Mod G</div>
+  </div>
+  <div class="deadline-card">
+    <div class="deadline-date"><div class="deadline-month">Sept</div><div class="deadline-day">1</div></div>
+    <div class="deadline-info"><div class="deadline-title">BC Psychological Harassment Policy — Mandatory</div><div class="deadline-sub">Module J · In force since September 1 2025 · All BC employers · WorkSafeBC enforcement</div></div>
+    <div class="deadline-status ds-urgent">Mod J</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- AUDIT TRAIL -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-audit">
+  <div class="page-header">
+    <div class="page-eyebrow">Compliance record</div>
+    <div class="page-title">Full audit trail</div>
+    <div class="page-desc">Every check logged with statute citation, input hash, result, and timestamp. Retained for 6 years (CCPSA requirement).</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">All compliance checks</div>
+        <div class="card-sub">6-year retention policy active</div>
+      </div>
+      <button class="btn" onclick="clearAudit()">Clear log</button>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>Check ID</th>
+            <th>Module</th>
+            <th>Rule</th>
+            <th>Input summary</th>
+            <th>Result</th>
+            <th>Statute</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="audit-tbody">
+          <tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">Audit log is empty — run checks in any module</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- RATE TABLE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-ratetable">
+  <div class="page-header">
+    <div class="page-eyebrow">Admin · NFR-01</div>
+    <div class="page-title">Rate table — no-code admin</div>
+    <div class="page-desc">Update all thresholds, penalty values, and statutory references without a code deployment. Changes take effect on next check.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Current thresholds &amp; penalties</div>
+      <div class="card-sub" style="margin-top:2px">Edit values and click Save to update the engine</div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>Rule ID</th>
+            <th>Description</th>
+            <th>Threshold</th>
+            <th>Penalty min</th>
+            <th>Penalty max</th>
+            <th>Statute</th>
+          </tr>
+        </thead>
+        <tbody id="rate-tbody"></tbody>
+      </table>
+    </div>
+    <div style="padding:16px 20px;border-top:1px solid var(--border);">
+      <button class="btn btn-accent" onclick="saveRateTable()">Save changes</button>
+      <span id="rate-save-msg" style="font-family:var(--mono);font-size:11px;color:var(--green);margin-left:14px;display:none;">Changes saved</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE F: PAYROLL / CRA -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-payroll">
+  <div class="page-header">
+    <div class="page-eyebrow">Module F · FR-CA-F01</div>
+    <div class="page-title">Payroll — CPP / EI / CRA</div>
+    <div class="page-desc">Canada Pension Plan, Employment Insurance, and income tax deduction checker. Validates remittance deadlines and SR&ED eligibility. The #1 admin burden for Canadian employers.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Payroll deduction calculator</div>
+      <div class="card-sub">Income Tax Act · Employment Insurance Act · Canada Pension Plan Act · CRA</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Gross pay per period (CAD)</label><input type="number" id="py-gross" placeholder="0.00" min="0" step="0.01"/></div>
+        <div class="form-group"><label>Pay period</label><select id="py-period"><option value="weekly">Weekly</option><option value="biweekly" selected>Bi-weekly</option><option value="semimonthly">Semi-monthly</option><option value="monthly">Monthly</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Province of employment</label><select id="py-province"><option value="ON">Ontario</option><option value="QC">Quebec</option><option value="BC">British Columbia</option><option value="AB">Alberta</option><option value="MB">Manitoba</option><option value="SK">Saskatchewan</option><option value="NS">Nova Scotia</option><option value="NB">New Brunswick</option><option value="PE">PEI</option><option value="NL">Newfoundland</option></select></div>
+        <div class="form-group"><label>Employee age</label><select id="py-age"><option value="under18">Under 18</option><option value="18to69" selected>18–69</option><option value="70plus">70 or over</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>YTD CPP contributions (CAD)</label><input type="number" id="py-cpp-ytd" placeholder="0.00" min="0" step="0.01"/></div>
+        <div class="form-group"><label>YTD EI premiums (CAD)</label><input type="number" id="py-ei-ytd" placeholder="0.00" min="0" step="0.01"/></div>
+      </div>
+      <div class="form-group"><label>Employee type</label><select id="py-emptype"><option value="regular">Regular employee</option><option value="selfemployed">Self-employed / contractor</option><option value="casual">Casual / temporary</option></select></div>
+      <div class="form-group"><label>SR&amp;ED activities?</label><select id="py-sred"><option value="no">No R&amp;D activities</option><option value="yes">Yes — conducting scientific research or experimental development</option></select></div>
+      <button class="btn btn-accent" onclick="runPayroll()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run payroll check</button>
+      <div class="running-indicator" id="payroll-spinner"><div class="spinner"></div> Calculating deductions...</div>
+      <div class="result-box" id="payroll-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE G: GST/HST -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-gsthst">
+  <div class="page-header">
+    <div class="page-eyebrow">Module G · FR-CA-G01</div>
+    <div class="page-title">GST / HST Engine</div>
+    <div class="page-desc">Registration threshold checker, province-by-province rate calculator, input tax credit eligibility, and filing deadline tracker. Penalty: 5% of unpaid + 1%/month interest.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">GST / HST compliance check</div>
+      <div class="card-sub">Excise Tax Act · CRA GST/HST Rules · Small Supplier Threshold $30,000</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Annual taxable supplies (CAD)</label><input type="number" id="gst-revenue" placeholder="0" min="0"/></div>
+        <div class="form-group"><label>Currently GST/HST registered?</label><select id="gst-registered"><option value="no">No</option><option value="yes">Yes</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Supply type</label><select id="gst-type"><option value="taxable">Taxable supplies (standard)</option><option value="zero">Zero-rated (e.g. basic groceries, exports)</option><option value="exempt">Exempt (e.g. residential rent, health services)</option><option value="mixed">Mixed taxable and exempt</option></select></div>
+        <div class="form-group"><label>Province of sale (primary)</label><select id="gst-province"><option value="ON">Ontario — HST 13%</option><option value="QC">Quebec — GST 5% + QST 9.975%</option><option value="BC">British Columbia — GST 5% + PST 7%</option><option value="AB">Alberta — GST 5% only</option><option value="NS">Nova Scotia — HST 15%</option><option value="NB">New Brunswick — HST 15%</option><option value="NL">Newfoundland — HST 15%</option><option value="PE">PEI — HST 15%</option><option value="MB">Manitoba — GST 5% + PST 7%</option><option value="SK">Saskatchewan — GST 5% + PST 6%</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Filing frequency (if registered)</label><select id="gst-freq"><option value="annual">Annual (≤$1.5M revenue)</option><option value="quarterly">Quarterly ($1.5M–$6M)</option><option value="monthly">Monthly (>$6M)</option></select></div>
+        <div class="form-group"><label>Input tax credit purchases (CAD)</label><input type="number" id="gst-itc" placeholder="0" min="0"/></div>
+      </div>
+      <button class="btn btn-accent" onclick="runGST()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run GST/HST check</button>
+      <div class="running-indicator" id="gst-spinner"><div class="spinner"></div> Calculating tax obligations...</div>
+      <div class="result-box" id="gst-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE H: EMPLOYMENT STANDARDS -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-employment">
+  <div class="page-header">
+    <div class="page-eyebrow">Module H · FR-CA-H01</div>
+    <div class="page-title">Employment Standards Checker</div>
+    <div class="page-desc">Province-by-province minimum wage, overtime, termination notice, and leave entitlements. Covers Ontario Bill 30 (Nov 2025), BC psychological safety (Sept 2025), and Canada Labour Code 2024 amendments.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Employment compliance check</div>
+      <div class="card-sub">Canada Labour Code · ESA (ON) · Employment Standards Act (BC) · LSA (AB) · LNT (QC)</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Province of employment</label><select id="emp-province"><option value="ON">Ontario (ESA)</option><option value="BC">British Columbia</option><option value="AB">Alberta</option><option value="QC">Quebec (LNT)</option><option value="FED">Federal jurisdiction (Canada Labour Code)</option><option value="MB">Manitoba</option><option value="SK">Saskatchewan</option></select></div>
+        <div class="form-group"><label>Employee hourly wage (CAD)</label><input type="number" id="emp-wage" placeholder="0.00" min="0" step="0.01"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Weekly hours worked</label><input type="number" id="emp-hours" placeholder="40" min="0" max="168" step="0.5"/></div>
+        <div class="form-group"><label>Length of employment</label><select id="emp-tenure"><option value="under3m">Under 3 months</option><option value="3mto1y">3 months – 1 year</option><option value="1to3y">1–3 years</option><option value="3to5y">3–5 years</option><option value="5to10y">5–10 years</option><option value="over10y">Over 10 years</option></select></div>
+      </div>
+      <div class="form-group"><label>Employer size (employees in province)</label><select id="emp-size"><option value="under5">Under 5</option><option value="5to24">5–24</option><option value="25to49">25–49</option><option value="50to99">50–99</option><option value="100plus">100 or more</option></select></div>
+      <div class="form-group"><label>Compliance areas to check</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" id="emp-c1" checked/><span class="check-item-label">Minimum wage compliance</span></label>
+          <label class="check-item"><input type="checkbox" id="emp-c2" checked/><span class="check-item-label">Overtime entitlement</span></label>
+          <label class="check-item"><input type="checkbox" id="emp-c3" checked/><span class="check-item-label">Termination notice / severance</span></label>
+          <label class="check-item"><input type="checkbox" id="emp-c4"/><span class="check-item-label">Psychological harassment policy (BC mandatory Sept 2025)</span></label>
+          <label class="check-item"><input type="checkbox" id="emp-c5"/><span class="check-item-label">Electronic monitoring policy (ON 25+ employees)</span></label>
+          <label class="check-item"><input type="checkbox" id="emp-c6"/><span class="check-item-label">Right to disconnect policy (ON 25+ employees)</span></label>
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="runEmployment()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run employment standards check</button>
+      <div class="running-indicator" id="emp-spinner"><div class="spinner"></div> Checking provincial standards...</div>
+      <div class="result-box" id="emp-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE I: PRIVACY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-privacy">
+  <div class="page-header">
+    <div class="page-eyebrow">Module I · FR-CA-I01</div>
+    <div class="page-title">Privacy — PIPEDA &amp; Quebec Law 25</div>
+    <div class="page-desc">PIPEDA 10-principle checker, Quebec Law 25 PIA requirement, breach reporting obligations, and consent audit. Canada still runs on PIPEDA (2000) — Bill C-27 died Jan 2025. Quebec Law 25 is fully in force.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Data privacy compliance check</div>
+      <div class="card-sub">PIPEDA · Quebec Law 25 (Act 25) · Office of the Privacy Commissioner</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Organization type</label><select id="priv-type"><option value="federal">Federally regulated (bank, telecom, transport)</option><option value="private">Private sector — operates interprovincially</option><option value="qc">Quebec-based organization</option><option value="nonprofit">Non-profit / charity</option></select></div>
+        <div class="form-group"><label>Approximate number of individuals' data held</label><select id="priv-size"><option value="under100">Fewer than 100</option><option value="100to1000">100–1,000</option><option value="1000to10000">1,000–10,000</option><option value="over10000">Over 10,000</option></select></div>
+      </div>
+      <div class="form-group"><label>Data practices — check all that apply</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" id="priv-p1"/><span class="check-item-label">Collecting sensitive data (health, financial, biometric)</span><span class="check-item-sub">Requires express consent under PIPEDA</span></label>
+          <label class="check-item"><input type="checkbox" id="priv-p2"/><span class="check-item-label">Using automated decision systems (AI, algorithms)</span><span class="check-item-sub">Quebec Law 25 s.12.1 — disclosure required</span></label>
+          <label class="check-item"><input type="checkbox" id="priv-p3"/><span class="check-item-label">Transferring data outside Canada</span><span class="check-item-sub">PIPEDA requires comparable protection</span></label>
+          <label class="check-item"><input type="checkbox" id="priv-p4"/><span class="check-item-label">Launching new tech project handling personal data</span><span class="check-item-sub">Quebec Law 25 — Privacy Impact Assessment required</span></label>
+          <label class="check-item"><input type="checkbox" id="priv-p5"/><span class="check-item-label">Had a data breach in last 12 months</span><span class="check-item-sub">PIPEDA — report to OPC if real risk of significant harm</span></label>
+          <label class="check-item"><input type="checkbox" id="priv-p6"/><span class="check-item-label">Collecting children's personal information</span><span class="check-item-sub">Heightened consent obligations</span></label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Privacy policy published?</label><select id="priv-policy"><option value="yes">Yes — publicly accessible</option><option value="no">No</option><option value="outdated">Yes but not updated in 2+ years</option></select></div>
+        <div class="form-group"><label>Privacy officer designated?</label><select id="priv-officer"><option value="yes">Yes</option><option value="no">No</option></select></div>
+      </div>
+      <button class="btn btn-accent" onclick="runPrivacy()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run privacy check</button>
+      <div class="running-indicator" id="priv-spinner"><div class="spinner"></div> Auditing privacy practices...</div>
+      <div class="result-box" id="priv-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE J: WORKPLACE SAFETY -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-safety">
+  <div class="page-header">
+    <div class="page-eyebrow">Module J · FR-CA-J01</div>
+    <div class="page-title">Workplace Safety — OHSA / WSIB / WCB</div>
+    <div class="page-desc">Ontario OHSA compliance, WSIB premium check, psychological safety policy requirement (BC Sept 2025), and joint health &amp; safety committee trigger. Ontario Bill 30 (Nov 2025) added new administrative penalties.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Workplace safety compliance check</div>
+      <div class="card-sub">OHSA (ON) · WorkSafeBC · WCB (AB) · CNESST (QC) · Canada OHS Regulations</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Province</label><select id="safe-province"><option value="ON">Ontario (OHSA)</option><option value="BC">British Columbia (WorkSafeBC)</option><option value="AB">Alberta (WCB)</option><option value="QC">Quebec (CNESST)</option><option value="FED">Federal (Canada OHS)</option></select></div>
+        <div class="form-group"><label>Number of employees</label><input type="number" id="safe-emp" placeholder="0" min="0"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Industry classification</label><select id="safe-industry"><option value="office">Office / professional services</option><option value="construction">Construction</option><option value="manufacturing">Manufacturing</option><option value="retail">Retail</option><option value="healthcare">Healthcare</option><option value="warehouse">Warehouse / logistics</option></select></div>
+        <div class="form-group"><label>Work environment</label><select id="safe-env"><option value="indoor">Indoor / office</option><option value="outdoor">Outdoor / field</option><option value="hybrid">Mixed indoor/outdoor</option><option value="remote">Remote / home-based</option></select></div>
+      </div>
+      <div class="form-group"><label>Safety programs in place</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" id="safe-s1"/><span class="check-item-label">Written health &amp; safety policy</span></label>
+          <label class="check-item"><input type="checkbox" id="safe-s2"/><span class="check-item-label">Joint health &amp; safety committee established</span><span class="check-item-sub">Required: ON 20+ employees, BC 20+ workers, FED 20+</span></label>
+          <label class="check-item"><input type="checkbox" id="safe-s3"/><span class="check-item-label">Psychological harassment prevention policy</span><span class="check-item-sub">BC mandatory from Sept 1, 2025</span></label>
+          <label class="check-item"><input type="checkbox" id="safe-s4"/><span class="check-item-label">Workplace Violence &amp; Harassment policy</span></label>
+          <label class="check-item"><input type="checkbox" id="safe-s5"/><span class="check-item-label">WSIB / WCB premiums current</span></label>
+          <label class="check-item"><input type="checkbox" id="safe-s6"/><span class="check-item-label">Defibrillator installed (ON building 50+ employees)</span></label>
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="runSafety()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run safety compliance check</button>
+      <div class="running-indicator" id="safe-spinner"><div class="spinner"></div> Checking safety obligations...</div>
+      <div class="result-box" id="safe-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE K: CUSTOMS / CBSA -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-customs">
+  <div class="page-header">
+    <div class="page-eyebrow">Module K · FR-CA-K01</div>
+    <div class="page-title">CBSA — Import / Export Compliance</div>
+    <div class="page-desc">CARM registration checker, duty calculator, CUSMA preferential tariff eligibility, and countermeasure tariff tracker. CARM launched October 2024 — most SME importers missed registration.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Import / export compliance check</div>
+      <div class="card-sub">Customs Act · CARM · Export and Import Permits Act · CUSMA/USMCA</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Activity type</label><select id="cus-activity"><option value="import">Importing goods into Canada</option><option value="export">Exporting goods from Canada</option><option value="both">Both import and export</option></select></div>
+        <div class="form-group"><label>Country of origin (goods)</label><select id="cus-origin"><option value="US">United States</option><option value="CN">China</option><option value="MX">Mexico</option><option value="EU">European Union</option><option value="UK">United Kingdom</option><option value="IN">India</option><option value="OTHER">Other</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>HS code (first 4 digits)</label><input type="text" id="cus-hs" placeholder="e.g. 8471 (computers)" maxlength="10"/></div>
+        <div class="form-group"><label>Shipment value (CAD)</label><input type="number" id="cus-value" placeholder="0" min="0"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>CARM registered?</label><select id="cus-carm"><option value="yes">Yes — registered with CBSA CARM portal</option><option value="no">No — not registered</option><option value="unsure">Unsure</option></select></div>
+        <div class="form-group"><label>CUSMA / USMCA origin qualification?</label><select id="cus-cusma"><option value="yes">Yes — meets rules of origin</option><option value="no">No or uncertain</option></select></div>
+      </div>
+      <div class="form-group"><label>Product category flags</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" id="cus-f1"/><span class="check-item-label">Steel or aluminum product</span><span class="check-item-sub">Canadian surtax / US Section 232 countermeasures</span></label>
+          <label class="check-item"><input type="checkbox" id="cus-f2"/><span class="check-item-label">Consumer electronics or EV components</span><span class="check-item-sub">Potential 100% surtax on Chinese EVs</span></label>
+          <label class="check-item"><input type="checkbox" id="cus-f3"/><span class="check-item-label">Food, plant, or animal product</span><span class="check-item-sub">CFIA permit required</span></label>
+          <label class="check-item"><input type="checkbox" id="cus-f4"/><span class="check-item-label">Dual-use / controlled goods</span><span class="check-item-sub">Export Control List — permit may be required</span></label>
+        </div>
+      </div>
+      <button class="btn btn-accent" onclick="runCustoms()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run CBSA compliance check</button>
+      <div class="running-indicator" id="cus-spinner"><div class="spinner"></div> Checking customs obligations...</div>
+      <div class="result-box" id="cus-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE L: AI GOVERNANCE -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-ai">
+  <div class="page-header">
+    <div class="page-eyebrow">Module L · FR-CA-L01</div>
+    <div class="page-title">AI Governance</div>
+    <div class="page-desc">Ontario Workers for Workers Four Act (AI hiring disclosure, 2026), Quebec Law 25 automated decision disclosure, and federal AIDA readiness pre-check. No federal AI law exists yet — build compliance now before legislation passes.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">AI governance compliance check</div>
+      <div class="card-sub">Workers for Workers Four Act (ON 2026) · Quebec Law 25 s.12.1 · Future AIDA · PIPEDA automated decisions</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Province of operation</label><select id="ai-province"><option value="ON">Ontario</option><option value="QC">Quebec</option><option value="BC">British Columbia</option><option value="FED">Federal jurisdiction</option><option value="OTHER">Other province</option></select></div>
+        <div class="form-group"><label>Number of employees</label><input type="number" id="ai-emp" placeholder="0" min="0"/></div>
+      </div>
+      <div class="form-group"><label>AI use cases — select all that apply</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" id="ai-u1"/><span class="check-item-label">AI-assisted hiring / resume screening</span><span class="check-item-sub">ON 2026: must disclose AI use in hiring to candidates</span></label>
+          <label class="check-item"><input type="checkbox" id="ai-u2"/><span class="check-item-label">AI makes or recommends decisions affecting individuals</span><span class="check-item-sub">Quebec Law 25 s.12.1: disclosure + right to explanation required</span></label>
+          <label class="check-item"><input type="checkbox" id="ai-u3"/><span class="check-item-label">AI used in credit, insurance, or financial decisions</span><span class="check-item-sub">High-impact — AIDA scope when enacted</span></label>
+          <label class="check-item"><input type="checkbox" id="ai-u4"/><span class="check-item-label">AI processes personal data of employees or customers</span><span class="check-item-sub">PIPEDA consent + transparency obligations apply now</span></label>
+          <label class="check-item"><input type="checkbox" id="ai-u5"/><span class="check-item-label">AI used in content moderation or profiling</span><span class="check-item-sub">Privacy risk — document and assess</span></label>
+          <label class="check-item"><input type="checkbox" id="ai-u6"/><span class="check-item-label">Electronic monitoring of employees</span><span class="check-item-sub">ON: written policy required for 25+ employees (ESA)</span></label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>AI disclosure policy published?</label><select id="ai-disclosure"><option value="yes">Yes</option><option value="no">No</option></select></div>
+        <div class="form-group"><label>Human review of AI decisions?</label><select id="ai-human"><option value="always">Always — human reviews every AI decision</option><option value="sometimes">Sometimes — spot checks only</option><option value="never">Never — fully automated</option></select></div>
+      </div>
+      <button class="btn btn-accent" onclick="runAI()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run AI governance check</button>
+      <div class="running-indicator" id="ai-spinner"><div class="spinner"></div> Assessing AI risk profile...</div>
+      <div class="result-box" id="ai-result"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- MODULE M: EPR / ENVIRONMENT -->
+<!-- ═══════════════════════════════════════ -->
+<div class="panel" id="panel-epr">
+  <div class="page-header">
+    <div class="page-eyebrow">Module M · FR-CA-M01</div>
+    <div class="page-title">EPR — Environmental &amp; Producer Responsibility</div>
+    <div class="page-desc">Ontario Blue Box EPR producer status, BC product stewardship programs, carbon pricing applicability, and CEPA substance notification. Most product manufacturers don't know they're "producers" under EPR law.</div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Environmental compliance check</div>
+      <div class="card-sub">CEPA · ON Blue Box (EPR) · BC Product Stewardship · QC 3RV-E · Greenhouse Gas Pollution Pricing Act</div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group"><label>Province of operation</label><select id="epr-province"><option value="ON">Ontario</option><option value="BC">British Columbia</option><option value="QC">Quebec</option><option value="AB">Alberta</option><option value="national">National (multiple provinces)</option></select></div>
+        <div class="form-group"><label>Business role</label><select id="epr-role"><option value="manufacturer">Manufacturer</option><option value="importer">Importer / brand owner</option><option value="retailer">Retailer (first to sell in province)</option><option value="distributor">Distributor</option></select></div>
+      </div>
+      <div class="form-group"><label>Products / materials — select all that apply</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" id="epr-p1"/><span class="check-item-label">Packaging materials (boxes, plastic, paper, metal, glass)</span><span class="check-item-sub">ON Blue Box EPR — producer registration required</span></label>
+          <label class="check-item"><input type="checkbox" id="epr-p2"/><span class="check-item-label">Electronics (computers, phones, appliances)</span><span class="check-item-sub">BC / ON / QC e-waste stewardship programs</span></label>
+          <label class="check-item"><input type="checkbox" id="epr-p3"/><span class="check-item-label">Batteries (primary or rechargeable)</span><span class="check-item-sub">BC Call2Recycle — mandatory stewardship</span></label>
+          <label class="check-item"><input type="checkbox" id="epr-p4"/><span class="check-item-label">Tires</span><span class="check-item-sub">ON / BC tire stewardship levies</span></label>
+          <label class="check-item"><input type="checkbox" id="epr-p5"/><span class="check-item-label">Paint or solvents</span><span class="check-item-sub">PaintCare / BC stewardship</span></label>
+          <label class="check-item"><input type="checkbox" id="epr-p6"/><span class="check-item-label">Business has over 50,000 tonnes CO2e annual emissions</span><span class="check-item-sub">GGPPA large emitter obligations</span></label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Annual Ontario packaging tonnage (kg)</label><input type="number" id="epr-tonnage" placeholder="0" min="0"/></div>
+        <div class="form-group"><label>EPR / stewardship program registered?</label><select id="epr-registered"><option value="no">No</option><option value="yes">Yes</option><option value="partial">Partially</option></select></div>
+      </div>
+      <button class="btn btn-accent" onclick="runEPR()" style="width:100%;padding:12px;margin-top:4px;font-size:13px;">Run environmental compliance check</button>
+      <div class="running-indicator" id="epr-spinner"><div class="spinner"></div> Checking environmental obligations...</div>
+      <div class="result-box" id="epr-result"></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+// ─── STATE ─────────────────────────────────────────
+const auditLog = [];
+const metrics = { total:0, pass:0, fail:0, flag:0, block:0 };
+
+let rateTable = [
+  { id:'FR-CA-01', desc:'Lead content limit (toys)', threshold:'90 mg/kg', pmin:'$5,000', pmax:'Criminal', statute:'Toys Regulations SOR/2011-17 s.23' },
+  { id:'FR-CA-01b', desc:'Phthalates limit (toys)', threshold:'0.1% by mass', pmin:'$5,000', pmax:'Criminal', statute:'Toys Regulations SOR/2011-17 s.25' },
+  { id:'FR-CA-02', desc:'Bilingualism — federal', threshold:'All consumer products', pmin:'$5,000', pmax:'$10,000', statute:'CPLA s.11' },
+  { id:'FR-CA-03', desc:'FINTRAC $10K trigger', threshold:'$10,000 CAD', pmin:'$1,000/day', pmax:'$500,000', statute:'PCMLTFA s.7' },
+  { id:'FR-CA-04', desc:'Greenwashing penalty — first violation', threshold:'Any unsubstantiated claim', pmin:'$750,000', pmax:'$10,000,000', statute:'Competition Act s.74.01' },
+  { id:'FR-CA-05', desc:'S-211 revenue threshold', threshold:'$20,000,000 CAD', pmin:'$0', pmax:'$250,000', statute:'S-211 s.3' },
+  { id:'FR-CA-10', desc:'CBCA ISC beneficial ownership', threshold:'25% shares/votes', pmin:'$0', pmax:'$200,000', statute:'CBCA s.21.1' },
+  { id:'FR-CA-F01', desc:'CPP contribution rate 2026', threshold:'$68,500 YMPE', pmin:'5.95% employee', pmax:'5.95% employer', statute:'Canada Pension Plan Act s.8' },
+  { id:'FR-CA-F02', desc:'EI premium rate 2026', threshold:'$63,200 max insurable', pmin:'1.64% employee', pmax:'2.296% employer', statute:'Employment Insurance Act s.66' },
+  { id:'FR-CA-G01', desc:'GST/HST small supplier threshold', threshold:'$30,000 CAD taxable supply', pmin:'5% unpaid', pmax:'+1%/month interest', statute:'Excise Tax Act s.148' },
+  { id:'FR-CA-H01', desc:'ON minimum wage 2025', threshold:'$17.20/hr general', pmin:'$500 per offence', pmax:'$100,000', statute:'ESA 2000 s.23.1' },
+  { id:'FR-CA-H02', desc:'BC minimum wage 2025', threshold:'$17.85/hr', pmin:'$500', pmax:'$10,000', statute:'BC Employment Standards Act s.16' },
+  { id:'FR-CA-H03', desc:'AB minimum wage 2025', threshold:'$15.00/hr', pmin:'$500', pmax:'$100,000', statute:'AB Employment Standards Code s.7' },
+  { id:'FR-CA-I01', desc:'PIPEDA breach reporting threshold', threshold:'Real risk of significant harm', pmin:'OPC investigation', pmax:'$100,000', statute:'PIPEDA s.10.1' },
+  { id:'FR-CA-J01', desc:'ON OHSA maximum penalty — corporation', threshold:'Any OHSA violation', pmin:'$0 (admin penalty)', pmax:'$1,500,000', statute:'OHSA s.66(2)(c)' },
+  { id:'FR-CA-K01', desc:'CARM — customs duty penalty', threshold:'Any underpayment', pmin:'25% of duty', pmax:'40% of duty', statute:'Customs Act s.109.1' },
+  { id:'FR-CA-M01', desc:'ON Blue Box EPR — producer registration', threshold:'Any packaging producer', pmin:'$0', pmax:'$500,000', statute:'Resource Recovery and Circular Economy Act s.42' },
+];
+
+// ─── MODULE F: PAYROLL ───────────────────────────────
+function runPayroll() {
+  runWithSpinner('payroll-spinner', () => {
+    const gross = parseFloat(document.getElementById('py-gross').value) || 0;
+    const period = document.getElementById('py-period').value;
+    const province = document.getElementById('py-province').value;
+    const age = document.getElementById('py-age').value;
+    const emptype = document.getElementById('py-emptype').value;
+    const sred = document.getElementById('py-sred').value;
+    const cppYtd = parseFloat(document.getElementById('py-cpp-ytd').value) || 0;
+    const eiYtd = parseFloat(document.getElementById('py-ei-ytd').value) || 0;
+
+    const fmt = n => '$' + Math.abs(n).toLocaleString('en-CA', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+    const periodsPerYear = {weekly:52, biweekly:26, semimonthly:24, monthly:12}[period];
+    const annualGross = gross * periodsPerYear;
+
+    const CPP_RATE = 0.0595;
+    const CPP_MAX = 3867.50;
+    const CPP_EXEMPTION = 3500 / periodsPerYear;
+    const EI_RATE = 0.0164;
+    const EI_MAX = 1037.28;
+
+    let cppDeduction = 0, eiDeduction = 0, itDeduction = 0;
+    let issues = [], result, title, statute, action;
+
+    if (emptype === 'selfemployed') {
+      result = 'flag';
+      title = 'FLAG — Self-employed / contractor: classification risk under Canada Labour Code 2025';
+      statute = 'Canada Labour Code s.167.1 (2025 amendment) — Presumption of employee status. As of 2025, if remuneration is paid, the person is presumed to be an employee unless the employer can rebut this presumption.';
+      action = 'As of 2025, the burden of proof that this worker is NOT an employee falls on you. Misclassifying an employee as a contractor can result in back-pay for CPP/EI (both shares), vacation pay, termination notice, and CRA penalties. Review working arrangement against the four-factor integration test.';
+    } else if (gross === 0) {
+      result = 'fail';
+      title = 'FAIL — No gross pay entered';
+      statute = 'Income Tax Act s.153 — Employer must withhold and remit income tax, CPP, and EI on all employment income.';
+      action = 'Enter the employee\'s gross pay to calculate required deductions and remittance obligations.';
+    } else {
+      if (age === '18to69') {
+        const cppRemaining = Math.max(0, CPP_MAX - cppYtd);
+        cppDeduction = Math.min(Math.max(0, (gross - CPP_EXEMPTION) * CPP_RATE), cppRemaining);
+      }
+      const eiRemaining = Math.max(0, EI_MAX - eiYtd);
+      eiDeduction = Math.min(gross * EI_RATE, eiRemaining);
+
+      const federalBasic = 15705 / periodsPerYear;
+      const taxableIncome = Math.max(0, gross - cppDeduction - eiDeduction - federalBasic);
+      const annualTaxable = taxableIncome * periodsPerYear;
+      let fedRate = annualTaxable <= 55867 ? 0.15 : annualTaxable <= 111733 ? 0.205 : annualTaxable <= 154906 ? 0.26 : annualTaxable <= 220000 ? 0.29 : 0.33;
+      itDeduction = (taxableIncome * fedRate) + (province === 'QC' ? 0 : gross * 0.05);
+
+      const netPay = gross - cppDeduction - eiDeduction - itDeduction;
+      const totalRemittance = cppDeduction * 2 + eiDeduction * 1.4;
+
+      const remittanceDue = annualGross < 25000 ? '15th of following month' : annualGross < 100000 ? '15th of following month' : '3rd Wednesday of current month';
+
+      result = 'pass';
+      title = `PASS — Payroll deductions calculated: net pay ${fmt(netPay)}`;
+      statute = 'Income Tax Act s.153 · Canada Pension Plan Act s.8 · Employment Insurance Act s.66 — Deductions and remittance obligations met.';
+      action = `<strong>Pay stub breakdown:</strong><br>Gross: ${fmt(gross)} | CPP: ${fmt(cppDeduction)} | EI: ${fmt(eiDeduction)} | Income tax (est.): ${fmt(itDeduction)} | Net pay: <strong>${fmt(netPay)}</strong><br><br><strong>Employer remittance:</strong> ${fmt(totalRemittance)} (CPP employer match: ${fmt(cppDeduction)} + EI employer: ${fmt(eiDeduction*1.4)})<br><strong>Remittance due:</strong> ${remittanceDue}<br>${sred === 'yes' ? '<br><strong>SR&ED note:</strong> Wages paid to employees conducting qualifying R&D may be eligible for SR&ED tax credits. Document activities contemporaneously — CRA requires contemporaneous records, not reconstructed records.' : ''}`;
+
+      if (province === 'QC') issues.push('Quebec employees: also subject to QPP (instead of CPP) and QPIP. File with Revenu Québec separately. This calculator shows federal only.');
+      if (annualGross > 250000) issues.push(`High earner: verify CPP2 (second additional contributions) applies above ${fmt(73200)} YAMPE threshold.`);
+    }
+
+    const entry = { id:uid(), module:'Payroll', ruleId:'FR-CA-F01', input:`${fmt(gross)} ${period} · ${province} · ${age}`, result:result.toUpperCase(), statute:statute.split('·')[0].trim(), timestamp:ts() };
+    logCheck(entry);
+    showResult('payroll-result', result, title, statute, action + (issues.length ? '<br><br><strong>Notes:</strong><br>' + issues.map(i=>'• '+i).join('<br>') : ''), [
+      {label:'Check ID', val:entry.id},
+      {label:'Province', val:province},
+      {label:'Pay period', val:period},
+      {label:'Annual gross (est.)', val:'$'+(gross*periodsPerYear).toLocaleString('en-CA')},
+    ]);
+  });
+}
+
+// ─── MODULE G: GST/HST ──────────────────────────────
+function runGST() {
+  runWithSpinner('gst-spinner', () => {
+    const revenue = parseFloat(document.getElementById('gst-revenue').value) || 0;
+    const registered = document.getElementById('gst-registered').value;
+    const type = document.getElementById('gst-type').value;
+    const province = document.getElementById('gst-province').value;
+    const freq = document.getElementById('gst-freq').value;
+    const itc = parseFloat(document.getElementById('gst-itc').value) || 0;
+    const fmt = n => '$' + Math.round(n).toLocaleString('en-CA');
+
+    const rates = { ON:0.13, QC:0.05, BC:0.05, AB:0.05, NS:0.15, NB:0.15, NL:0.15, PE:0.15, MB:0.05, SK:0.05 };
+    const rateLabels = { ON:'HST 13%', QC:'GST 5% + QST 9.975%', BC:'GST 5% + PST 7%', AB:'GST 5%', NS:'HST 15%', NB:'HST 15%', NL:'HST 15%', PE:'HST 15%', MB:'GST 5% + PST 7%', SK:'GST 5% + PST 6%' };
+    const deadlines = { annual:'June 15 (self-employed) / 3 months after fiscal year-end', quarterly:'1 month after each quarter-end', monthly:'1 month after each reporting period' };
+
+    let result, title, statute, action;
+
+    if (type === 'exempt') {
+      result = 'pass';
+      title = 'PASS — Exempt supplies: no GST/HST collectible';
+      statute = 'Excise Tax Act Schedule V — Exempt supplies include residential rent, most health services, most educational services, and financial services.';
+      action = 'Your supply is exempt — you do not charge GST/HST and cannot claim Input Tax Credits on related expenses. Confirm your supply falls within Schedule V of the Excise Tax Act. If you have both taxable and exempt supplies, you must prorate ITCs.';
+    } else if (type === 'zero') {
+      result = 'pass';
+      title = 'PASS — Zero-rated supply: GST/HST at 0%, ITCs fully claimable';
+      statute = 'Excise Tax Act Schedule VI — Zero-rated supplies include basic groceries, exports, and certain medical devices.';
+      action = `Zero-rated supplies are technically taxable at 0%. You collect no GST/HST from customers but can claim full ITCs on your inputs. ITC available this period: ${fmt(itc * rates[province])}. File ${freq} with CRA.`;
+    } else if (revenue < 30000 && registered === 'no') {
+      result = 'pass';
+      title = `PASS — Small supplier: ${fmt(revenue)} annual revenue is below $30,000 GST/HST threshold`;
+      statute = 'Excise Tax Act s.148 — Small Supplier. A person whose taxable supplies in any rolling 4 consecutive quarters do not exceed $30,000 is a small supplier and not required to register.';
+      action = `You are not required to register for GST/HST. Monitor revenue — if you exceed $30,000 in any rolling 12-month period, you must register within 29 days and begin charging. You may voluntarily register to claim ITCs.`;
+    } else if (revenue >= 30000 && registered === 'no') {
+      result = 'fail';
+      title = `FAIL — Revenue ${fmt(revenue)} exceeds $30,000 threshold: GST/HST registration required`;
+      statute = 'Excise Tax Act s.148, s.240 — Mandatory registration when taxable supplies exceed $30,000 in 4 consecutive quarters. Penalty: 5% of net tax owed plus 1% per month for late filing.';
+      action = `You must register for GST/HST immediately. Register online at canada.ca/cra-forms. Once registered, charge ${rateLabels[province]} on all taxable supplies. Collect and remit — you are liable for tax from the date registration was required, even if not collected from customers.`;
+    } else {
+      const taxCollected = revenue * rates[province];
+      const itcAmount = itc * rates[province];
+      const netTax = Math.max(0, taxCollected - itcAmount);
+      result = 'pass';
+      title = `PASS — Registered. Net ${rateLabels[province]} owing: ${fmt(netTax)}`;
+      statute = `Excise Tax Act s.225 — Net tax calculation. File ${freq} returns. Deadline: ${deadlines[freq]}.`;
+      action = `<strong>GST/HST calculation:</strong><br>Tax collected on sales: ${fmt(taxCollected)}<br>Less ITCs (purchases): ${fmt(itcAmount)}<br><strong>Net remittance: ${fmt(netTax)}</strong><br><br><strong>Filing deadline:</strong> ${deadlines[freq]}<br><strong>Rate applied:</strong> ${rateLabels[province]}${province === 'QC' ? '<br><br><strong>Quebec note:</strong> File QST separately with Revenu Québec (rate 9.975%). This calculator shows GST only for QC.' : ''}`;
+    }
+
+    const entry = { id:uid(), module:'GST/HST', ruleId:'FR-CA-G01', input:`${fmt(revenue)} · ${province} · ${registered==='yes'?'registered':'not registered'}`, result:result.toUpperCase(), statute:statute.split('—')[0].trim(), timestamp:ts() };
+    logCheck(entry);
+    showResult('gst-result', result, title, statute, action, [
+      {label:'Check ID', val:entry.id}, {label:'Province rate', val:rateLabels[province]},
+      {label:'Threshold', val:'$30,000'}, {label:'Filing', val:freq},
+    ]);
+  });
+}
+
+// ─── MODULE H: EMPLOYMENT STANDARDS ────────────────
+function runEmployment() {
+  runWithSpinner('emp-spinner', () => {
+    const province = document.getElementById('emp-province').value;
+    const wage = parseFloat(document.getElementById('emp-wage').value) || 0;
+    const hours = parseFloat(document.getElementById('emp-hours').value) || 40;
+    const tenure = document.getElementById('emp-tenure').value;
+    const size = document.getElementById('emp-size').value;
+    const c4 = document.getElementById('emp-c4').checked;
+    const c5 = document.getElementById('emp-c5').checked;
+    const c6 = document.getElementById('emp-c6').checked;
+    const fmt = n => '$' + n.toFixed(2);
+
+    const minWages = { ON:17.20, BC:17.85, AB:15.00, QC:15.75, FED:17.30, MB:15.80, SK:14.00 };
+    const overtimeThresholds = { ON:44, BC:40, AB:44, QC:40, FED:40, MB:40, SK:40 };
+    const noticePeriods = {
+      under3m:{ON:'No notice required',BC:'No notice',AB:'No notice',QC:'No notice',FED:'No notice'},
+      '3mto1y':{ON:'1 week',BC:'1 week',AB:'1 week',QC:'1 week',FED:'2 weeks'},
+      '1to3y':{ON:'2 weeks',BC:'2 weeks',AB:'2 weeks',QC:'2 weeks',FED:'4 weeks'},
+      '3to5y':{ON:'3 weeks',BC:'3 weeks',AB:'3 weeks',QC:'3 weeks',FED:'6 weeks'},
+      '5to10y':{ON:'4 weeks',BC:'5 weeks',AB:'4 weeks',QC:'4 weeks',FED:'8 weeks'},
+      over10y:{ON:'8 weeks',BC:'8 weeks',AB:'8 weeks',QC:'8 weeks',FED:'8 weeks + severance'},
+    };
+
+    const issues = [];
+    const minWage = minWages[province] || 15.00;
+    const otThreshold = overtimeThresholds[province] || 40;
+
+    if (wage > 0 && wage < minWage) {
+      issues.push(`FAIL: Wage ${fmt(wage)}/hr is below the ${province} minimum wage of ${fmt(minWage)}/hr. Underpayment is recoverable by the employee plus penalties.`);
+    }
+
+    let overtimeHours = 0, overtimePay = 0;
+    if (hours > otThreshold) {
+      overtimeHours = hours - otThreshold;
+      overtimePay = overtimeHours * wage * 1.5;
+      issues.push(`Overtime: ${overtimeHours.toFixed(1)}h worked beyond ${otThreshold}h threshold. Employee is entitled to ${fmt(overtimePay)} overtime premium at 1.5× regular rate.`);
+    }
+
+    const notice = noticePeriods[tenure]?.[province] || 'Varies';
+    const sizeNum = { under5:4, '5to24':14, '25to49':37, '50to99':75, '100plus':150 }[size];
+
+    const policyIssues = [];
+    if (c4 && province === 'BC') policyIssues.push('BC FAIL: Psychological harassment prevention policy is MANDATORY from September 1, 2025. Written policy must address prevention, reporting, and response.');
+    if (c5 && (province === 'ON') && sizeNum >= 25) policyIssues.push('ON FLAG: Electronic monitoring policy required for employers with 25+ employees in Ontario (ESA s.21.1.1). Must be in writing and provided to all employees.');
+    if (c6 && province === 'ON' && sizeNum >= 25) policyIssues.push('ON FLAG: Right to disconnect policy required for employers with 25+ employees (ESA s.21.1.2). Policy must outline expectations for responding to communications outside work hours.');
+
+    const hasWageFail = issues.some(i => i.startsWith('FAIL'));
+    const hasPolicyFail = policyIssues.some(i => i.includes('FAIL'));
+    const result = (hasWageFail || hasPolicyFail) ? 'fail' : issues.length > 0 || policyIssues.length > 0 ? 'flag' : 'pass';
+
+    const title = result === 'fail' ? `FAIL — Employment standards violation(s) in ${province}` :
+                  result === 'flag' ? `FLAG — ${issues.length + policyIssues.length} compliance item(s) require attention` :
+                  `PASS — Employment standards met in ${province}`;
+
+    const statute = result === 'pass' ?
+      `${province === 'ON' ? 'Employment Standards Act 2000' : province === 'BC' ? 'Employment Standards Act RSBC 1996' : province === 'FED' ? 'Canada Labour Code RSC 1985' : 'Employment Standards legislation'} — No violations detected.` :
+      `${province === 'ON' ? 'Employment Standards Act 2000 s.23.1 (minimum wage), s.22 (overtime), s.57 (termination)' : province === 'BC' ? 'Employment Standards Act RSBC 1996 — ss.16, 40, 63' : 'Applicable employment standards legislation'}`;
+
+    const action = result === 'pass' ?
+      `Wage of ${fmt(wage)}/hr is at or above the ${province} minimum wage of ${fmt(minWage)}/hr. Hours (${hours}h/wk) are within the ${otThreshold}h standard threshold. Termination notice for this tenure: <strong>${notice}</strong>. All checked policies are in place.` :
+      (issues.concat(policyIssues)).map(i => '• ' + i).join('<br>') + `<br><br><strong>Required termination notice for this tenure:</strong> ${notice}`;
+
+    const entry = { id:uid(), module:'Employment', ruleId:'FR-CA-H01', input:`${province} · ${fmt(wage)}/hr · ${hours}h/wk · ${tenure}`, result:result.toUpperCase(), statute:statute.split('—')[0].trim(), timestamp:ts() };
+    logCheck(entry);
+    showResult('emp-result', result, title, statute, action, [
+      {label:'Check ID', val:entry.id}, {label:'Min wage', val:fmt(minWage)+'/hr'},
+      {label:'OT threshold', val:otThreshold+'h/wk'}, {label:'Notice period', val:notice},
+    ]);
+  });
+}
+
+// ─── MODULE I: PRIVACY ──────────────────────────────
+function runPrivacy() {
+  runWithSpinner('priv-spinner', () => {
+    const type = document.getElementById('priv-type').value;
+    const p1 = document.getElementById('priv-p1').checked;
+    const p2 = document.getElementById('priv-p2').checked;
+    const p3 = document.getElementById('priv-p3').checked;
+    const p4 = document.getElementById('priv-p4').checked;
+    const p5 = document.getElementById('priv-p5').checked;
+    const p6 = document.getElementById('priv-p6').checked;
+    const policy = document.getElementById('priv-policy').value;
+    const officer = document.getElementById('priv-officer').value;
+    const isQC = type === 'qc';
+    const issues = [], flags = [];
+
+    if (policy === 'no') issues.push('FAIL: No privacy policy published. PIPEDA Principle 8 requires organizations to make their privacy policies available to individuals upon request. Quebec Law 25 requires publication on your website.');
+    if (policy === 'outdated') flags.push('FLAG: Privacy policy not updated in 2+ years. With ongoing regulatory changes (Quebec Law 25 fully in force 2024, incoming CPPA), your policy likely does not reflect current obligations.');
+    if (officer === 'no') flags.push('FLAG: No designated privacy officer. PIPEDA Principle 1 (Accountability) requires a designated individual to be accountable for the organization\'s compliance. Quebec Law 25 requires a person in authority to be designated.');
+    if (p1) issues.push('FAIL: Sensitive data collected requires EXPRESS (opt-in) consent under PIPEDA. Implied consent is insufficient for health, financial, biometric, or other sensitive data.');
+    if (p2) {
+      if (isQC) issues.push('FAIL: Quebec Law 25 s.12.1 — When an automated decision system is used to make a decision based exclusively on automated processing that produces legal or similarly significant effects on a person, you must inform the person and on request provide the reasons for the decision, the principal factors and parameters considered, and the right to have the decision reviewed by a human.');
+      else flags.push('FLAG: Automated decision systems — PIPEDA requires meaningful transparency when automated decisions significantly affect individuals. Document the system, its inputs, and provide an explanation mechanism.');
+    }
+    if (p3) flags.push('FLAG: Cross-border data transfer — PIPEDA requires comparable protection when transferring personal information outside Canada. Use contractual protections (data processing agreements). Document transfer mechanisms.');
+    if (p4 && isQC) issues.push('FAIL: Quebec Law 25 — A Privacy Impact Assessment (PIA) is MANDATORY before launching any technology project involving personal information. Cannot proceed without completing and documenting the PIA.');
+    if (p4 && !isQC) flags.push('FLAG: Best practice — conduct a Privacy Impact Assessment before launching new data projects. While not mandatory federally (under PIPEDA), it is the standard the OPC expects and will be mandatory under the incoming CPPA.');
+    if (p5) issues.push('FAIL: Data breach occurred — under PIPEDA, you must report the breach to the Office of the Privacy Commissioner if it creates a real risk of significant harm, AND notify affected individuals directly. Failure to report can result in up to $100,000 penalty.');
+    if (p6) flags.push('FLAG: Children\'s data requires heightened consent. PIPEDA requires verifiable parental consent for children who cannot meaningfully consent themselves. Quebec Law 25 has specific children\'s privacy provisions.');
+
+    const result = issues.length > 0 ? 'fail' : flags.length > 0 ? 'flag' : 'pass';
+    const title = result === 'fail' ? `FAIL — ${issues.length} privacy violation(s) under ${isQC ? 'Quebec Law 25' : 'PIPEDA'}` :
+                  result === 'flag' ? `FLAG — ${flags.length} privacy risk(s) require attention` :
+                  'PASS — Privacy practices meet current Canadian requirements';
+    const statute = 'Personal Information Protection and Electronic Documents Act SC 2000 c.5 (PIPEDA) · ' + (isQC ? 'Act respecting the protection of personal information in the private sector (Law 25) RSQ c.P-39.1' : 'OPC Guidance');
+    const action = result === 'pass' ? 'Privacy practices are compliant with current PIPEDA requirements and applicable provincial law. Monitor for the incoming federal CPPA legislation (expected 2026) which will bring fines up to the greater of $25M or 5% of global revenue.' :
+      (issues.concat(flags)).map(i => '• ' + i).join('<br>');
+
+    const entry = { id:uid(), module:'Privacy', ruleId:'FR-CA-I01', input:`${type} · policy:${policy} · officer:${officer}`, result:result.toUpperCase(), statute:'PIPEDA · Law 25', timestamp:ts() };
+    logCheck(entry);
+    showResult('priv-result', result, title, statute, action, [
+      {label:'Check ID', val:entry.id}, {label:'Jurisdiction', val:isQC?'Quebec Law 25':'PIPEDA'},
+      {label:'Issues', val:issues.length}, {label:'Flags', val:flags.length},
+    ]);
+  });
+}
+
+// ─── MODULE J: WORKPLACE SAFETY ─────────────────────
+function runSafety() {
+  runWithSpinner('safe-spinner', () => {
+    const province = document.getElementById('safe-province').value;
+    const empCount = parseInt(document.getElementById('safe-emp').value) || 0;
+    const industry = document.getElementById('safe-industry').value;
+    const s1 = document.getElementById('safe-s1').checked;
+    const s2 = document.getElementById('safe-s2').checked;
+    const s3 = document.getElementById('safe-s3').checked;
+    const s4 = document.getElementById('safe-s4').checked;
+    const s5 = document.getElementById('safe-s5').checked;
+    const s6 = document.getElementById('safe-s6').checked;
+    const issues = [];
+
+    const jhscThreshold = { ON:20, BC:20, AB:20, QC:20, FED:20 }[province] || 20;
+    const needsJHSC = empCount >= jhscThreshold;
+    const needsDefibrillator = province === 'ON' && empCount >= 50;
+
+    if (!s1) issues.push(`FAIL: Written health & safety policy is mandatory in ${province} for all employers. This must be signed by a senior officer, posted prominently, and reviewed annually.`);
+    if (needsJHSC && !s2) issues.push(`FAIL: Joint Health & Safety Committee (JHSC) is MANDATORY for employers with ${empCount} employees in ${province} (threshold: ${jhscThreshold}+ workers). Committee must meet at least monthly and conduct regular workplace inspections.`);
+    if (province === 'BC' && !s3) issues.push('FAIL: BC — Psychological Harassment Prevention Policy is MANDATORY from September 1, 2025 (Workers Compensation Amendment Act). Must include definition of harassment, reporting procedure, investigation process, and consequences. Penalty: WorkSafeBC stop-work orders and fines.');
+    if (!s4) issues.push(`FAIL: Workplace Violence and Harassment Policy is required under ${province === 'ON' ? 'OHSA s.32.0.1' : province === 'BC' ? 'Workers Compensation Act' : province === 'QC' ? 'Act respecting Labour Standards s.81.19' : 'applicable OHS legislation'}. Must be in writing and reviewed annually.`);
+    if (!s5) issues.push(`FAIL: WSIB / WCB premiums must be current. Unregistered employers face penalties plus retroactive premiums. Register at ${province === 'ON' ? 'wsib.ca' : province === 'BC' ? 'worksafebc.com' : province === 'AB' ? 'wcb.ab.ca' : province === 'QC' ? 'cnesst.gouv.qc.ca' : 'applicable board'}.`);
+    if (needsDefibrillator && !s6) issues.push('FLAG: Ontario OHSA (as amended by Bill 30, Nov 2025) — Certain employers with 50+ employees in buildings accessible to the public may be required to install an AED (automated external defibrillator). Check specific OHSA regulations for your building type. WSIB may reimburse costs.');
+
+    const highRisk = ['construction','manufacturing','warehouse'].includes(industry);
+    if (highRisk && empCount > 0) issues.push(`FLAG: ${industry} sector is classified HIGH RISK. Ensure sector-specific regulations apply: ${industry === 'construction' ? 'Construction Regulations O.Reg 213/91 (ON) — require supervisor certification, fall protection, and daily site inspections.' : industry === 'manufacturing' ? 'Industrial Establishments Regulation O.Reg 851 (ON) — machine guarding, lockout/tagout procedures mandatory.' : 'Warehouse: forklift operator certification, racking inspection programs required.'}`);
+
+    const result = issues.filter(i=>i.startsWith('FAIL')).length > 0 ? 'fail' : issues.length > 0 ? 'flag' : 'pass';
+    const title = result === 'fail' ? `FAIL — ${issues.filter(i=>i.startsWith('FAIL')).length} mandatory safety program(s) missing` :
+                  result === 'flag' ? `FLAG — ${issues.length} safety item(s) require review` :
+                  `PASS — Workplace safety programs are in place for ${province}`;
+    const statute = `${province === 'ON' ? 'Occupational Health and Safety Act RSO 1990 c.O.1 (as amended by Working for Workers Seven Act 2025)' : province === 'BC' ? 'Workers Compensation Act RSBC 2019 (as amended Sept 2025)' : province === 'QC' ? 'Act respecting Occupational Health and Safety CQLR c.S-2.1' : 'Canada Occupational Health and Safety Regulations SOR/86-304'}`;
+    const action = result === 'pass' ? `All required safety programs are in place for a ${empCount}-person ${industry} operation in ${province}. Conduct annual policy reviews and JHSC meeting minutes. Maximum penalty: ${province === 'ON' ? '$1,500,000 for corporations (OHSA s.66)' : '$500,000+'}.` :
+      issues.map(i => '• ' + i).join('<br>');
+
+    const entry = { id:uid(), module:'Safety', ruleId:'FR-CA-J01', input:`${province} · ${empCount} employees · ${industry}`, result:result.toUpperCase(), statute:statute.split('(')[0].trim(), timestamp:ts() };
+    logCheck(entry);
+    showResult('safe-result', result, title, statute, action, [
+      {label:'Check ID', val:entry.id}, {label:'Province', val:province},
+      {label:'JHSC required', val:needsJHSC?'Yes ('+jhscThreshold+'+ threshold)':'No'},
+      {label:'Max penalty', val:province==='ON'?'$1,500,000':'up to $500K+'},
+    ]);
+  });
+}
+
+// ─── MODULE K: CUSTOMS / CBSA ────────────────────────
+function runCustoms() {
+  runWithSpinner('cus-spinner', () => {
+    const activity = document.getElementById('cus-activity').value;
+    const origin = document.getElementById('cus-origin').value;
+    const hs = document.getElementById('cus-hs').value.trim();
+    const value = parseFloat(document.getElementById('cus-value').value) || 0;
+    const carm = document.getElementById('cus-carm').value;
+    const cusma = document.getElementById('cus-cusma').value;
+    const f1 = document.getElementById('cus-f1').checked;
+    const f2 = document.getElementById('cus-f2').checked;
+    const f3 = document.getElementById('cus-f3').checked;
+    const f4 = document.getElementById('cus-f4').checked;
+    const fmt = n => '$' + Math.round(n).toLocaleString('en-CA');
+    const issues = [];
+
+    if (carm === 'no' || carm === 'unsure') {
+      issues.push(`FAIL: CARM (CBSA Assessment and Revenue Management) registration is MANDATORY for all importers as of October 2024. You must register at carm.cbsa-asfc.gc.ca to post security, file B3 accounting documents, and receive duty statements electronically. Non-registration means you cannot clear goods through customs and your broker cannot act on your behalf.`);
+    }
+
+    const baseRate = origin === 'US' ? 0 : origin === 'MX' ? 0 : origin === 'CN' ? 0.065 : origin === 'EU' ? 0.035 : origin === 'UK' ? 0.03 : 0.05;
+    let dutyRate = baseRate;
+    let dutyAmount = value * dutyRate;
+    let gstOnImport = (value + dutyAmount) * 0.05;
+
+    if (f1) {
+      issues.push(`FLAG: Steel/aluminum surtax — Canada imposed retaliatory surtaxes on US steel (25%) and aluminum (25%) effective 2025. If importing from the US, verify whether your steel/aluminum products are subject to the Canadian countermeasure tariffs. Origin marking and mill certificates required.`);
+      if (origin === 'US') dutyRate += 0.25;
+    }
+
+    if (f2 && origin === 'CN') {
+      issues.push(`FAIL: Chinese EVs and EV components are subject to a 100% surtax effective October 2024 (plus the existing 6.1% MFN tariff). If your goods fall under HS chapters 87, 85, or 8507, calculate: total duty = 106.1% of customs value. This is a hard block for many importers.`);
+      dutyRate += 1.0;
+    }
+
+    if (origin === 'US' && cusma === 'yes') {
+      dutyRate = 0;
+      dutyAmount = 0;
+      issues.push(`PASS NOTE: CUSMA/USMCA preferential tariff applied — duty rate reduced to 0% (from ${(baseRate*100).toFixed(1)}%). Retain Certificate of Origin documentation for 5 years. CBSA may audit origin claims.`);
+    }
+
+    if (f3) issues.push('FLAG: Food, plant, or animal products require a CFIA import permit in addition to CBSA clearance. Apply through the Automated Import Reference System (AIRS). Undeclared agricultural products face seizure and $500–$50,000 CFIA fines.');
+    if (f4) issues.push('FLAG: Goods may be on the Export Control List or Import Control List. Check the Export and Import Permits Act Schedule. Controlled goods require an import permit from Global Affairs Canada before importation.');
+
+    dutyAmount = value * dutyRate;
+    gstOnImport = (value + dutyAmount) * 0.05;
+    const totalLanding = value + dutyAmount + gstOnImport;
+
+    const hasFail = issues.some(i => i.startsWith('FAIL'));
+    const result = hasFail ? 'fail' : issues.length > 0 ? 'flag' : 'pass';
+    const title = hasFail ? `FAIL — ${issues.filter(i=>i.startsWith('FAIL')).length} customs compliance violation(s)` :
+                  issues.length > 0 ? `FLAG — ${issues.length} customs item(s) require attention` :
+                  `PASS — Shipment cleared customs compliance check`;
+    const statute = 'Customs Act RSC 1985 c.1 · CARM (CBSA Assessment & Revenue Management, Oct 2024) · Customs Tariff SC 1997 c.36';
+    const action = hasFail || issues.length > 0 ?
+      issues.map(i => '• ' + i).join('<br>') + (value > 0 ? `<br><br><strong>Estimated duty calculation:</strong><br>Customs value: ${fmt(value)}<br>Duty rate: ${(dutyRate*100).toFixed(1)}%<br>Duty: ${fmt(dutyAmount)}<br>GST on import: ${fmt(gstOnImport)}<br><strong>Total landed cost: ${fmt(totalLanding)}</strong>` : '') :
+      `Shipment from ${origin} clears standard customs requirements. Duty: ${fmt(dutyAmount)} (${(dutyRate*100).toFixed(1)}%) · GST on import: ${fmt(gstOnImport)} · Total landed: ${fmt(totalLanding)}. Retain all customs documents for 6 years.`;
+
+    const entry = { id:uid(), module:'Customs', ruleId:'FR-CA-K01', input:`${origin} → CA · HS:${hs||'?'} · ${fmt(value)}`, result:result.toUpperCase(), statute:'Customs Act · CARM', timestamp:ts() };
+    logCheck(entry);
+    showResult('cus-result', result, title, statute, action, [
+      {label:'Check ID', val:entry.id}, {label:'Origin', val:origin},
+      {label:'Duty rate', val:(dutyRate*100).toFixed(1)+'%'}, {label:'CARM status', val:carm},
+    ]);
+  });
+}
+
+// ─── MODULE L: AI GOVERNANCE ────────────────────────
+function runAI() {
+  runWithSpinner('ai-spinner', () => {
+    const province = document.getElementById('ai-province').value;
+    const empCount = parseInt(document.getElementById('ai-emp').value) || 0;
+    const u1 = document.getElementById('ai-u1').checked;
+    const u2 = document.getElementById('ai-u2').checked;
+    const u3 = document.getElementById('ai-u3').checked;
+    const u4 = document.getElementById('ai-u4').checked;
+    const u5 = document.getElementById('ai-u5').checked;
+    const u6 = document.getElementById('ai-u6').checked;
+    const disclosure = document.getElementById('ai-disclosure').value;
+    const human = document.getElementById('ai-human').value;
+    const issues = [], flags = [];
+    const isQC = province === 'QC';
+    const isON = province === 'ON';
+
+    if (u1 && isON && empCount >= 25) issues.push('FAIL (effective 2026): Ontario Workers for Workers Four Act — Employers using AI in hiring must disclose this in publicly advertised job postings. Policy must be written and available to all applicants. Non-compliance = ESA violation.');
+    if (u1 && !isON) flags.push('FLAG: Ontario\'s AI hiring disclosure law (2026) is the first in Canada — other provinces are watching. If you operate in multiple provinces, implement disclosure now to be ready nationally.');
+    if (u2 && isQC) issues.push('FAIL: Quebec Law 25 s.12.1 — Must inform individuals when a decision is made exclusively by automated means AND significantly affects them. On request, must provide: (1) reasons for the decision, (2) principal factors considered, (3) right to have decision reviewed by a human. Non-compliance: penalty up to $25M or 4% of global revenue (when CPPA passes).');
+    if (u2 && !isQC) flags.push('FLAG: Automated decision transparency — while not yet legislated federally, the OPC expects organizations to be transparent about automated decision-making. Document your systems, inputs, and outputs. Prepare for incoming CPPA requirements.');
+    if (u3) issues.push('FLAG: AI in credit/insurance/financial decisions is classified as HIGH-IMPACT under the proposed AIDA framework. While AIDA died with Bill C-27, the concept survives in expected 2026 legislation. Conduct impact assessments now. OSFI also has AI risk guidance for FRFIs.');
+    if (u4 && disclosure === 'no') issues.push('FAIL: AI that processes personal data must comply with PIPEDA consent and transparency obligations NOW. You must: (1) disclose AI use in your privacy policy, (2) obtain appropriate consent for automated processing, (3) have a data processing agreement with any AI vendor.');
+    if (u5) flags.push('FLAG: AI profiling — automated collection and analysis of personal information to build profiles requires a legal basis under PIPEDA. Document the purpose, ensure proportionality, and provide opt-out mechanisms.');
+    if (u6 && isON && empCount >= 25) issues.push('FAIL: Ontario ESA s.21.1.1 — Written electronic monitoring policy is MANDATORY for employers with 25+ employees. Must describe how, when, and in what circumstances electronic monitoring occurs. Provide to all employees within 60 days of policy creation.');
+    if (human === 'never' && u2) issues.push('FLAG: Fully automated decisions with no human review is the highest risk scenario under all current and proposed Canadian AI law. Quebec Law 25 explicitly grants the right to human review. Implement a human-in-the-loop mechanism for significant decisions.');
+
+    const hasFail = issues.length > 0;
+    const result = hasFail ? 'fail' : flags.length > 0 ? 'flag' : 'pass';
+    const title = result === 'fail' ? `FAIL — ${issues.length} AI governance violation(s) under current law` :
+                  result === 'flag' ? `FLAG — ${flags.length} AI risk(s) require governance action` :
+                  'PASS — AI use cases meet current Canadian governance requirements';
+    const statute = `${isQC ? 'Act respecting the protection of personal information in the private sector (Law 25) s.12.1 · ' : ''}${isON ? 'Workers for Workers Four Act 2024 (ON) · ESA s.21.1.1 · ' : ''}PIPEDA SC 2000 c.5`;
+    const action = result === 'pass' ? 'Current AI use cases meet Canadian governance requirements. Stay ahead of incoming legislation: Ontario AI hiring disclosure (2026), federal CPPA (expected 2026), and eventual AIDA replacement. Document all AI systems in an inventory now.' :
+      (issues.concat(flags)).map(i => '• ' + i).join('<br>');
+
+    const entry = { id:uid(), module:'AI Gov.', ruleId:'FR-CA-L01', input:`${province} · ${empCount} emp · uses:${[u1,u2,u3,u4,u5,u6].filter(Boolean).length}`, result:result.toUpperCase(), statute:'AI Governance · Law 25 · PIPEDA', timestamp:ts() };
+    logCheck(entry);
+    showResult('ai-result', result, title, statute, action, [
+      {label:'Check ID', val:entry.id}, {label:'Province', val:province},
+      {label:'AI use cases', val:[u1,u2,u3,u4,u5,u6].filter(Boolean).length+'/6'},
+      {label:'Federal AI law', val:'None (AIDA died Jan 2025)'},
+    ]);
+  });
+}
+
+// ─── MODULE M: EPR / ENVIRONMENT ────────────────────
+function runEPR() {
+  runWithSpinner('epr-spinner', () => {
+    const province = document.getElementById('epr-province').value;
+    const role = document.getElementById('epr-role').value;
+    const p1 = document.getElementById('epr-p1').checked;
+    const p2 = document.getElementById('epr-p2').checked;
+    const p3 = document.getElementById('epr-p3').checked;
+    const p4 = document.getElementById('epr-p4').checked;
+    const p5 = document.getElementById('epr-p5').checked;
+    const p6 = document.getElementById('epr-p6').checked;
+    const tonnage = parseFloat(document.getElementById('epr-tonnage').value) || 0;
+    const registered = document.getElementById('epr-registered').value;
+    const issues = [];
+
+    if (p1 && (province === 'ON' || province === 'national')) {
+      if (registered === 'no') issues.push('FAIL: Ontario Blue Box EPR — You are a "producer" of packaging under the Resource Recovery and Circular Economy Act. All producers must register with Circular Materials Ontario and report annual tonnage. Fees are calculated per kg of material supplied to Ontario consumers. Deadline: producers must be registered and reporting. Non-compliance: up to $500,000 penalty.');
+      else issues.push('PASS NOTE: ON Blue Box registered. Ensure annual tonnage report is filed by March 31 and fees are paid on schedule.');
+    }
+
+    if (p1 && province === 'BC') issues.push('FLAG: BC Packaging and Printed Paper Stewardship — producers supplying packaging in BC must participate in the Multi-Material BC (MMBC) program or an equivalent. Contact MMBC for registration and fee schedule.');
+    if (p1 && province === 'QC') issues.push('FLAG: Quebec 3RV-E — producers are responsible for the costs of managing printed paper and packaging they supply to Quebec consumers. Register with eEco Entreprises Québec (eEQ).');
+
+    if (p2 && registered === 'no') issues.push(`FAIL: E-waste stewardship — ${province === 'ON' ? 'Ontario EPRA (Electronic Products Recycling Association)' : province === 'BC' ? 'BC Recycling Regulation (Encorp / ESABC)' : province === 'QC' ? 'RecycleMédias QC' : 'applicable provincial program'} — producers of electronics must register with the provincial stewardship program. Non-registration means you are selling products illegally in this province.`);
+    if (p3) issues.push(`FLAG: Battery stewardship — ${province === 'BC' ? 'BC Recycling Regulation requires battery producers to register with Call2Recycle.' : 'Most provinces require battery producers to participate in stewardship programs. Contact Call2Recycle Canada for national registration.'}`);
+    if (p4) issues.push(`FLAG: Tire stewardship — ${province === 'ON' ? 'Ontario: Orange Drop program for tires.' : province === 'BC' ? 'BC: Tire Stewardship BC levy applies.' : 'Contact your provincial stewardship body for tire levy and reporting requirements.'}`);
+    if (p5) issues.push('FLAG: Paint/solvents — PaintCare Canada administers stewardship for paints and solvents in BC, MB, SK, and NL. Producers must join the program and pay stewardship fees.');
+    if (p6) issues.push('FLAG: Large emitter — businesses emitting 50,000+ tonnes CO2e annually are subject to the Output-Based Pricing System (OBPS) under the Greenhouse Gas Pollution Pricing Act. Register with Environment and Climate Change Canada. Annual compliance report required.');
+
+    if (tonnage > 0 && province === 'ON') {
+      const onFeeEstimate = tonnage * 0.15;
+      issues.push(`ON Blue Box estimate: ~$${Math.round(onFeeEstimate).toLocaleString('en-CA')} based on ${tonnage.toLocaleString()}kg at ~$0.15/kg average rate (rate varies by material type — plastic higher, paper lower).`);
+    }
+
+    const hasFail = issues.some(i => i.startsWith('FAIL'));
+    const result = hasFail ? 'fail' : issues.length > 0 ? 'flag' : 'pass';
+    const title = hasFail ? `FAIL — ${issues.filter(i=>i.startsWith('FAIL')).length} EPR registration obligation(s) unmet` :
+                  issues.length > 0 ? `FLAG — ${issues.length} environmental compliance item(s) require action` :
+                  'PASS — No EPR obligations triggered for selected products';
+    const statute = 'Resource Recovery and Circular Economy Act SO 2016 c.12 (ON) · BC Recycling Regulation BC Reg 449/04 · Canadian Environmental Protection Act SC 1999 c.33 (CEPA)';
+    const action = result === 'pass' ? 'No EPR registration obligations triggered for your selected product categories in this province. If you expand product lines or provinces, re-run this check.' :
+      issues.map(i => '• ' + i).join('<br>');
+
+    const entry = { id:uid(), module:'EPR/Env.', ruleId:'FR-CA-M01', input:`${province} · ${role} · products:${[p1,p2,p3,p4,p5,p6].filter(Boolean).length}`, result:result.toUpperCase(), statute:'RRCEA · CEPA', timestamp:ts() };
+    logCheck(entry);
+    showResult('epr-result', result, title, statute, action, [
+      {label:'Check ID', val:entry.id}, {label:'Province', val:province},
+      {label:'Products flagged', val:[p1,p2,p3,p4,p5,p6].filter(Boolean).length},
+      {label:'Registered', val:registered},
+    ]);
+  });
+}
+
+// ─── NAVIGATION ─────────────────────────────────────
+function showPanel(id, navEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (navEl) navEl.classList.add('active');
+  const titles = {
+    dashboard: ['Dashboard','Canada Compliance Engine · 13 modules'],
+    ccpsa: ['Module A — CCPSA','Product Safety · Danger Checker'],
+    cpla: ['Module B — CPLA','Bilingualism Validator · Bill 96'],
+    fintrac: ['Module C — FINTRAC','AML / KYC · $10K Trigger'],
+    esg: ['Module D — ESG','Greenwashing Detector · Bill C-59'],
+    supply: ['Module E — S-211','Supply Chain · Beneficial Ownership'],
+    payroll: ['Module F — Payroll','CPP / EI / CRA · SR&ED'],
+    gsthst: ['Module G — GST/HST','Excise Tax Act · Province Rates'],
+    employment: ['Module H — Employment','ESA · Canada Labour Code · Bill 30'],
+    privacy: ['Module I — Privacy','PIPEDA · Quebec Law 25'],
+    safety: ['Module J — Workplace Safety','OHSA · WSIB · WCB · CNESST'],
+    customs: ['Module K — Customs','CBSA · CARM · CUSMA/USMCA'],
+    ai: ['Module L — AI Governance','Workers for Workers IV · Law 25 · AIDA'],
+    epr: ['Module M — EPR / Environment','Blue Box · CEPA · Product Stewardship'],
+    deadlines: ['Compliance Calendar','All 13 module filing deadlines'],
+    audit: ['Audit Trail','6-year compliance record'],
+    ratetable: ['Rate Table','No-code threshold admin'],
+  };
+  const t = titles[id] || ['CanCompliance',''];
+  document.getElementById('topbar-title').textContent = t[0];
+  document.getElementById('topbar-sub').textContent = t[1];
+}
+
+// ─── AUDIT HELPERS ──────────────────────────────────
+function uid() { return 'CHK-' + Math.random().toString(36).substr(2,6).toUpperCase(); }
+function ts() { return new Date().toISOString().replace('T',' ').substr(0,19); }
+
+function logCheck(entry) {
+  auditLog.unshift(entry);
+  metrics.total++;
+  metrics[entry.result.toLowerCase().replace(/\s.*/,'')]++;
+  updateMetrics();
+  updateAuditTable();
+  updateRecentChecks();
+}
+
+function updateMetrics() {
+  document.getElementById('m-total').textContent = metrics.total;
+  document.getElementById('m-pass').textContent = metrics.pass;
+  document.getElementById('m-fail').textContent = metrics.fail;
+  document.getElementById('m-flag').textContent = metrics.flag;
+  document.getElementById('m-block').textContent = metrics.block;
+}
+
+function buildRow(e) {
+  const tagClass = { PASS:'tag-pass', FAIL:'tag-fail', FLAG:'tag-flag', BLOCK:'tag-block' };
+  return `<tr>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${e.id}</td>
+    <td>${e.module}</td>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${e.ruleId}</td>
+    <td style="color:var(--text2)">${e.input}</td>
+    <td><span class="tag ${tagClass[e.result]}">${e.result}</span></td>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3);max-width:220px">${e.statute}</td>
+    <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${e.timestamp}</td>
+  </tr>`;
+}
+
+function updateAuditTable() {
+  const tbody = document.getElementById('audit-tbody');
+  if (auditLog.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">Audit log is empty</td></tr>';
+  } else {
+    tbody.innerHTML = auditLog.map(buildRow).join('');
+  }
+}
+
+function updateRecentChecks() {
+  const tbody = document.getElementById('recent-checks');
+  const recent = auditLog.slice(0,5);
+  if (recent.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px;font-family:var(--mono);font-size:11px;">No checks run yet</td></tr>';
+  } else {
+    tbody.innerHTML = recent.map(buildRow).join('');
+  }
+}
+
+function clearAudit() {
+  auditLog.length = 0;
+  updateAuditTable();
+  updateRecentChecks();
+}
+
+function showResult(boxId, type, title, statute, action, extras) {
+  const box = document.getElementById(boxId);
+  box.className = 'result-box ' + type;
+  box.style.display = 'block';
+  const metaHtml = extras ? extras.map(e => `<div class="result-meta-item">${e.label}: <span>${e.val}</span></div>`).join('') : '';
+  box.innerHTML = `
+    <div class="result-badge ${type}">${type.toUpperCase()}</div>
+    <div class="result-title ${type}">${title}</div>
+    <div class="result-statute">${statute}</div>
+    <div class="result-action">${action}</div>
+    ${extras ? `<div class="result-meta">${metaHtml}</div>` : ''}
+  `;
+}
+
+function runWithSpinner(spinnerId, fn) {
+  const s = document.getElementById(spinnerId);
+  s.classList.add('show');
+  setTimeout(() => { s.classList.remove('show'); fn(); }, 900);
+}
+
+// ─── MODULE A: CCPSA ────────────────────────────────
+function runCCPSA() {
+  runWithSpinner('ccpsa-spinner', () => {
+    const name = document.getElementById('cc-name').value || 'Unnamed product';
+    const cat = document.getElementById('cc-cat').value;
+    const lead = parseFloat(document.getElementById('cc-lead').value) || 0;
+    const phthal = parseFloat(document.getElementById('cc-phthalate').value) || 0;
+    const parts = parseFloat(document.getElementById('cc-parts').value) || 99;
+    const asbestos = document.getElementById('cc-asbestos').checked;
+    const flam = document.getElementById('cc-flam').checked;
+    const supplier = document.getElementById('cc-supplier').value || 'Unknown supplier';
+
+    let result, title, statute, action;
+
+    if (asbestos) {
+      result = 'block';
+      title = 'BLOCK — Absolute prohibition: asbestos detected';
+      statute = 'CCPSA Schedule 2 — Prohibited Products. Asbestos and asbestos-containing products are absolutely prohibited from manufacture, import, sale, or advertisement in Canada.';
+      action = 'This product cannot enter the Canadian market under any circumstances. Asbestos is an absolutely prohibited substance under Schedule 2 of the CCPSA. Consult legal counsel and do not proceed with importation.';
+    } else if (cat === 'toy' && lead > 90) {
+      result = 'block';
+      title = `BLOCK — Lead content exceeded: ${lead} mg/kg (limit: 90 mg/kg)`;
+      statute = 'Toys Regulations SOR/2011-17 s.23 — Lead Content. No toy or toy component shall contain more than 90 mg/kg of total lead.';
+      action = `Product "${name}" fails the lead content limit. Remove from market immediately. Reformulate to bring lead content below 90 mg/kg. File an incident report with Health Canada. Record supplier details for traceability.`;
+    } else if (cat === 'toy' && phthal > 0.1) {
+      result = 'block';
+      title = `BLOCK — Phthalates exceeded: ${phthal}% (limit: 0.1%)`;
+      statute = 'Toys Regulations SOR/2011-17 s.25 — Phthalates. No toy that can be placed in the mouth shall contain more than 0.1% by mass of certain phthalates.';
+      action = `Product "${name}" fails the phthalates limit. Do not sell or import this product. Reformulate and retest before re-entry. Maintain records per CCPSA s.11 for 6 years.`;
+    } else if (cat === 'toy' && parts > 0 && parts < 31.7) {
+      result = 'fail';
+      title = `FAIL — Small parts hazard: ${parts}mm diameter (minimum: 31.7mm for toys)`;
+      statute = 'Toys Regulations SOR/2011-17 s.16 — Small Parts. Toys intended for children under 3 must not contain parts small enough to fit entirely in a small parts cylinder.';
+      action = `Product "${name}" contains parts that may pose a choking hazard. Redesign components to exceed 31.7mm or restrict age labelling to 3+ years with prominent warning. Retest before sale.`;
+    } else if (flam) {
+      result = 'flag';
+      title = 'FLAG — Flammability materials declared — review required';
+      statute = 'CCPSA s.7 — General Prohibition. Products posing an unreasonable danger due to flammability require testing per applicable standards (CSA, ASTM, UL).';
+      action = 'Conduct flammability testing per applicable Canadian standards. Maintain test records for 6 years. Depending on product category, specific flammability regulations may apply (e.g., upholstered furniture, children\'s sleepwear). Lawyer review recommended.';
+    } else {
+      result = 'pass';
+      title = `PASS — ${name} meets CCPSA requirements`;
+      statute = 'Canada Consumer Product Safety Act SC 2010 c.21 — No violations detected across checked parameters.';
+      action = `Product "${name}" supplied by ${supplier} has cleared the CCPSA danger check. A 6-year document record has been created. Continue monitoring — no pre-market approval exists; ongoing compliance is the manufacturer's responsibility.`;
+    }
+
+    const entry = {
+      id: uid(), module: 'CCPSA', ruleId: 'FR-CA-01',
+      input: `${name} · ${cat} · Lead:${lead} · Phthal:${phthal}%`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+
+    showResult('ccpsa-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Product', val: name },
+      { label:'Supplier', val: supplier },
+      { label:'Retention', val: '6 years from today' },
+    ]);
+  });
+}
+
+// ─── MODULE B: CPLA ─────────────────────────────────
+function runCPLA() {
+  runWithSpinner('cpla-spinner', () => {
+    const enName = document.getElementById('cp-en-name').value.trim();
+    const frName = document.getElementById('cp-fr-name').value.trim();
+    const enQty = document.getElementById('cp-en-qty').value.trim();
+    const frQty = document.getElementById('cp-fr-qty').value.trim();
+    const enDealer = document.getElementById('cp-en-dealer').value.trim();
+    const dealerFr = document.getElementById('cp-dealer-fr').value;
+    const prominence = document.getElementById('cp-prominence').value;
+    const province = document.getElementById('cp-province').value;
+    const trademark = document.getElementById('cp-trademark').value.trim();
+    const mfrDate = document.getElementById('cp-mfr-date').value;
+
+    const issues = [];
+    let result = 'pass';
+    let title = 'PASS — Label meets bilingualism requirements';
+    let statute = 'Consumer Packaging and Labelling Act RSC 1985 c.C-38 — All required bilingual fields present.';
+    let action = 'Label is compliant with federal bilingualism requirements. Ensure font size for net quantity is at minimum 1.6mm. Keep label records for audit.';
+
+    if (!enName) issues.push('Missing English product identity declaration (required: CPLA s.11)');
+    if (!frName) { issues.push('Missing French product identity declaration (required: CPLA s.11)'); result = 'fail'; }
+    if (!enQty) issues.push('Missing English net quantity declaration');
+    if (!frQty) { issues.push('Missing French net quantity declaration (required: CPLA s.13)'); result = result === 'pass' ? 'fail' : result; }
+    if (!enDealer) issues.push('Missing dealer name and address');
+
+    if ((province === 'national' || province === 'qc') && prominence === 'smaller') {
+      if (mfrDate === 'after') {
+        issues.push('FAIL: Quebec Bill 96 — French text must be at least as prominent as English. Products manufactured after June 1, 2025 must comply immediately.');
+        result = 'fail';
+      } else {
+        issues.push('FLAG: Quebec Bill 96 — French text is smaller than English. Grace period applies until June 1, 2027 for pre-June 2025 stock. New production must comply now.');
+        result = result === 'pass' ? 'flag' : result;
+      }
+    }
+
+    if ((province === 'national' || province === 'qc') && prominence === 'much-smaller') {
+      issues.push('FAIL: Quebec Bill 96 — French text is significantly less prominent. This is a clear violation regardless of manufacture date.');
+      result = 'fail';
+    }
+
+    const hasDescriptive = trademark && /[a-z]{3,}/i.test(trademark) && trademark.includes(' ');
+    if ((province === 'national' || province === 'qc') && hasDescriptive) {
+      issues.push(`FLAG: Trademark "${trademark}" contains descriptive terms that may require French translation under Bill 96. Coined/fanciful trademarks are exempt; descriptive terms are not.`);
+      result = result === 'pass' ? 'flag' : result;
+    }
+
+    if (issues.length === 0) {
+      statute = 'Consumer Packaging and Labelling Act RSC 1985 c.C-38 · All bilingual fields present and compliant.';
+      action = 'Label fully compliant federally. ' + (province !== 'non-qc' ? 'Quebec Bill 96 prominence check passed. ' : '') + 'Retain label copy for audit trail.';
+    } else {
+      statute = 'Consumer Packaging and Labelling Act s.11, s.13 · ' + (province !== 'non-qc' ? 'Quebec Charter of the French Language (Bill 96) — An Act respecting French, the official and common language of Québec.' : '');
+      title = result === 'fail' ? `FAIL — ${issues.filter(i=>i.startsWith('FAIL')||i.startsWith('Missing')).length} bilingualism violation(s) found` :
+              result === 'flag' ? 'FLAG — Quebec Bill 96 review required' : title;
+      action = '<strong>Issues found:</strong><br>' + issues.map(i => '• ' + i).join('<br>');
+    }
+
+    const penalty = result === 'fail' ? 'Up to $10,000 (indictment) · Competition Act may also apply: up to $750,000' : 'N/A';
+    const entry = {
+      id: uid(), module: 'CPLA', ruleId: 'FR-CA-02',
+      input: `${enName || 'No EN name'} / ${frName || 'No FR name'} · ${province}`,
+      result: result.toUpperCase(), statute: statute.split('·')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('cpla-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Province', val: province === 'qc' ? 'Quebec' : province === 'national' ? 'National' : 'Non-QC' },
+      { label:'Bill 96', val: (province === 'non-qc') ? 'N/A' : 'Applied' },
+      { label:'Penalty exposure', val: penalty },
+    ]);
+  });
+}
+
+// ─── MODULE C: FINTRAC ──────────────────────────────
+function runFINTRAC() {
+  runWithSpinner('fintrac-spinner', () => {
+    const amount = parseFloat(document.getElementById('ft-amount').value) || 0;
+    const type = document.getElementById('ft-type').value;
+    const customer = document.getElementById('ft-customer').value;
+    const sector = document.getElementById('ft-sector').value;
+    const s1 = document.getElementById('ft-s1').checked;
+    const s2 = document.getElementById('ft-s2').checked;
+    const s3 = document.getElementById('ft-s3').checked;
+    const s4 = document.getElementById('ft-s4').checked;
+    const suspiciousCount = [s1,s2,s3,s4].filter(Boolean).length;
+
+    let result, title, statute, action;
+    const fmt = n => '$' + n.toLocaleString('en-CA', {minimumFractionDigits:2});
+    const highRisk = sector === 'mse' || sector === 'gambling' || sector === 'crypto' || customer === 'pep';
+
+    if (s4) {
+      result = 'fail';
+      title = 'FAIL — Structuring detected: transaction may be designed to avoid reporting';
+      statute = 'PCMLTFA s.9.3 — Structuring. It is prohibited to structure transactions to avoid FINTRAC reporting obligations. This is a serious offense.';
+      action = 'Structuring is a criminal offense. File a Suspicious Transaction Report (STR) immediately with FINTRAC. Do not tip off the customer. Preserve all records. Escalate to compliance officer and legal counsel.';
+    } else if (amount >= 10000 && suspiciousCount >= 2) {
+      result = 'fail';
+      title = `FAIL — Large transaction + ${suspiciousCount} suspicious indicator(s): KYC required + STR mandatory`;
+      statute = 'PCMLTFA s.7 — Large Cash Transaction Report (LCTR). Transactions of $10,000 CAD or more in cash must be reported to FINTRAC. s.7.1 — Suspicious Transaction Report required when reasonable grounds to suspect ML/TF.';
+      action = `Transaction of ${fmt(amount)} triggers mandatory LCTR. With ${suspiciousCount} suspicious indicators, a Suspicious Transaction Report (STR) is also required. Complete KYC verification immediately. Retain all records for 5 years. Report to FINTRAC within 30 days.`;
+    } else if (amount >= 10000) {
+      result = 'fail';
+      title = `FAIL — Large transaction: ${fmt(amount)} exceeds $10,000 CAD threshold`;
+      statute = 'PCMLTFA s.7 — Large Cash Transaction Report. Transactions of $10,000 CAD or more in a single transaction or series must be reported to FINTRAC within 15 days.';
+      action = `Mandatory KYC verification required. File a Large Cash Transaction Report (LCTR) with FINTRAC within 15 days. Collect: full legal name, address, date of birth, nature of business. Log transaction ID, amount, date, and method.`;
+    } else if (suspiciousCount >= 1 || customer === 'pep') {
+      result = 'flag';
+      title = `FLAG — ${customer === 'pep' ? 'PEP detected + ' : ''}${suspiciousCount} suspicious indicator(s) — enhanced due diligence required`;
+      statute = 'PCMLTFA s.9.3 — Suspicious Transaction Report (STR). A STR must be filed when there are reasonable grounds to suspect ML/TF activity, regardless of transaction amount.';
+      action = `Transaction is below the $10,000 threshold but ${customer === 'pep' ? 'involves a Politically Exposed Person and ' : ''}suspicious indicators present. Apply enhanced due diligence. If grounds for suspicion remain, file an STR with FINTRAC. Document your assessment reasoning.`;
+    } else if (highRisk) {
+      result = 'flag';
+      title = 'FLAG — High-risk sector: enhanced monitoring required';
+      statute = 'PCMLTFA s.9.6 — Ongoing monitoring obligations for high-risk business relationships.';
+      action = `Sector "${sector}" is categorized as high-risk by FINTRAC. Apply enhanced due diligence, more frequent monitoring, and senior management approval for the business relationship. Document risk assessment.`;
+    } else {
+      result = 'pass';
+      title = `PASS — Transaction of ${fmt(amount)} cleared all FINTRAC checks`;
+      statute = 'PCMLTFA — No reporting obligations triggered at this threshold with current indicators.';
+      action = 'No FINTRAC reporting obligation triggered. Transaction is below $10,000 threshold and no suspicious indicators are present. Continue standard monitoring. Log record retained per PCI DSS 4.0.';
+    }
+
+    const entry = {
+      id: uid(), module: 'FINTRAC', ruleId: 'FR-CA-03',
+      input: `$${amount.toLocaleString()} CAD · ${type} · ${customer}`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('fintrac-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Amount', val: fmt(amount) },
+      { label:'Threshold', val: '$10,000 CAD' },
+      { label:'Suspicious indicators', val: suspiciousCount + '/4' },
+    ]);
+  });
+}
+
+// ─── MODULE D: ESG ──────────────────────────────────
+function runESG() {
+  runWithSpinner('esg-spinner', () => {
+    const text = document.getElementById('esg-text').value.toLowerCase();
+    const revenue = parseFloat(document.getElementById('esg-revenue').value) || 0;
+    const context = document.getElementById('esg-context').value;
+    const proof = document.getElementById('esg-proof').value;
+
+    const keywords = [
+      {kw:'carbon neutral', risk:'high'}, {kw:'net zero', risk:'high'},
+      {kw:'carbon free', risk:'high'}, {kw:'zero emissions', risk:'high'},
+      {kw:'eco-friendly', risk:'med'}, {kw:'sustainable', risk:'med'},
+      {kw:'green', risk:'low'}, {kw:'biodegradable', risk:'med'},
+      {kw:'compostable', risk:'med'}, {kw:'recyclable', risk:'med'},
+      {kw:'planet positive', risk:'high'}, {kw:'climate positive', risk:'high'},
+      {kw:'environmentally friendly', risk:'med'}, {kw:'carbon offset', risk:'high'},
+    ];
+
+    const found = keywords.filter(k => text.includes(k.kw));
+    const highRisk = found.filter(k => k.risk === 'high');
+
+    let result, title, statute, action;
+    const penaltyCalc = () => {
+      const p1 = 10000000;
+      const p2 = revenue * 0.03;
+      const max = Math.max(p1, p2);
+      return '$' + max.toLocaleString('en-CA');
+    };
+
+    if (context === 'securities' && found.length > 0) {
+      result = 'pass';
+      title = 'PASS — Securities disclosure context: enforcement unlikely';
+      statute = 'Competition Act s.74.01 — Competition Bureau Final Guidelines (June 5, 2025): Environmental claims in mandatory or voluntary securities disclosures are unlikely to result in enforcement action unless used to promote a product outside the sale of securities.';
+      action = `Found ${found.length} environmental term(s) in your text. In a securities/ESG disclosure context, the Competition Bureau has indicated this is unlikely to trigger enforcement. However, monitor for Budget 2025 amendments and ensure claims remain accurate.`;
+    } else if (found.length === 0) {
+      result = 'pass';
+      title = 'PASS — No regulated environmental keywords detected';
+      statute = 'Competition Act s.74.01 · Bill C-59 Anti-Greenwashing — No substantiation obligations triggered.';
+      action = 'No environmental benefit claims detected in the submitted text. If environmental claims are added in future, re-run this check before publication.';
+    } else if (proof === 'none' && highRisk.length > 0) {
+      result = 'flag';
+      title = `FLAG — ${highRisk.length} high-risk claim(s) without substantiation: legal review required`;
+      statute = 'Competition Act s.74.01(1)(b) — Greenwashing. Environmental benefit claims about a product must be based on adequate and proper testing. Business/activity claims must use an internationally recognized methodology (pending Budget 2025 amendment).';
+      action = `<strong>Flagged claims:</strong> ${highRisk.map(k => '"' + k.kw + '"').join(', ')}<br><br>These claims require substantiation before publication. Without adequate testing or methodology documentation, you are exposed to Competition Bureau enforcement. File FLAG record and obtain testing or remove claims.<br><br><strong>Note:</strong> Budget 2025 proposes removing the international methodology requirement — but this has not yet received Royal Assent. Current law applies.`;
+    } else if (found.length > 0 && proof !== 'intl' && proof !== 'canadian') {
+      result = 'flag';
+      title = `FLAG — ${found.length} environmental claim(s) require substantiation review`;
+      statute = 'Competition Act s.74.01 — Bill C-59. Environmental product claims must be based on adequate and proper testing. Current substantiation is partial or unclear.';
+      action = `<strong>Detected terms:</strong> ${found.map(k => '"' + k.kw + '"').join(', ')}<br><br>Partial substantiation is on file but may not meet the "adequate and proper testing" standard. Obtain full third-party testing aligned with a recognized Canadian or international standard. Do not publish until substantiation is complete.`;
+    } else {
+      result = 'pass';
+      title = `PASS — ${found.length} environmental claim(s) detected with substantiation on record`;
+      statute = 'Competition Act s.74.01 — Substantiation requirement met with recognized methodology.';
+      action = `Found ${found.length} environmental term(s): ${found.map(k => '"' + k.kw + '"').join(', ')}. Substantiation type "${proof}" is on record. Maintain documentation for audit. Monitor for regulatory changes.`;
+    }
+
+    const entry = {
+      id: uid(), module: 'ESG', ruleId: 'FR-CA-04',
+      input: `${found.length} keywords · ${context} · proof: ${proof}`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('esg-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Keywords found', val: found.length },
+      { label:'High-risk claims', val: highRisk.length },
+      { label:'Max penalty exposure', val: revenue > 0 ? penaltyCalc() : 'Min. $10M' },
+    ]);
+  });
+}
+
+// ─── MODULE E: SUPPLY CHAIN ─────────────────────────
+function runSupply() {
+  runWithSpinner('supply-spinner', () => {
+    const revenue = parseFloat(document.getElementById('sc-revenue').value) || 0;
+    const assets = parseFloat(document.getElementById('sc-assets').value) || 0;
+    const employees = parseInt(document.getElementById('sc-employees').value) || 0;
+    const entity = document.getElementById('sc-entity').value;
+    const listed = document.getElementById('sc-listed').value;
+    const iscPct = parseFloat(document.getElementById('sc-isc').value) || 0;
+    const iscFiled = document.getElementById('sc-isc-filed').value;
+
+    const t20m = 20000000;
+    const t250e = 250;
+    const fmt = n => '$' + n.toLocaleString('en-CA');
+
+    const conditions = [
+      revenue >= t20m ? 1 : 0,
+      assets >= t20m ? 1 : 0,
+      employees >= t250e ? 1 : 0,
+    ];
+    const conditionsMet = conditions.reduce((a,b) => a+b, 0);
+    const isCovered = listed === 'yes' || conditionsMet >= 2 || entity === 'government';
+
+    const issues = [];
+    let iscIssue = false;
+
+    if (entity === 'cbca' && iscPct >= 25 && iscFiled === 'no') {
+      iscIssue = true;
+      issues.push(`CBCA ISC FAIL: Shareholder at ${iscPct}% control exceeds 25% threshold — ISC data must be filed with Corporations Canada. Deadline: within 30 days of incorporation, within 15 days of any change, at each annual return. Penalty: up to $200,000.`);
+    }
+
+    let result, title, statute, action;
+
+    if (isCovered && issues.length > 0) {
+      result = 'fail';
+      title = `FAIL — S-211 covered entity + ${issues.length} CBCA filing violation(s)`;
+      statute = 'Fighting Against Forced Labour and Child Labour in Supply Chains Act (S-211) s.3 — Covered entities must file annual report by May 31. CBCA s.21.1 — ISC register filing required.';
+      action = `<strong>S-211:</strong> Your entity meets ${conditionsMet}/3 size conditions (${listed === 'yes' ? 'or is exchange-listed' : ''}). Annual report must be filed with Minister of Public Safety by May 31. Board approval required.<br><br><strong>CBCA ISC:</strong><br>` + issues.join('<br>');
+    } else if (!isCovered && issues.length > 0) {
+      result = 'fail';
+      title = 'FAIL — S-211 exempt, but CBCA ISC filing violation detected';
+      statute = 'CBCA s.21.1 — Individuals with Significant Control register. Filing required with Corporations Canada effective January 22, 2024.';
+      action = `Entity does not meet S-211 coverage threshold (only ${conditionsMet}/2 conditions met; exchange-listed: ${listed}). However:<br><br>` + issues.join('<br>');
+    } else if (isCovered) {
+      result = 'flag';
+      title = `FLAG — S-211 covered entity: annual report required by May 31`;
+      const conds = ['Revenue ≥ $20M: ' + (revenue >= t20m ? '✓' : '✗'), 'Assets ≥ $20M: ' + (assets >= t20m ? '✓' : '✗'), 'Employees ≥ 250: ' + (employees >= t250e ? '✓' : '✗')];
+      statute = 'Fighting Against Forced Labour and Child Labour in Supply Chains Act SC 2023 c.9 (Bill S-211). Annual report required by May 31 each year. Penalty for non-filing: up to $250,000.';
+      action = `<strong>Coverage status: COVERED</strong> (${conditionsMet}/3 conditions met${listed === 'yes' ? ' + exchange-listed' : ''})<br><br>Conditions: ${conds.join(' · ')}<br><br>Required actions:<br>• File annual report with Minister of Public Safety by May 31<br>• Report requires board approval and must be published on your website<br>• Cover: policies, due diligence, training, supply chain steps, effectiveness<br>• Penalty for non-filing: up to $250,000` + (iscPct >= 25 ? `<br><br>CBCA ISC: ${iscPct}% shareholder — ISC data filed: ${iscFiled === 'yes' ? 'Yes' : 'VERIFY'}` : '');
+    } else {
+      result = 'pass';
+      title = 'PASS — Entity not covered by S-211; CBCA ISC compliant';
+      const conds = ['Revenue ≥ $20M: ' + (revenue >= t20m ? '✓' : '✗'), 'Assets ≥ $20M: ' + (assets >= t20m ? '✓' : '✗'), 'Employees ≥ 250: ' + (employees >= t250e ? '✓' : '✗')];
+      statute = 'Fighting Against Forced Labour and Child Labour in Supply Chains Act SC 2023 c.9 — Entity does not meet coverage threshold. CBCA s.21.1 — ISC compliant.';
+      action = `S-211: Entity meets only ${conditionsMet}/3 size conditions (${conds.join(' · ')}). Not exchange-listed. Exemption confirmed — no annual report required this cycle. Re-assess annually as revenue and assets change.<br><br>CBCA: ${iscPct < 25 ? 'No individual exceeds 25% control threshold. No ISC filing required.' : `ISC filed: ${iscFiled}. Verify next filing date.`}`;
+    }
+
+    const entry = {
+      id: uid(), module: 'S-211', ruleId: 'FR-CA-05',
+      input: `Rev: ${fmt(revenue)} · Assets: ${fmt(assets)} · Emp: ${employees}`,
+      result: result.toUpperCase(), statute: statute.split('—')[0].trim(), timestamp: ts()
+    };
+    logCheck(entry);
+    showResult('supply-result', result, title, statute, action, [
+      { label:'Check ID', val: entry.id },
+      { label:'Conditions met', val: conditionsMet + '/3' },
+      { label:'S-211 covered', val: isCovered ? 'Yes' : 'No' },
+      { label:'ISC threshold', val: iscPct >= 25 ? 'Triggered' : 'Not triggered' },
+    ]);
+  });
+}
+
+// ─── RATE TABLE ─────────────────────────────────────
+function renderRateTable() {
+  const tbody = document.getElementById('rate-tbody');
+  tbody.innerHTML = rateTable.map((r,i) => `
+    <tr>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${r.id}</td>
+      <td>${r.desc}</td>
+      <td><input type="text" value="${r.threshold}" style="width:140px;padding:5px 8px;font-size:12px;" oninput="rateTable[${i}].threshold=this.value" /></td>
+      <td><input type="text" value="${r.pmin}" style="width:100px;padding:5px 8px;font-size:12px;" oninput="rateTable[${i}].pmin=this.value" /></td>
+      <td><input type="text" value="${r.pmax}" style="width:120px;padding:5px 8px;font-size:12px;" oninput="rateTable[${i}].pmax=this.value" /></td>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--text3)">${r.statute}</td>
+    </tr>
+  `).join('');
+}
+
+function saveRateTable() {
+  const msg = document.getElementById('rate-save-msg');
+  msg.style.display = 'inline';
+  setTimeout(() => { msg.style.display = 'none'; }, 2500);
+}
+
+renderRateTable();
+</script>
+</body>
+</html>

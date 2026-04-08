@@ -14,3 +14,122 @@ import * as zod from "zod";
 export const HealthCheckResponse = zod.object({
   status: zod.string(),
 });
+
+/**
+ * @summary Run a compliance check
+ */
+export const RunComplianceCheckBody = zod.object({
+  module: zod
+    .string()
+    .describe("Module type: casl, pipeda, bill96, employment, wsib, payroll"),
+  province: zod.string(),
+  businessType: zod.string().optional(),
+  data: zod.record(zod.string(), zod.unknown()).optional(),
+});
+
+export const RunComplianceCheckResponse = zod.object({
+  status: zod.enum(["pass", "fail", "flag", "block"]),
+  score: zod.number(),
+  title: zod.string(),
+  statute: zod.string(),
+  remediation: zod.string(),
+  module: zod.string(),
+  timestamp: zod.coerce.date(),
+});
+
+/**
+ * @summary Scan a URL for compliance violations (landing page demo)
+ */
+export const ScanUrlBody = zod.object({
+  url: zod.string(),
+});
+
+export const ScanUrlResponse = zod.object({
+  url: zod.string(),
+  overallScore: zod.number(),
+  violations: zod.array(
+    zod.object({
+      law: zod.string(),
+      issue: zod.string(),
+      severity: zod.enum(["high", "medium", "low"]),
+      citation: zod.string(),
+    }),
+  ),
+});
+
+/**
+ * @summary List all conversations
+ */
+export const ListAnthropicConversationsResponseItem = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+export const ListAnthropicConversationsResponse = zod.array(
+  ListAnthropicConversationsResponseItem,
+);
+
+/**
+ * @summary Create a new conversation
+ */
+export const CreateAnthropicConversationBody = zod.object({
+  title: zod.string(),
+});
+
+/**
+ * @summary Get conversation with messages
+ */
+export const GetAnthropicConversationParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const GetAnthropicConversationResponse = zod.object({
+  id: zod.number(),
+  title: zod.string(),
+  createdAt: zod.coerce.date(),
+  messages: zod.array(
+    zod.object({
+      id: zod.number(),
+      conversationId: zod.number(),
+      role: zod.string(),
+      content: zod.string(),
+      createdAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
+ * @summary Delete a conversation
+ */
+export const DeleteAnthropicConversationParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary List messages in a conversation
+ */
+export const ListAnthropicMessagesParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const ListAnthropicMessagesResponseItem = zod.object({
+  id: zod.number(),
+  conversationId: zod.number(),
+  role: zod.string(),
+  content: zod.string(),
+  createdAt: zod.coerce.date(),
+});
+export const ListAnthropicMessagesResponse = zod.array(
+  ListAnthropicMessagesResponseItem,
+);
+
+/**
+ * @summary Send a message and receive an AI response (SSE stream)
+ */
+export const SendAnthropicMessageParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const SendAnthropicMessageBody = zod.object({
+  content: zod.string(),
+});

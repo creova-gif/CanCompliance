@@ -8,3 +8,92 @@
 export interface HealthStatus {
   status: string;
 }
+
+export type ComplianceCheckBodyData = { [key: string]: unknown };
+
+export interface ComplianceCheckBody {
+  /** Module type: casl, pipeda, bill96, employment, wsib, payroll */
+  module: string;
+  province: string;
+  businessType?: string;
+  data?: ComplianceCheckBodyData;
+}
+
+export type ComplianceCheckResultStatus =
+  (typeof ComplianceCheckResultStatus)[keyof typeof ComplianceCheckResultStatus];
+
+export const ComplianceCheckResultStatus = {
+  pass: "pass",
+  fail: "fail",
+  flag: "flag",
+  block: "block",
+} as const;
+
+export interface ComplianceCheckResult {
+  status: ComplianceCheckResultStatus;
+  score: number;
+  title: string;
+  statute: string;
+  remediation: string;
+  module: string;
+  timestamp: string;
+}
+
+export interface ScanUrlBody {
+  url: string;
+}
+
+export type ScanViolationSeverity =
+  (typeof ScanViolationSeverity)[keyof typeof ScanViolationSeverity];
+
+export const ScanViolationSeverity = {
+  high: "high",
+  medium: "medium",
+  low: "low",
+} as const;
+
+export interface ScanViolation {
+  law: string;
+  issue: string;
+  severity: ScanViolationSeverity;
+  citation: string;
+}
+
+export interface ScanUrlResult {
+  url: string;
+  overallScore: number;
+  violations: ScanViolation[];
+}
+
+export interface AnthropicConversation {
+  id: number;
+  title: string;
+  createdAt: string;
+}
+
+export interface AnthropicMessage {
+  id: number;
+  conversationId: number;
+  role: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface CreateAnthropicConversationBody {
+  title: string;
+}
+
+export interface SendAnthropicMessageBody {
+  content: string;
+}
+
+export interface AnthropicConversationWithMessages {
+  id: number;
+  title: string;
+  createdAt: string;
+  messages: AnthropicMessage[];
+}
+
+export interface AnthropicError {
+  error: string;
+}

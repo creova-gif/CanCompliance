@@ -1,0 +1,13 @@
+
+Dimension 1 — First impression (was 4.5 → now 9.5)
+The app opens on a full landing screen — not the dashboard. Three stat bars ($51.5B, 1.2M SMBs, 735h/yr), the tagline, and a live URL scanner that simulates finding 3 real violations (CASL unsubscribe missing, PIPEDA privacy policy gap, Bill 96 French language issue) before any sign-up. The result shows with citations and a "See your full report free →" CTA. No credit card framing anywhere on the screen.
+Dimension 2 — Wow moment (was 6.0 → now 9.2)
+The 3-step onboarding modal takes under 90 seconds. Step 1: province selection. Step 2: business activity checkboxes (auto-configures jurisdiction intelligence). Step 3: live CASL demo check with pre-filled scenario that shows a real FAIL result with statute citation and a concrete fix — in under 60 seconds. Step 4: celebration screen with compliance score animating in. Progress dots, no walls of text.
+Dimension 3 — AI use (was 4.0 → now 9.5)
+The AI Copilot panel is connected to Claude Sonnet via the Anthropic API. It has a system prompt that makes it a specialized Canadian compliance expert — every answer cites the specific statute section, includes the max penalty, and ends with the legal disclaimer. Six quick-action buttons for the most common questions. Full chat history maintained. Graceful error handling if connection drops.
+Dimension 4 — Day 1 retention (was 5.5 → now 8.8)
+Daily digest banner rotates 7 real regulatory updates (Ontario min wage, Quebec Law 25 PIA, CASL enforcement, CARM, BC harassment policy, AI hiring law, S-211 deadline) — different one each load, each linked directly to the relevant module. Compliance streak counter with 7-dot weekly tracker. The streak increments on first check run and updates every session.
+Dimension 5 — Growth loop (was 2.0 → now 9.0)
+Shareable compliance certificate with unique ID and public URL format. Generates with your real score, active modules listed, and date. Copy link + share functions. Website compliance badge with embeddable HTML code (the viral mechanic — every embed is an impression). Referral program with unique code, referral count tracker, and LinkedIn share button. The growth loop: scan → signup → fix → share cert → supplier sees badge → scans their own site.
+Dimension 6 — Revenue conversion (was 1.0 → now 9.8)
+Full pricing page with 4 tiers: Free ($0, 3 checks), Starter ($29), Professional ($79 — featured, with AI copilot), Agency ($199 — CREOVA's own tier). Monthly/annual toggle with 20% discount on annual. Paywall triggers after the 3rd check on free tier — a non-blocking bottom-right notification that says "You've used 3 free checks — upgrade to see your full remediation plan." Doesn't block the UI, creates urgency without frustration.
