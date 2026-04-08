@@ -1,7 +1,6 @@
 import { Link } from "wouter";
-import { SignUpButton, SignInButton } from "@clerk/react";
 import { PublicNav, PublicFooter } from "@/components/PublicLayout";
-import { Bot, ArrowRight, Zap, MessageSquare, Shield, Globe, CheckCircle, Sparkles, Clock, FileText, Code2 } from "lucide-react";
+import { Bot, ArrowRight, Zap, MessageSquare, Shield, Globe, CheckCircle, Sparkles, Clock, FileText, Code2, ChevronRight } from "lucide-react";
 
 const SAMPLE_CONVERSATIONS = [
   {
@@ -22,14 +21,20 @@ const SAMPLE_CONVERSATIONS = [
     model: "Claude Sonnet",
     statute: "Bill 96 / Charter of the French Language S.52, S.206",
   },
+  {
+    q: "What are the WSIB reporting deadlines for new employers in Ontario?",
+    a: "Under the Workplace Safety and Insurance Act (WSIA), new employers must register with WSIB within 10 days of hiring their first employee. Serious workplace injuries must be reported within 3 days. Fatalities must be reported immediately by phone. Premium remittances are due quarterly for new accounts. Failure to register: retroactive premiums + 25% surcharge + potential prosecution. Failure to report injury: up to $500,000 penalty.",
+    model: "GPT-5.2",
+    statute: "WSIA S.10, S.52; O. Reg. 175/98",
+  },
 ];
 
 const USE_CASES = [
-  { icon: MessageSquare, title: "Real-time Q&A", desc: "Ask anything about Canadian compliance. Get an answer with the exact statute section and penalty range — in seconds." },
-  { icon: FileText, title: "Contract review guidance", desc: "Paste a clause and ask if it's PIPEDA-compliant, CASL-compliant, or if it violates Employment Standards. The AI spots issues a generalist lawyer might miss." },
-  { icon: Globe, title: "Province-specific rules", desc: "Quebec employment law is different from Ontario's. Ask jurisdiction-specific questions and get province-specific answers, not generic Canadian advice." },
-  { icon: Zap, title: "Regulation interpretation", desc: "New regulation published? Paste the section and ask what it means for your business. The AI translates legalese into plain English action steps." },
-  { icon: Clock, title: "Deadline awareness", desc: "Ask about filing deadlines, remittance schedules, and renewal dates for any Canadian regulatory obligation. Never miss a date again." },
+  { icon: MessageSquare, title: "Real-time Q&A", desc: "Ask anything about Canadian compliance. Get an answer with the exact statute section and penalty range in seconds. No generalist advice." },
+  { icon: FileText, title: "Contract review guidance", desc: "Paste a clause and ask if it's PIPEDA-compliant, CASL-compliant, or if it violates Employment Standards. Spots issues a generalist lawyer might miss." },
+  { icon: Globe, title: "Province-specific rules", desc: "Quebec employment law is different from Ontario's. Get jurisdiction-specific answers, not generic Canadian advice — province is always considered." },
+  { icon: Zap, title: "Regulation interpretation", desc: "New regulation published? Paste the section and ask what it means for your business. Translates legalese into plain English action steps." },
+  { icon: Clock, title: "Deadline awareness", desc: "Ask about filing deadlines, remittance schedules, and renewal dates for any Canadian regulatory obligation. Every deadline is statute-backed." },
   { icon: Code2, title: "Technical compliance", desc: "How does your tech stack affect PIPEDA compliance? Does your SaaS cookie setup satisfy CASL? The AI understands both law and technology." },
 ];
 
@@ -37,7 +42,7 @@ const MODELS = [
   {
     name: "Claude Sonnet",
     by: "Anthropic",
-    strength: "Deep legal reasoning, nuanced compliance analysis, multi-step statute interpretation",
+    strength: "Deep legal reasoning, nuanced compliance analysis, multi-step statute interpretation. Preferred for complex multi-law questions.",
     badge: "Recommended",
     color: "#c8f135",
     icon: "◆",
@@ -45,11 +50,22 @@ const MODELS = [
   {
     name: "GPT-5.2",
     by: "OpenAI",
-    strength: "Comprehensive knowledge base, precise citations, technical regulations",
+    strength: "Comprehensive knowledge base, precise regulatory citations, strong performance on technical compliance questions and structured outputs.",
     badge: "Latest",
     color: "#7F77DD",
     icon: "●",
   },
+];
+
+const QUICK_QUESTIONS = [
+  "Is my CASL consent compliant if I use a pre-checked checkbox?",
+  "What does PIPEDA say about sharing customer data with third parties?",
+  "Do I need French labels in Quebec for online-only products?",
+  "What are the WSIB reporting deadlines for new employers in Ontario?",
+  "Explain the key Bill 96 requirements for e-commerce businesses",
+  "What are the new Ontario employment standards for remote workers?",
+  "How do I calculate CPP contributions for a new employee?",
+  "What triggers a FINTRAC reporting obligation for my business?",
 ];
 
 export default function AiCopilotPage() {
@@ -59,10 +75,7 @@ export default function AiCopilotPage() {
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 px-6 max-w-5xl mx-auto w-full">
-        <div
-          className="pointer-events-none absolute left-1/2 top-16 -translate-x-1/2 w-[800px] h-[500px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(ellipse at center, #c8f135 0%, transparent 70%)" }}
-        />
+        <div className="pointer-events-none absolute left-1/2 top-16 -translate-x-1/2 w-[800px] h-[500px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(ellipse at center, #c8f135 0%, transparent 70%)" }} />
         <div className="relative">
           <div className="flex justify-center mb-6">
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #c8f135 0%, #12b76a 100%)" }}>
@@ -72,45 +85,66 @@ export default function AiCopilotPage() {
           <div className="text-center">
             <div className="inline-flex items-center gap-2 font-mono text-[10px] text-primary tracking-[3px] uppercase mb-4 border border-primary/20 rounded-full px-3 py-1 bg-primary/5">
               <Sparkles className="w-3 h-3" />
-              Claude Sonnet + GPT-5.2
+              Claude Sonnet + GPT-5.2 · Statute-cited answers
             </div>
             <h1 className="font-serif italic text-5xl md:text-6xl text-foreground leading-tight mb-5">
               Your compliance lawyer,<br /><span style={{ color: "#c8f135" }}>on demand.</span>
             </h1>
             <p className="text-[15px] text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
-              Ask any Canadian compliance question — CASL, PIPEDA, Bill 96, Employment Standards, FINTRAC — and get a precise answer with the exact statute section, penalty amount, and step-by-step fix. 
+              Ask any Canadian compliance question — CASL, PIPEDA, Bill 96, Employment Standards, FINTRAC, GST/HST — and get a precise answer with the exact statute section, penalty amount, and step-by-step fix.
               Powered by Claude Sonnet and GPT-5.2.
             </p>
             <div className="flex items-center justify-center gap-4 mb-4">
-              <SignUpButton mode="modal">
-                <button className="px-7 py-3.5 rounded-lg text-[13px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-2" style={{ background: "#c8f135", color: "#09090a" }}>
+              <Link href="/sign-up">
+                <button data-testid="btn-copilot-signup" className="px-7 py-3.5 rounded-lg text-[13px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-2" style={{ background: "#c8f135", color: "#09090a" }}>
                   Try AI Copilot Free <ArrowRight className="w-4 h-4" />
                 </button>
-              </SignUpButton>
-              <SignInButton mode="modal">
+              </Link>
+              <Link href="/sign-in">
                 <button className="px-7 py-3.5 rounded-lg text-[13px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
                   Sign In to Ask
                 </button>
-              </SignInButton>
+              </Link>
+              <Link href="/dashboard">
+                <button className="px-7 py-3.5 rounded-lg text-[13px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors flex items-center gap-1.5">
+                  Dashboard <ChevronRight className="w-4 h-4" />
+                </button>
+              </Link>
             </div>
             <p className="text-[11px] text-muted-foreground font-mono">Available on Professional and Agency plans · Not legal advice</p>
           </div>
         </div>
       </section>
 
+      {/* Quick questions preview */}
+      <section className="py-10 px-6 max-w-5xl mx-auto w-full">
+        <div className="text-center mb-6">
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Example questions you can ask right now</div>
+        </div>
+        <div className="grid md:grid-cols-4 gap-2">
+          {QUICK_QUESTIONS.map(q => (
+            <div key={q} className="bg-card border border-border rounded-lg p-3 text-[11px] text-muted-foreground leading-relaxed hover:border-primary/20 hover:text-foreground transition-all cursor-pointer">
+              {q}
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-4">
+          <Link href="/sign-up">
+            <span className="text-[12px] text-primary hover:underline underline-offset-2 font-mono cursor-pointer">Sign up to ask any of these →</span>
+          </Link>
+        </div>
+      </section>
+
       {/* Model comparison */}
       <section className="py-16 px-6 max-w-5xl mx-auto w-full">
         <div className="text-center mb-10">
-          <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-3">Choose your model</div>
+          <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-3">Choose your AI model</div>
           <h2 className="font-serif italic text-3xl text-foreground mb-3">Two world-class AI models. One compliance platform.</h2>
-          <p className="text-[13px] text-muted-foreground">Switch between models mid-conversation. Each brings different strengths to compliance analysis.</p>
+          <p className="text-[13px] text-muted-foreground">Switch between models mid-conversation. Each brings different strengths.</p>
         </div>
         <div className="grid md:grid-cols-2 gap-5 max-w-3xl mx-auto">
           {MODELS.map(model => (
-            <div
-              key={model.name}
-              className="bg-card border border-border rounded-xl p-6 hover:border-primary/20 transition-all relative overflow-hidden"
-            >
+            <div key={model.name} className="bg-card border border-border rounded-xl p-6 hover:border-primary/20 transition-all relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: model.color }} />
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -136,12 +170,11 @@ export default function AiCopilotPage() {
           <div className="text-center mb-12">
             <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-3">Real examples</div>
             <h2 className="font-serif italic text-4xl text-foreground mb-3">What real answers look like.</h2>
-            <p className="text-[14px] text-muted-foreground">Every answer includes: the relevant statute, the maximum penalty, and the specific fix. No vague advice.</p>
+            <p className="text-[14px] text-muted-foreground max-w-2xl mx-auto">Every answer includes: the relevant statute, the maximum penalty, and the specific fix. No vague advice. No "consult a lawyer" cop-outs without useful guidance.</p>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-5">
             {SAMPLE_CONVERSATIONS.map((conv, i) => (
               <div key={i} className="bg-card border border-border rounded-2xl overflow-hidden">
-                {/* Header */}
                 <div className="px-5 py-3 border-b border-border flex items-center gap-2">
                   <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
                     <Bot className="w-3 h-3 text-primary" />
@@ -149,13 +182,11 @@ export default function AiCopilotPage() {
                   <span className="font-mono text-[10px] text-muted-foreground">{conv.model}</span>
                   <span className="ml-auto font-mono text-[9px] px-2 py-0.5 rounded bg-primary/5 text-primary">{conv.statute}</span>
                 </div>
-                {/* Question */}
                 <div className="px-5 pt-4 pb-3 flex justify-end">
                   <div className="max-w-[75%] rounded-xl px-4 py-3 text-[13px]" style={{ background: "#c8f135", color: "#09090a" }}>
                     {conv.q}
                   </div>
                 </div>
-                {/* Answer */}
                 <div className="px-5 pb-5 flex justify-start">
                   <div className="max-w-[80%] rounded-xl px-4 py-3 bg-muted text-[13px] text-foreground leading-relaxed">
                     {conv.a}
@@ -163,6 +194,13 @@ export default function AiCopilotPage() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link href="/sign-up">
+              <button className="px-6 py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity flex items-center gap-2 mx-auto" style={{ background: "#c8f135", color: "#09090a" }}>
+                Ask your own question — Sign up free <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -193,24 +231,27 @@ export default function AiCopilotPage() {
             <Shield className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <div className="text-[13px] font-semibold text-foreground mb-2">Data handling transparency — PIPEDA compliant</div>
-            <p className="text-[12px] text-muted-foreground leading-relaxed mb-2">
-              Your questions are processed by Anthropic PBC or OpenAI in the United States. This is a cross-border transfer under PIPEDA, disclosed in our Privacy Policy. 
-              Conversations are stored in your account and can be deleted at any time. Do not enter personal information about third parties (employee names, client data) into AI Copilot.
+            <div className="text-[13px] font-semibold text-foreground mb-2">Data handling — PIPEDA compliant disclosure</div>
+            <p className="text-[12px] text-muted-foreground leading-relaxed mb-3">
+              Your questions are processed by Anthropic PBC or OpenAI in the United States. This is a cross-border transfer under PIPEDA Principle 4.1.3, disclosed in our Privacy Policy.
+              Conversations are stored in your account and can be permanently deleted from Account Settings at any time. Do not enter personal information about third parties (employee names, client data) into AI Copilot.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 <CheckCircle className="w-3.5 h-3.5 text-pass" />
-                PIPEDA-compliant disclosure
+                PIPEDA-compliant cross-border disclosure
               </div>
               <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 <CheckCircle className="w-3.5 h-3.5 text-pass" />
-                Delete your history anytime
+                Delete your conversation history anytime
               </div>
               <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 <CheckCircle className="w-3.5 h-3.5 text-pass" />
-                No data sold to third parties
+                No data sold or shared for training
               </div>
+              <Link href="/privacy-policy">
+                <span className="text-[11px] text-primary hover:underline underline-offset-2 cursor-pointer">Read Privacy Policy →</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -218,23 +259,25 @@ export default function AiCopilotPage() {
 
       {/* CTA */}
       <section className="py-20 px-6 max-w-5xl mx-auto w-full">
-        <div
-          className="rounded-2xl p-14 border text-center relative overflow-hidden"
-          style={{ background: "linear-gradient(135deg, rgba(200,241,53,0.07) 0%, rgba(18,183,106,0.03) 100%)", borderColor: "rgba(200,241,53,0.2)" }}
-        >
+        <div className="rounded-2xl p-14 border text-center relative overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(200,241,53,0.07) 0%, rgba(18,183,106,0.03) 100%)", borderColor: "rgba(200,241,53,0.2)" }}>
           <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 w-[500px] h-[200px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(ellipse at center, #c8f135 0%, transparent 70%)" }} />
           <div className="relative">
             <Bot className="w-12 h-12 text-primary mx-auto mb-4" />
             <h2 className="font-serif italic text-4xl text-foreground mb-4">Start asking compliance questions now</h2>
             <p className="text-[14px] text-muted-foreground mb-8 max-w-lg mx-auto">
-              Available on Professional ($79/mo) and Agency ($199/mo) plans. Try free for 30 days — no credit card.
+              AI Copilot is included on Professional ($79/mo) and Agency ($199/mo) plans. 30-day money-back guarantee.
             </p>
             <div className="flex items-center justify-center gap-4">
-              <SignUpButton mode="modal">
+              <Link href="/sign-up">
                 <button className="px-8 py-4 rounded-lg font-semibold text-[14px] hover:opacity-90 transition-opacity flex items-center gap-2" style={{ background: "#c8f135", color: "#09090a" }}>
-                  Start Free — Access AI Copilot <ArrowRight className="w-4 h-4" />
+                  Create Account — Access AI Copilot <ArrowRight className="w-4 h-4" />
                 </button>
-              </SignUpButton>
+              </Link>
+              <Link href="/sign-in">
+                <button className="px-8 py-4 rounded-lg text-[14px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+                  Sign In
+                </button>
+              </Link>
               <Link href="/pricing">
                 <button className="px-8 py-4 rounded-lg text-[14px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
                   View Pricing

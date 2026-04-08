@@ -59,28 +59,28 @@ export default function Landing() {
             <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">Features</button>
           </Link>
           <Link href="/pricing">
-            <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
-              Pricing
-            </button>
+            <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">Pricing</button>
           </Link>
           <Link href="/ai-copilot">
-            <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
-              AI Copilot
-            </button>
+            <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">AI Copilot</button>
+          </Link>
+          <Link href="/dashboard">
+            <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">Dashboard</button>
           </Link>
           <Link href="/sign-in">
             <button data-testid="btn-signin" className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground border border-border hover:bg-muted hover:text-foreground transition-colors">
               Sign In
             </button>
           </Link>
-          <button
-            data-testid="btn-start-free"
-            onClick={() => setShowOnboarding(true)}
-            className="px-4 py-1.5 rounded-lg text-[12px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5"
-            style={{ background: "#c8f135", color: "#09090a" }}
-          >
-            Start Free <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          <Link href="/sign-up">
+            <button
+              data-testid="btn-start-free"
+              className="px-4 py-1.5 rounded-lg text-[12px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5"
+              style={{ background: "#c8f135", color: "#09090a" }}
+            >
+              Start Free <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </Link>
         </div>
       </nav>
 
@@ -108,14 +108,15 @@ export default function Landing() {
 
           {/* Hero CTAs */}
           <div className="flex items-center justify-center gap-3 mb-12">
-            <button
-              data-testid="btn-hero-start"
-              onClick={() => setShowOnboarding(true)}
-              className="px-6 py-3 rounded-lg text-[13px] font-semibold transition-opacity hover:opacity-90 flex items-center gap-2"
-              style={{ background: "#c8f135", color: "#09090a" }}
-            >
-              Start Free — No Credit Card <ArrowRight className="w-4 h-4" />
-            </button>
+            <Link href="/sign-up">
+              <button
+                data-testid="btn-hero-start"
+                className="px-6 py-3 rounded-lg text-[13px] font-semibold transition-opacity hover:opacity-90 flex items-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
+              >
+                Start Free — No Credit Card <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
             <Link href="/dashboard">
               <button className="px-6 py-3 rounded-lg text-[13px] font-medium border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors flex items-center gap-2">
                 View Dashboard <ChevronRight className="w-4 h-4" />
@@ -231,14 +232,15 @@ export default function Landing() {
                 </div>
               ))}
 
-              <button
-                data-testid="btn-full-report"
-                onClick={handleGetFullReport}
-                className="w-full mt-4 py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-                style={{ background: "#c8f135", color: "#09090a" }}
-              >
-                See your full report free <ArrowRight className="w-4 h-4" />
-              </button>
+              <Link href="/sign-up">
+                <button
+                  data-testid="btn-full-report"
+                  className="w-full mt-4 py-3 rounded-lg font-semibold text-[13px] hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                  style={{ background: "#c8f135", color: "#09090a" }}
+                >
+                  See your full report free <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
               <p className="text-center text-[11px] text-muted-foreground">No credit card required</p>
             </div>
           </div>
@@ -308,14 +310,22 @@ export default function Landing() {
           <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-4">Get started today</div>
           <h2 className="font-serif italic text-3xl text-foreground mb-4">Start your free compliance scan</h2>
           <p className="text-[13px] text-muted-foreground mb-8">3 free checks per month. No credit card. No lawyers. Just answers.</p>
-          <button
-            data-testid="btn-cta-start"
-            onClick={() => setShowOnboarding(true)}
-            className="px-8 py-3.5 rounded-lg font-semibold text-[14px] hover:opacity-90 transition-opacity"
-            style={{ background: "#c8f135", color: "#09090a" }}
-          >
-            Get Started Free
-          </button>
+          <div className="flex items-center justify-center gap-3">
+            <Link href="/sign-up">
+              <button
+                data-testid="btn-cta-start"
+                className="px-8 py-3.5 rounded-lg font-semibold text-[14px] hover:opacity-90 transition-opacity flex items-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}
+              >
+                Get Started Free <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
+            <Link href="/dashboard">
+              <button className="px-6 py-3.5 rounded-lg text-[14px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+                View Dashboard
+              </button>
+            </Link>
+          </div>
           <p className="mt-4 text-[11px] text-muted-foreground">3 checks free monthly · Cancel anytime · Not legal advice</p>
         </div>
       </section>
