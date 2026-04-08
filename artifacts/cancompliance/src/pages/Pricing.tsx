@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import AppLayout from "@/components/AppLayout";
 import { Check } from "lucide-react";
 
@@ -16,6 +17,7 @@ const TIERS = [
       "Basic result export",
     ],
     cta: "Get Started Free",
+    ctaHref: "/sign-up",
     featured: false,
   },
   {
@@ -32,6 +34,7 @@ const TIERS = [
       "Email support",
     ],
     cta: "Start Starter",
+    ctaHref: "/sign-up",
     featured: false,
   },
   {
@@ -49,6 +52,7 @@ const TIERS = [
       "Audit-ready reports",
     ],
     cta: "Start Professional",
+    ctaHref: "/sign-up",
     featured: true,
   },
   {
@@ -66,12 +70,14 @@ const TIERS = [
       "Custom compliance modules",
     ],
     cta: "Contact Sales",
+    ctaHref: "mailto:sales@cancompliance.ca",
     featured: false,
   },
 ];
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(false);
+  const [, setLocation] = useLocation();
 
   return (
     <AppLayout title="Pricing" subtitle="Simple, transparent pricing for Canadian businesses">
@@ -152,6 +158,13 @@ export default function Pricing() {
                 <div className="p-5 pt-0">
                   <button
                     data-testid={`btn-cta-${tier.id}`}
+                    onClick={() => {
+                      if (tier.ctaHref.startsWith("mailto:")) {
+                        window.location.href = tier.ctaHref;
+                      } else {
+                        setLocation(tier.ctaHref);
+                      }
+                    }}
                     className={`w-full py-2.5 rounded-lg text-[12px] font-semibold transition-colors ${
                       tier.featured
                         ? "hover:opacity-90"
