@@ -36,6 +36,11 @@ import JurisdictionSetup from "@/pages/JurisdictionSetup";
 import ControlMapper from "@/pages/ControlMapper";
 import PrivacyPolicy from "@/pages/PrivacyPolicy";
 import Account from "@/pages/Account";
+import RedTapeCalculator from "@/pages/RedTapeCalculator";
+import LegislationTracker from "@/pages/LegislationTracker";
+import DocumentScanner from "@/pages/DocumentScanner";
+import Benchmarking from "@/pages/Benchmarking";
+import SandboxAdvisor from "@/pages/SandboxAdvisor";
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
@@ -222,6 +227,11 @@ function AppBody() {
       <Route path="/jurisdiction" component={() => <ProtectedRoute component={JurisdictionSetup} />} />
       <Route path="/control-mapper" component={() => <ProtectedRoute component={ControlMapper} />} />
       <Route path="/account" component={() => <ProtectedRoute component={Account} />} />
+      <Route path="/red-tape-calculator" component={() => <ProtectedRoute component={RedTapeCalculator} />} />
+      <Route path="/legislation-tracker" component={() => <ProtectedRoute component={LegislationTracker} />} />
+      <Route path="/document-scanner" component={() => <ProtectedRoute component={DocumentScanner} />} />
+      <Route path="/benchmarking" component={() => <ProtectedRoute component={Benchmarking} />} />
+      <Route path="/sandbox-advisor" component={() => <ProtectedRoute component={SandboxAdvisor} />} />
       <Route component={NotFound} />
     </Switch>
   );

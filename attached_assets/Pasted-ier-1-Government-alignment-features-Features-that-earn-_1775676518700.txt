@@ -1,0 +1,150 @@
+ier 1 — Government alignment features
+Features that earn government support
+Research confirms the federal government is actively seeking private-sector RegTech partners to help reduce $17.9B in annual red tape. BizPaL is expanding. ISED is funding compliance digitization. These features position CanCompliance as infrastructure, not just a SaaS tool.
+Gov · Feature 1
+BizPaL integration layer
+The federal government's BizPaL platform is actively expanding to include compliance documentation. An API integration makes CanCompliance the user-facing layer for BizPaL's regulatory database — putting you inside the government's own infrastructure rollout. ISED is already funding this expansion.
+Gov. fit
+9.8
+Build effort
+Med
+ISED partnership
+API integration
+Federal legitimacy
+Gov · Feature 2
+Digital regulatory reporting (DRR) pipeline
+Regulators worldwide are shifting to real-time, API-based reporting rather than quarterly paper submissions. Build a "push to regulator" pipeline: CASL consent records structured for CRTC audit, FINTRAC reports formatted for PCMLTFA submission, WSIB premiums pre-calculated for remittance. First in Canada to do this.
+Gov. fit
+9.2
+Build effort
+High
+CRTC alignment
+FINTRAC integration
+SupTech play
+Gov · Feature 3
+Red tape burden calculator
+The CFIB measures $51.5B in compliance costs annually but has no tool that measures a specific business's burden. Build a "How much red tape does your business face?" calculator — hours lost, cost in dollars, comparison to industry average. Government can use this anonymized aggregate data to identify reform priorities. Publishable research.
+Gov. fit
+8.8
+Build effort
+Low
+CFIB partnership angle
+Policy data asset
+PR / media hook
+Gov · Feature 4
+Regulatory sandbox advisor
+Canada's Centre for Regulatory Innovation has a $1.7M+ fund for RegTech. The OSFI and FCAC both run fintech sandboxes. Build a "Regulatory Sandbox Eligibility Checker" — businesses describe their product and the system identifies which sandbox programs they qualify for and what exemptions they can apply for. Positions CanCompliance as a government-adjacent advisor.
+Gov. fit
+8.5
+Build effort
+Med-low
+OSFI / FCAC
+Innovation Canada
+ISED Centre
+Tier 2 — Product features for public adoption
+Features that drive mass uptake
+Research shows 35% of regulations are pure red tape — unnecessary burden with no public interest value. The public adoption flywheel is built on making compliance feel like an advantage, not a tax. These features create network effects, habit formation, and defensible switching costs.
+Product · Feature 5
+Compliance health network (B2B2B)
+When a business shares their compliance certificate, their suppliers see it. Build a "Request compliance proof from supplier" feature — a business can request that a vendor prove their CASL, PIPEDA, or S-211 status. Each request pulls a new user into the network. Network effects: every certified business becomes a distribution node for the next customer.
+Adoption
+9.4
+Build effort
+Med
+Viral B2B loop
+Supply chain trust
+Network effect moat
+Product · Feature 6
+Compliance inbox (regulatory news, personalized)
+A personalized weekly email digest: "3 regulatory changes that affect your business this week." Filtered by province, industry, and modules active on your account. The daily digest banner in the app already exists — this extends it to email. The CFIB publishes weekly regulatory updates. Becoming the filter layer between noisy government publications and the business owner is a massive retention mechanic.
+Adoption
+9.0
+Build effort
+Low
+Resend / email
+Weekly touchpoint
+Day 30+ retention
+AI · Feature 7
+Contract & document scanner
+Upload a contract, terms of service, privacy policy, supplier agreement, or employment contract. Claude reads it and flags: CASL non-compliance, PIPEDA gaps, employment standards violations, missing S-211 language, and Quebec Bill 96 bilingualism issues. Output is a compliance audit report with statute citations and exact fix recommendations. This is the "Grammarly for legal docs" moment — and it's why Pro tier at $79/mo is instantly justified.
+Revenue
+9.6
+Build effort
+Med-low
+Claude API · PDF input
+Pro tier anchor feature
+Immediate value
+AI · Feature 8
+Upcoming legislation tracker (future-risk intelligence)
+Canada has 12+ major pieces of legislation in active development: CPPA (privacy), C-8 (cybersecurity), AI regulation (Minister Solomon), S-209 (online harms), C-2 (border). Build a live tracker: "Laws in progress that will affect your business" — each with estimated in-force date, projected compliance cost, and a "Start preparing now" action. This is the Bill C-27 Future Risk Score from the strategy brief, operationalized. Investors love forward positioning.
+YC signal
+9.5
+Build effort
+Low
+Dashboard feature
+Investor narrative
+Retention driver
+Data · Feature 9
+Anonymous compliance benchmarking
+With enough users, aggregate their anonymous compliance scores by province, industry, and size. Show each business: "Businesses like yours in Ontario average 62/100. You are at 74/100 — top 30% of your sector." This creates both retention (you want to maintain your rank) and social proof (government and investors can cite the aggregate data). The CFIB would publish this. Statistics Canada would cite it. Media would write about it.
+Network value
+9.1
+Build effort
+Med
+Privacy-safe aggregation
+CFIB partnership
+Data moat
+Data · Feature 10
+Compliance API (developer platform)
+Expose CanCompliance as an API: POST a business profile, GET back a compliance assessment. Developers at accounting firms (Freshbooks, Wave), HR tools (Humi, Rippling Canada), e-commerce platforms (Shopify), and law firms can embed Canadian compliance into their own products. Network effect: every integration is a distribution channel. Pricing: $0.05/API call at Professional tier, unlimited at Agency. This is how you reach millions of SMBs without selling to each one directly.
+Distribution
+9.3
+Build effort
+High
+Shopify / Wave potential
+Usage-based revenue
+Platform play
+International · Feature 11
+Tanzania compliance module (GoPay + CREOVA East Africa)
+Tanzania's Finance Act 2025 (WVAT 3%/6%), DST 2%, TRA EFD system interfacing, PDPA data protection, EPOCA e-waste — all go live in a dedicated Tanzania module with the same architecture as the Canadian modules. Direct synergy with GoPay Tanzania and CREOVA SME OS. No other compliance SaaS in the world covers Canada + Tanzania. This is your global moat. Build after Canadian revenue is stable — but architect for it now.
+Global moat
+9.7
+Build effort
+Med-high
+GoPay Tanzania synergy
+CREOVA SME OS
+YC global story
+Product · Feature 12
+Compliance marketplace (accountant + lawyer network)
+When a business gets a FAIL or FLAG that requires professional help, connect them with a vetted Canadian accountant, employment lawyer, or privacy specialist — with a pre-populated brief of their exact issue and relevant statutes. CanCompliance earns a referral fee (10-15%). The professional gets a warm lead with context. The business gets help fast. This turns compliance failures into revenue events and builds a network of professional advocates who recommend the platform.
+Revenue
+8.7
+Build effort
+Med
+Referral revenue
+Professional advocates
+Full-stack compliance
+Government partnership ladder
+How to earn government endorsement — in sequence
+Now
+Phase 0
+Build the red tape burden calculator + launch publicly
+Low effort, high government visibility. CFIB will cover it. Media will write about it. It costs $0 and positions you as a public-interest tool before you have 100 users.
+Month 3
+Phase 1
+Submit to ISED's BizPaL and Centre for Regulatory Innovation
+Apply for the Centre for Regulatory Innovation's partnership program. Contact BizPaL's national office at ISED. Request to be listed as a preferred RegTech tool. These are open programs — no political connections needed.
+Month 6
+Phase 2
+Publish the first Canadian SMB Compliance Benchmarking Report
+Anonymized aggregate data from your user base. Send to CFIB, Statistics Canada, the Treasury Board Secretariat, and every provincial chamber of commerce. This is the moment you become a policy-relevant data source — not just a SaaS tool.
+Month 9
+Phase 3
+Pitch provincial governments as a preferred SMB compliance tool
+Ontario's Red Tape Challenge, Alberta's SMART Regulation initiative, and BC's Better Regulation Office all have procurement pathways for RegTech. A provincial "endorsed tool" badge is worth 10x more than any ad spend for SMB adoption.
+Year 2
+Phase 4
+Regulatory Sandbox partnership with OSFI / FCAC / CRTC
+Apply to pilot the Digital Regulatory Reporting (DRR) pipeline with a single regulator — CRTC for CASL is the easiest first. Once one regulator accepts structured data from CanCompliance, you become part of Canada's compliance infrastructure. That is the moat no competitor can replicate.
+The one-sentence positioning shift these features enable
+CanCompliance stops being "a compliance tool for SMBs" and becomes "Canada's compliance infrastructure layer" — the platform that governments cite in policy papers, lawyers recommend to clients, accountants use to serve their books, and developers embed in their products. That is a different category of business, with a different multiple, and a different YC conversation.

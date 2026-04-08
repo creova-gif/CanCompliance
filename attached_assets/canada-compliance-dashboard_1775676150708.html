@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CanCompliance — PRD Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --border: #e2e1da;
+    --border2: #cccbc3;
+    --text: #1a1a18;
+    --text2: #5a5a55;
+    --text3: #9a9a92;
+    --red: #c0392b;
+    --red-bg: #fdf0ee;
+    --amber: #b8600a;
+    --amber-bg: #fef6ea;
+    --green: #2d7a47;
+    --green-bg: #edf7f1;
+    --blue: #1a5fa8;
+    --blue-bg: #edf4fc;
+    --purple: #4a3db0;
+    --purple-bg: #f0effe;
+    --teal: #0f6e56;
+    --teal-bg: #e4f5ef;
+    --p0: #c0392b;
+    --p1: #b8600a;
+    --p2: #2d7a47;
+    --accent: #1a1a18;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Sora', system-ui, sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 16px; }
+
+  .logo {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
+
+  .logo span {
+    display: inline-block;
+    background: var(--text);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    margin-left: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  .nav {
+    display: flex;
+    gap: 4px;
+    padding: 0 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+
+  .nav-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-family: var(--sans);
+    font-weight: 400;
+    color: var(--text2);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--text); border-bottom-color: var(--text); font-weight: 500; }
+
+  .main { padding: 28px 32px; max-width: 1200px; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Summary Cards */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+
+  .metric-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .metric-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .metric-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* Module cards */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .module-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .module-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .module-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .module-act {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+    margin-top: 2px;
+  }
+
+  .module-badge {
+    font-size: 10px;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .badge-p0 { background: var(--red-bg); color: var(--red); }
+  .badge-p1 { background: var(--amber-bg); color: var(--amber); }
+  .badge-p2 { background: var(--green-bg); color: var(--green); }
+  .badge-info { background: var(--blue-bg); color: var(--blue); }
+
+  .module-rules { padding: 12px 20px 16px; }
+
+  .rule-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+
+  .rule-row:last-child { border-bottom: none; }
+
+  .rule-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 72px;
+  }
+
+  .rule-name {
+    font-size: 12px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .rule-priority {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  /* User Stories */
+  .stories-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: var(--mono);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--text);
+    color: #fff;
+    border-color: var(--text);
+  }
+
+  .story-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+  }
+
+  .story-card:hover { border-color: var(--border2); }
+
+  .story-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .story-id {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  .story-epic {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: var(--mono);
+  }
+
+  .story-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .story-role {
+    font-size: 12px;
+    color: var(--blue);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .story-acceptance {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .acceptance-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .acceptance-item {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 4px;
+    align-items: flex-start;
+  }
+
+  .acceptance-item::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border2);
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+
+  /* Stack */
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .stack-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+
+  .stack-layer {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .stack-tech {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .stack-reason {
+    font-size: 12px;
+    color: var(--text2);
+  }
+
+  /* Phases */
+  .phase-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .phase-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--text);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: var(--mono);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .phase-title { font-size: 14px; font-weight: 500; }
+  .phase-timeline { font-size: 12px; color: var(--text3); font-family: var(--mono); margin-left: auto; }
+
+  .phase-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .phase-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text2);
+  }
+
+  /* Risk table */
+  .risk-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .risk-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .risk-table td {
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .risk-table tr:last-child td { border-bottom: none; }
+
+  .risk-high { color: var(--red); font-weight: 500; }
+  .risk-med { color: var(--amber); font-weight: 500; }
+  .risk-low { color: var(--green); font-weight: 500; }
+
+  /* Schema */
+  .schema-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .schema-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .schema-table-header {
+    background: var(--text);
+    color: #fff;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .schema-fields { padding: 10px 14px; }
+
+  .schema-field {
+    display: flex;
+    gap: 8px;
+    padding: 3px 0;
+    font-size: 11px;
+    font-family: var(--mono);
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+
+  .schema-field:last-child { border-bottom: none; }
+
+  .field-name { color: var(--text); }
+  .field-pk { color: var(--amber); }
+  .field-fk { color: var(--blue); }
+  .field-type { color: var(--text3); margin-left: auto; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="logo">CanCompliance <span>PRD v1.0</span></div>
+  </div>
+  <div class="header-meta">
+    <span>CREOVA / Justin Mafie</span>
+    <span>Apr 7, 2026</span>
+    <span>All modules · Web SaaS</span>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('overview')">Overview</button>
+  <button class="nav-btn" onclick="showSection('modules')">Modules (10)</button>
+  <button class="nav-btn" onclick="showSection('stories')">User stories (17)</button>
+  <button class="nav-btn" onclick="showSection('stack')">Tech stack</button>
+  <button class="nav-btn" onclick="showSection('phases')">Build phases</button>
+  <button class="nav-btn" onclick="showSection('schema')">DB schema</button>
+  <button class="nav-btn" onclick="showSection('risks')">Risk register</button>
+</div>
+
+<div class="main">
+
+  <!-- OVERVIEW -->
+  <div class="section active" id="overview">
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total rules</div>
+        <div class="metric-value">28</div>
+        <div class="metric-sub">FR-CA-01 → FR-CA-28</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">User stories</div>
+        <div class="metric-value">17</div>
+        <div class="metric-sub">5 epics</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">P0 rules</div>
+        <div class="metric-value">13</div>
+        <div class="metric-sub">Must ship in MVP</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Legislation</div>
+        <div class="metric-value">8</div>
+        <div class="metric-sub">Federal acts covered</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Build timeline</div>
+        <div class="metric-value">12w</div>
+        <div class="metric-sub">3 phases</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Auto-resolve target</div>
+        <div class="metric-value">80%</div>
+        <div class="metric-sub">No lawyer needed</div>
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px;">
+      <div style="font-size: 12px; font-family: var(--mono); color: var(--text3); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">System overview</div>
+      <div style="font-size: 13px; color: var(--text2); line-height: 1.8;">
+        CanCompliance is a web-based SaaS compliance automation platform for Canadian businesses — SME owners, compliance officers, and developers. It translates 8 federal acts into binary logic (Pass / Fail / Flag / Block) and surfaces actionable remediation steps with statutory citations. Every check is logged to a 6-year audit trail, Canadian data stays in ca-central-1, and admins can update all rate thresholds without a code deployment.
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px;">
+      <div style="font-size: 12px; font-family: var(--mono); color: var(--text3); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Output types</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
+        <div style="background: var(--green-bg); border: 1px solid #b8dfc6; border-radius: 8px; padding: 14px 16px;">
+          <div style="font-family: var(--mono); font-size: 11px; color: var(--green); margin-bottom: 4px; font-weight: 500;">PASS</div>
+          <div style="font-size: 12px; color: #2a6640;">Compliance certificate + 6-yr audit trail created</div>
+        </div>
+        <div style="background: var(--red-bg); border: 1px solid #f0b8b3; border-radius: 8px; padding: 14px 16px;">
+          <div style="font-family: var(--mono); font-size: 11px; color: var(--red); margin-bottom: 4px; font-weight: 500;">FAIL</div>
+          <div style="font-size: 12px; color: #8a2a20;">Statute section cited + corrective action required</div>
+        </div>
+        <div style="background: var(--amber-bg); border: 1px solid #f0d0a0; border-radius: 8px; padding: 14px 16px;">
+          <div style="font-family: var(--mono); font-size: 11px; color: var(--amber); margin-bottom: 4px; font-weight: 500;">FLAG</div>
+          <div style="font-size: 12px; color: #7a4010;">Nuanced — lawyer review recommended</div>
+        </div>
+        <div style="background: #fef0f0; border: 1px solid #f0a0a0; border-radius: 8px; padding: 14px 16px;">
+          <div style="font-family: var(--mono); font-size: 11px; color: #901010; margin-bottom: 4px; font-weight: 500;">BLOCK</div>
+          <div style="font-size: 12px; color: #701010;">Hard stop — product cannot proceed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULES -->
+  <div class="section" id="modules">
+    <div class="modules-grid">
+
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Module A — CCPSA Product Safety</div>
+            <div class="module-act">Canada Consumer Product Safety Act</div>
+          </div>
+          <span class="module-badge badge-p0">Core</span>
+        </div>
+        <div class="module-rules">
+          <div class="rule-row"><span class="rule-id">FR-CA-01</span><span class="rule-name">Danger checker — lead / phthalates</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-06</span><span class="rule-name">6-year document trail</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-11</span><span class="rule-name">Product risk classifier</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-12</span><span class="rule-name">Incident report template</span><span class="module-badge badge-p1">P1</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-13</span><span class="rule-name">US CPSC cross-reference</span><span class="module-badge badge-p2">P2</span></div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Module B — CPLA Bilingualism</div>
+            <div class="module-act">Consumer Packaging & Labelling Act + Quebec Bill 96</div>
+          </div>
+          <span class="module-badge badge-p0">Core</span>
+        </div>
+        <div class="module-rules">
+          <div class="rule-row"><span class="rule-id">FR-CA-02</span><span class="rule-name">Federal EN + FR validator</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-02b</span><span class="rule-name">Quebec Bill 96 French prominence</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-07</span><span class="rule-name">Net quantity metric validator</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-14</span><span class="rule-name">Test market exemption flag</span><span class="module-badge badge-p1">P1</span></div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Module C — FINTRAC / AML / KYC</div>
+            <div class="module-act">PCMLTFA · PCI DSS 4.0 · NI 93-101</div>
+          </div>
+          <span class="module-badge badge-p0">Core</span>
+        </div>
+        <div class="module-rules">
+          <div class="rule-row"><span class="rule-id">FR-CA-03</span><span class="rule-name">$10K CAD transaction trigger</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-15</span><span class="rule-name">STR log generator</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-16</span><span class="rule-name">PCI DSS 4.0 logging</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-08</span><span class="rule-name">NI 93-101 derivatives trigger</span><span class="module-badge badge-p1">P1</span></div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Module D — ESG / Greenwashing</div>
+            <div class="module-act">Competition Act · Bill C-59 · OSFI B-15</div>
+          </div>
+          <span class="module-badge badge-p1">Advanced</span>
+        </div>
+        <div class="module-rules">
+          <div class="rule-row"><span class="rule-id">FR-CA-04</span><span class="rule-name">Greenwashing claim detector (NLP)</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-09</span><span class="rule-name">OSFI B-15 FRFI check</span><span class="module-badge badge-p1">P1</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-17</span><span class="rule-name">Substantiation uploader</span><span class="module-badge badge-p1">P1</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-18</span><span class="rule-name">Penalty exposure calculator</span><span class="module-badge badge-p2">P2</span></div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Module E — Supply Chain + Ownership</div>
+            <div class="module-act">S-211 · CBCA Beneficial Ownership</div>
+          </div>
+          <span class="module-badge badge-p0">Core</span>
+        </div>
+        <div class="module-rules">
+          <div class="rule-row"><span class="rule-id">FR-CA-05</span><span class="rule-name">S-211 covered entity calculator</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-19</span><span class="rule-name">S-211 May 31 report template</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-10</span><span class="rule-name">CBCA ISC 25% threshold check</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-20</span><span class="rule-name">Supplier risk questionnaire</span><span class="module-badge badge-p1">P1</span></div>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-title">Platform / Cross-cutting</div>
+            <div class="module-act">Audit · API · RBAC · Alerts</div>
+          </div>
+          <span class="module-badge badge-info">Infra</span>
+        </div>
+        <div class="module-rules">
+          <div class="rule-row"><span class="rule-id">FR-CA-21</span><span class="rule-name">Audit trail (every check)</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-22</span><span class="rule-name">Audit export PDF / CSV</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-23</span><span class="rule-name">No-code rate table admin</span><span class="module-badge badge-p0">P0</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-26</span><span class="rule-name">REST API — developer tier</span><span class="module-badge badge-p1">P1</span></div>
+          <div class="rule-row"><span class="rule-id">FR-CA-25</span><span class="rule-name">Deadline calendar + alerts</span><span class="module-badge badge-p1">P1</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- USER STORIES -->
+  <div class="section" id="stories">
+    <div class="stories-filters">
+      <button class="filter-btn active" onclick="filterStories('all', this)">All (17)</button>
+      <button class="filter-btn" onclick="filterStories('ccpsa', this)">CCPSA</button>
+      <button class="filter-btn" onclick="filterStories('cpla', this)">Bilingualism</button>
+      <button class="filter-btn" onclick="filterStories('fintrac', this)">FINTRAC</button>
+      <button class="filter-btn" onclick="filterStories('esg', this)">ESG</button>
+      <button class="filter-btn" onclick="filterStories('supply', this)">Supply chain</button>
+    </div>
+    <div id="stories-list"></div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="section" id="stack">
+    <div class="stack-grid">
+      <div class="stack-card"><div class="stack-layer">Frontend</div><div class="stack-tech">Next.js 15 + Tailwind</div><div class="stack-reason">Fast, SEO-friendly, API routes built-in</div></div>
+      <div class="stack-card"><div class="stack-layer">API layer</div><div class="stack-tech">tRPC + Next.js API routes</div><div class="stack-reason">Type-safe, co-located with frontend</div></div>
+      <div class="stack-card"><div class="stack-layer">Database</div><div class="stack-tech">Supabase — ca-central-1</div><div class="stack-reason">Canadian data residency, RLS, real-time</div></div>
+      <div class="stack-card"><div class="stack-layer">Authentication</div><div class="stack-tech">Supabase Auth</div><div class="stack-reason">Role-based access, MFA support</div></div>
+      <div class="stack-card"><div class="stack-layer">Rules engine</div><div class="stack-tech">JSON config in Supabase</div><div class="stack-reason">No-code admin updates via Table Editor</div></div>
+      <div class="stack-card"><div class="stack-layer">AI / NLP</div><div class="stack-tech">Claude Sonnet API</div><div class="stack-reason">Greenwashing NLP, plain-English explanations</div></div>
+      <div class="stack-card"><div class="stack-layer">File storage</div><div class="stack-tech">Supabase Storage</div><div class="stack-reason">Label uploads, document attachments</div></div>
+      <div class="stack-card"><div class="stack-layer">Email / alerts</div><div class="stack-tech">Resend</div><div class="stack-reason">Deadline reminders, audit summaries</div></div>
+      <div class="stack-card"><div class="stack-layer">Payments</div><div class="stack-tech">Stripe</div><div class="stack-reason">SaaS subscription tiers</div></div>
+      <div class="stack-card"><div class="stack-layer">Hosting</div><div class="stack-tech">Vercel</div><div class="stack-reason">Global CDN, zero-config Next.js deploy</div></div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-top: 4px;">
+      <div style="font-size: 12px; font-family: var(--mono); color: var(--text3); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px;">API response shape</div>
+      <pre style="font-family: var(--mono); font-size: 12px; color: var(--text2); background: var(--surface2); border-radius: 8px; padding: 16px; overflow-x: auto; line-height: 1.7;">{
+  "check_id": "uuid",
+  "module": "CCPSA",
+  "rule_id": "FR-CA-01",
+  "result": "BLOCK",
+  "statute": "Toys Regulations SOR/2011-17 s.23 — lead limit exceeded",
+  "penalty_ref": "CCPSA s.32 — fine or imprisonment on conviction",
+  "remediation": "Remove from market. Reformulate to &lt;90mg/kg. File incident report.",
+  "timestamp": "2026-04-07T14:23:00Z",
+  "latency_ms": 847
+}</pre>
+    </div>
+  </div>
+
+  <!-- BUILD PHASES -->
+  <div class="section" id="phases">
+    <div class="phase-list">
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-number">0</div>
+          <div class="phase-title">Foundation — schema, auth, admin panel</div>
+          <div class="phase-timeline">Weeks 1–2</div>
+        </div>
+        <div class="phase-items">
+          <span class="phase-item">Supabase project (ca-central-1)</span>
+          <span class="phase-item">Schema deployment</span>
+          <span class="phase-item">Next.js + auth scaffolding</span>
+          <span class="phase-item">Rate table seeded</span>
+          <span class="phase-item">Admin panel CRUD</span>
+          <span class="phase-item">RBAC roles</span>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-number">1</div>
+          <div class="phase-title">Core modules — all P0 rules</div>
+          <div class="phase-timeline">Weeks 3–6</div>
+        </div>
+        <div class="phase-items">
+          <span class="phase-item">FR-CA-01 Danger checker</span>
+          <span class="phase-item">FR-CA-02 Bilingualism</span>
+          <span class="phase-item">FR-CA-02b Quebec Bill 96</span>
+          <span class="phase-item">FR-CA-03 FINTRAC $10K</span>
+          <span class="phase-item">FR-CA-05 S-211 threshold</span>
+          <span class="phase-item">FR-CA-10 CBCA ISC</span>
+          <span class="phase-item">FR-CA-15 STR log</span>
+          <span class="phase-item">FR-CA-19 Report template</span>
+          <span class="phase-item">FR-CA-21 Audit trail</span>
+          <span class="phase-item">FR-CA-22 Audit export</span>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-number">2</div>
+          <div class="phase-title">Advanced modules — P1 rules + API</div>
+          <div class="phase-timeline">Weeks 7–9</div>
+        </div>
+        <div class="phase-items">
+          <span class="phase-item">FR-CA-04 ESG NLP (Claude)</span>
+          <span class="phase-item">FR-CA-06 Doc trail automation</span>
+          <span class="phase-item">FR-CA-08 NI 93-101</span>
+          <span class="phase-item">FR-CA-09 OSFI B-15</span>
+          <span class="phase-item">FR-CA-26 REST API</span>
+          <span class="phase-item">FR-CA-17 Substantiation uploader</span>
+        </div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-header">
+          <div class="phase-number">3</div>
+          <div class="phase-title">Polish, scale, and subscriptions</div>
+          <div class="phase-timeline">Weeks 10–12</div>
+        </div>
+        <div class="phase-items">
+          <span class="phase-item">Bilingual UI (FR)</span>
+          <span class="phase-item">Compliance cert PDF</span>
+          <span class="phase-item">Deadline calendar</span>
+          <span class="phase-item">Resend email alerts</span>
+          <span class="phase-item">Stripe subscriptions</span>
+          <span class="phase-item">CPSC recall feed</span>
+          <span class="phase-item">FR-CA-20 Supplier questionnaire</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHEMA -->
+  <div class="section" id="schema">
+    <div style="font-size: 12px; color: var(--text3); font-family: var(--mono); margin-bottom: 16px;">Schema: ca_compliance · Supabase project ecuafonnvppsblxitgcu · Region: ca-central-1</div>
+    <div class="schema-grid">
+      <div class="schema-table">
+        <div class="schema-table-header">companies</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">company_id</span><span class="field-type">uuid PK</span></div>
+          <div class="schema-field"><span class="field-name">name</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">business_type</span><span class="field-type">enum</span></div>
+          <div class="schema-field"><span class="field-name">province</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">revenue</span><span class="field-type">numeric</span></div>
+          <div class="schema-field"><span class="field-name">employees</span><span class="field-type">int</span></div>
+          <div class="schema-field"><span class="field-name">assets</span><span class="field-type">numeric</span></div>
+          <div class="schema-field"><span class="field-name">is_cbca</span><span class="field-type">bool</span></div>
+          <div class="schema-field"><span class="field-name">is_frfi</span><span class="field-type">bool</span></div>
+        </div>
+      </div>
+      <div class="schema-table">
+        <div class="schema-table-header">products</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">product_id</span><span class="field-type">uuid PK</span></div>
+          <div class="schema-field"><span class="field-name field-fk">company_id</span><span class="field-type">uuid FK</span></div>
+          <div class="schema-field"><span class="field-name">name</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">risk_tier</span><span class="field-type">enum</span></div>
+          <div class="schema-field"><span class="field-name">material_composition</span><span class="field-type">jsonb</span></div>
+          <div class="schema-field"><span class="field-name">target_provinces</span><span class="field-type">text[]</span></div>
+        </div>
+      </div>
+      <div class="schema-table">
+        <div class="schema-table-header">checks</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">check_id</span><span class="field-type">uuid PK</span></div>
+          <div class="schema-field"><span class="field-name field-fk">company_id</span><span class="field-type">uuid FK</span></div>
+          <div class="schema-field"><span class="field-name field-fk">product_id</span><span class="field-type">uuid FK</span></div>
+          <div class="schema-field"><span class="field-name">module</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">rule_id</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">result</span><span class="field-type">enum</span></div>
+          <div class="schema-field"><span class="field-name">statute_section</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">penalty_ref</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">remediation</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">checked_at</span><span class="field-type">timestamptz</span></div>
+        </div>
+      </div>
+      <div class="schema-table">
+        <div class="schema-table-header">audit_log</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">log_id</span><span class="field-type">uuid PK</span></div>
+          <div class="schema-field"><span class="field-name field-fk">check_id</span><span class="field-type">uuid FK</span></div>
+          <div class="schema-field"><span class="field-name">entity_type</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">action</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">actor_id</span><span class="field-type">uuid</span></div>
+          <div class="schema-field"><span class="field-name">timestamp</span><span class="field-type">timestamptz</span></div>
+          <div class="schema-field"><span class="field-name">ip_address</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">retention_until</span><span class="field-type">date</span></div>
+        </div>
+      </div>
+      <div class="schema-table">
+        <div class="schema-table-header">rate_table</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">rule_id</span><span class="field-type">text PK</span></div>
+          <div class="schema-field"><span class="field-name">module</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">threshold_value</span><span class="field-type">numeric</span></div>
+          <div class="schema-field"><span class="field-name">penalty_min</span><span class="field-type">numeric</span></div>
+          <div class="schema-field"><span class="field-name">penalty_max</span><span class="field-type">numeric</span></div>
+          <div class="schema-field"><span class="field-name">statute_section</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">effective_date</span><span class="field-type">date</span></div>
+          <div class="schema-field"><span class="field-name">updated_by</span><span class="field-type">uuid</span></div>
+        </div>
+      </div>
+      <div class="schema-table">
+        <div class="schema-table-header">esg_claims</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">claim_id</span><span class="field-type">uuid PK</span></div>
+          <div class="schema-field"><span class="field-name field-fk">company_id</span><span class="field-type">uuid FK</span></div>
+          <div class="schema-field"><span class="field-name">claim_text</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">flagged_keywords</span><span class="field-type">text[]</span></div>
+          <div class="schema-field"><span class="field-name">substantiation_url</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">status</span><span class="field-type">enum</span></div>
+          <div class="schema-field"><span class="field-name">created_at</span><span class="field-type">timestamptz</span></div>
+        </div>
+      </div>
+      <div class="schema-table">
+        <div class="schema-table-header">isc_records</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">isc_id</span><span class="field-type">uuid PK</span></div>
+          <div class="schema-field"><span class="field-name field-fk">company_id</span><span class="field-type">uuid FK</span></div>
+          <div class="schema-field"><span class="field-name">individual_name</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">dob</span><span class="field-type">date</span></div>
+          <div class="schema-field"><span class="field-name">citizenship</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">pct_control</span><span class="field-type">numeric</span></div>
+          <div class="schema-field"><span class="field-name">filed_at</span><span class="field-type">timestamptz</span></div>
+          <div class="schema-field"><span class="field-name">next_review_date</span><span class="field-type">date</span></div>
+        </div>
+      </div>
+      <div class="schema-table">
+        <div class="schema-table-header">supply_chain_declarations</div>
+        <div class="schema-fields">
+          <div class="schema-field"><span class="field-name field-pk">declaration_id</span><span class="field-type">uuid PK</span></div>
+          <div class="schema-field"><span class="field-name field-fk">company_id</span><span class="field-type">uuid FK</span></div>
+          <div class="schema-field"><span class="field-name">year</span><span class="field-type">int</span></div>
+          <div class="schema-field"><span class="field-name">filing_status</span><span class="field-type">enum</span></div>
+          <div class="schema-field"><span class="field-name">report_url</span><span class="field-type">text</span></div>
+          <div class="schema-field"><span class="field-name">submitted_at</span><span class="field-type">timestamptz</span></div>
+          <div class="schema-field"><span class="field-name">deadline</span><span class="field-type">date</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISKS -->
+  <div class="section" id="risks">
+    <table class="risk-table">
+      <thead>
+        <tr>
+          <th style="width: 30%">Risk</th>
+          <th style="width: 12%">Probability</th>
+          <th style="width: 12%">Impact</th>
+          <th>Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Budget 2025 amends greenwashing rules mid-build</td>
+          <td><span class="risk-high">High</span></td>
+          <td><span class="risk-med">Medium</span></td>
+          <td>Module D outputs FLAG only — safe regardless of which legal version applies</td>
+        </tr>
+        <tr>
+          <td>Quebec Bill 96 phase-out creates two simultaneous rule sets</td>
+          <td><span class="risk-med">Medium</span></td>
+          <td><span class="risk-med">Medium</span></td>
+          <td>Manufacture date field toggles legacy vs. new rules automatically</td>
+        </tr>
+        <tr>
+          <td>CCPSA / Competition Act jurisdictional overlap on misleading advertising</td>
+          <td><span class="risk-high">High</span></td>
+          <td><span class="risk-high">High</span></td>
+          <td>All overlapping claims → FLAG + lawyer referral, never auto-pass</td>
+        </tr>
+        <tr>
+          <td>S-211 size threshold regulations not fully gazetted</td>
+          <td><span class="risk-med">Medium</span></td>
+          <td><span class="risk-med">Medium</span></td>
+          <td>Threshold stored in rate_table — admin-configurable without code deploy</td>
+        </tr>
+        <tr>
+          <td>Annual federal budget changes tax / penalty thresholds</td>
+          <td><span class="risk-high">Certain</span></td>
+          <td><span class="risk-med">Medium</span></td>
+          <td>All values in rate_table — annual admin review workflow every July 1</td>
+        </tr>
+        <tr>
+          <td>Data residency breach (data leaving ca-central-1)</td>
+          <td><span class="risk-low">Low</span></td>
+          <td><span class="risk-high">High</span></td>
+          <td>Enforced at Supabase project level; Vercel edge functions region-locked</td>
+        </tr>
+        <tr>
+          <td>False negative on lead / phthalates check</td>
+          <td><span class="risk-low">Low</span></td>
+          <td><span class="risk-high">High</span></td>
+          <td>Hard-coded BLOCK — not driven by rate_table — requires code change to alter</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+const STORIES = [
+  { id:'US-001', epic:'ccpsa', epicLabel:'CCPSA', epicColor:'#fdf0ee', epicText:'#c0392b',
+    title:'Material composition check before import',
+    role:'As an importer',
+    goal:'I want to enter my product material composition so the system tells me if it violates CCPSA limits before I bring it into Canada.',
+    acceptance:['BLOCK returned if lead > 90mg/kg (toys) or phthalates > 0.1% by mass; exact Toys Regulations section cited','PASS returned with timestamp and product record ID if no violation'] },
+  { id:'US-002', epic:'ccpsa', epicLabel:'CCPSA', epicColor:'#fdf0ee', epicText:'#c0392b',
+    title:'6-year document record for recall readiness',
+    role:'As a retailer',
+    goal:'I want the system to automatically generate a 6-year document record for every product I sell, so I can prove traceability in a recall.',
+    acceptance:['Record includes supplier name, address, product ID, sale location, sale period','Retrievable by product ID and exportable as PDF'] },
+  { id:'US-003', epic:'ccpsa', epicLabel:'CCPSA', epicColor:'#fdf0ee', epicText:'#c0392b',
+    title:'Compliance dashboard with Pass/Fail/Flag status',
+    role:'As a compliance officer',
+    goal:'I want to see all product checks in a dashboard so I can identify which products need attention.',
+    acceptance:['Dashboard shows product name, check date, result, and triggering module','Filter by status (Pass / Fail / Flag) and date range'] },
+  { id:'US-004', epic:'ccpsa', epicLabel:'CCPSA', epicColor:'#fdf0ee', epicText:'#c0392b',
+    title:'US CPSC recall alert for similar products',
+    role:'As a manufacturer',
+    goal:'I want to receive an alert if the US CPSC recalls a similar product so I can proactively check my own inventory.',
+    acceptance:['CPSC recall database cross-referenced weekly','Alert sent via email and dashboard notification'] },
+  { id:'US-005', epic:'cpla', epicLabel:'Bilingualism', epicColor:'#edf4fc', epicText:'#1a5fa8',
+    title:'Federal bilingual label check',
+    role:'As a product manager',
+    goal:'I want to upload a label or paste label text so the system checks federal bilingual requirements.',
+    acceptance:['Detects presence of EN and FR product identity declaration','FAIL returned with specific missing field (e.g. "Net quantity not in French")'] },
+  { id:'US-006', epic:'cpla', epicLabel:'Bilingualism', epicColor:'#edf4fc', epicText:'#1a5fa8',
+    title:'Quebec Bill 96 French prominence check',
+    role:'As a company selling in Quebec',
+    goal:'I want the system to apply Bill 96 rules on top of the federal check so I know if French text is prominent enough.',
+    acceptance:['Flags if English text is larger or more prominent than French','Flags if descriptive trademark terms lack French translation','Manufacture date field adjusts rules — pre-June 2025 activates grace period'] },
+  { id:'US-007', epic:'cpla', epicLabel:'Bilingualism', epicColor:'#edf4fc', epicText:'#1a5fa8',
+    title:'Plain-English fix explanations for label failures',
+    role:'As a small business owner new to Canada',
+    goal:'I want plain-English explanations for every bilingualism failure so I know exactly what to change.',
+    acceptance:['Each FAIL includes plain-language fix (e.g. "Add grammes next to grams")','Link to Competition Bureau guidance included'] },
+  { id:'US-008', epic:'fintrac', epicLabel:'FINTRAC', epicColor:'#f0effe', epicText:'#4a3db0',
+    title:'$10K transaction KYC trigger',
+    role:'As a fintech operator',
+    goal:'I want every transaction above $10,000 CAD to trigger a KYC prompt and create a FINTRAC log automatically.',
+    acceptance:['Trigger fires at exactly $10,000.00 CAD','KYC prompt includes required identity fields per FINTRAC standard','STR log stored with transaction ID, timestamp, user ID, amount'] },
+  { id:'US-009', epic:'fintrac', epicLabel:'FINTRAC', epicColor:'#f0effe', epicText:'#4a3db0',
+    title:'NI 93-101 derivatives disclosure check',
+    role:'As a compliance officer at a financial firm',
+    goal:'I want the system to check if our trade volume triggers NI 93-101 disclosure requirements.',
+    acceptance:['Admin can configure trade volume threshold in no-code rate table','When threshold exceeded, disclosure report template generated'] },
+  { id:'US-010', epic:'fintrac', epicLabel:'FINTRAC', epicColor:'#f0effe', epicText:'#4a3db0',
+    title:'Developer API for payment compliance checks',
+    role:'As a developer',
+    goal:'I want to POST transaction details and receive a JSON compliance response to integrate into my payment flow.',
+    acceptance:['Response includes rule_id, result, statute, penalty_ref, remediation, timestamp','Latency < 2s at p95','API key auth with rate limiting'] },
+  { id:'US-011', epic:'esg', epicLabel:'ESG', epicColor:'#e4f5ef', epicText:'#0f6e56',
+    title:'Marketing copy greenwashing scan',
+    role:'As a marketing manager',
+    goal:'I want to paste our product copy into the system and have it flag environmental claims needing substantiation.',
+    acceptance:['Detects: carbon neutral, net zero, eco-friendly, sustainable, green, biodegradable, recyclable','Returns FLAG (not FAIL) with Competition Bureau guideline reference','Includes Budget 2025 amendment pending note'] },
+  { id:'US-012', epic:'esg', epicLabel:'ESG', epicColor:'#e4f5ef', epicText:'#0f6e56',
+    title:'Substantiation documentation upload',
+    role:'As a compliance officer',
+    goal:'I want to upload testing documentation alongside an environmental claim to create an internal record.',
+    acceptance:['Attachment stored against claim record with date, claim text, and uploader','Audit trail updated automatically'] },
+  { id:'US-013', epic:'esg', epicLabel:'ESG', epicColor:'#e4f5ef', epicText:'#0f6e56',
+    title:'Penalty exposure calculator',
+    role:'As a CFO',
+    goal:'I want to know our maximum penalty exposure for a greenwashing claim so I can assess legal risk.',
+    acceptance:['Calculates max($10M, 3× benefit derived, 3% annual worldwide revenue)','Revenue input field; estimated max penalty output'] },
+  { id:'US-014', epic:'supply', epicLabel:'Supply chain', epicColor:'#fef6ea', epicText:'#b8600a',
+    title:'S-211 covered entity calculator',
+    role:'As a business owner',
+    goal:'I want to enter our revenue, employees, and assets so the system tells me if we need to file under S-211.',
+    acceptance:['Applies 2-of-3 threshold test','If covered: May 31 deadline alert + report template generated','If not covered: exemption confirmation with audit record issued'] },
+  { id:'US-015', epic:'supply', epicLabel:'Supply chain', epicColor:'#fef6ea', epicText:'#b8600a',
+    title:'S-211 annual report template generator',
+    role:'As a compliance officer',
+    goal:'I want the system to generate a pre-filled S-211 report template based on our company data.',
+    acceptance:['Template includes all mandatory sections: policies, due diligence, training, supply chain steps','Exportable as PDF and Word doc','Deadline alert set for May 1 (30 days before filing)'] },
+  { id:'US-016', epic:'supply', epicLabel:'Supply chain', epicColor:'#fef6ea', epicText:'#b8600a',
+    title:'CBCA beneficial ownership ISC checker',
+    role:'As a director of a CBCA corporation',
+    goal:'I want to enter our shareholder structure and have the system identify ISCs so we can file correctly.',
+    acceptance:['Applies 25% voting rights / fair market value threshold','Generates ISC record with required fields: name, DOB, citizenship, address','Filing deadline alert: at incorporation, within 15 days of changes, at annual return'] },
+  { id:'US-017', epic:'supply', epicLabel:'Supply chain', epicColor:'#fef6ea', epicText:'#b8600a',
+    title:'Supplier forced labour risk questionnaire',
+    role:'As a supply chain manager',
+    goal:'I want a questionnaire I can send to suppliers to assess forced labour risk for documented due diligence.',
+    acceptance:['Covers geographic risk, labour standards, certifications, child labour policies','Supplier responses stored against company record','High-risk suppliers flagged for enhanced review'] },
+];
+
+let activeFilter = 'all';
+
+function filterStories(filter, btn) {
+  activeFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderStories();
+}
+
+function renderStories() {
+  const list = document.getElementById('stories-list');
+  const filtered = activeFilter === 'all' ? STORIES : STORIES.filter(s => s.epic === activeFilter);
+  list.innerHTML = filtered.map(s => `
+    <div class="story-card">
+      <div class="story-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span class="story-id">${s.id}</span>
+            <span class="story-epic" style="background:${s.epicColor};color:${s.epicText};">${s.epicLabel}</span>
+          </div>
+          <div class="story-title">${s.title}</div>
+          <div class="story-role">${s.role}, ${s.goal}</div>
+        </div>
+      </div>
+      <div class="story-acceptance">
+        <div class="acceptance-label">Acceptance criteria</div>
+        ${s.acceptance.map(a => `<div class="acceptance-item">${a}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+renderStories();
+</script>
+</body>
+</html>

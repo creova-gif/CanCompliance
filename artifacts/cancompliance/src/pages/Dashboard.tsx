@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import AppLayout from "@/components/AppLayout";
-import { ArrowRight, Flame } from "lucide-react";
+import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine } from "lucide-react";
 
 const DIGEST_UPDATES = [
   { module: "EMPLOYMENT", headline: "Ontario minimum wage increases to $17.20/hr effective Oct 2024", href: "/employment" },
@@ -161,6 +161,40 @@ export default function Dashboard() {
               ))}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Intelligence section */}
+      <div className="mt-7">
+        <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-3">Intelligence Tools — New</div>
+        <div className="grid grid-cols-5 gap-3">
+          {[
+            { icon: Gavel, label: "Legislation Tracker", sub: "12+ bills in progress", href: "/legislation-tracker", badge: "CRITICAL" },
+            { icon: Calculator, label: "Red Tape Calculator", sub: "Quantify your compliance cost", href: "/red-tape-calculator", badge: null },
+            { icon: ScanLine, label: "Document Scanner", sub: "Claude audits your contracts", href: "/document-scanner", badge: "AI" },
+            { icon: BarChart3, label: "Benchmarking", sub: "Compare to your sector", href: "/benchmarking", badge: null },
+            { icon: Lightbulb, label: "Gov. Sandboxes", sub: "Funding & eligibility", href: "/sandbox-advisor", badge: "$1.7M" },
+          ].map(item => (
+            <Link key={item.href} href={item.href}>
+              <div
+                data-testid={`intelligence-${item.label.toLowerCase().replace(/\s+/g, "-")}`}
+                className="bg-card border border-border rounded-xl p-4 hover:border-primary/40 transition-colors cursor-pointer group"
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <item.icon className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </div>
+                  {item.badge && (
+                    <span className="font-mono text-[9px] px-1.5 py-0.5 rounded" style={{ background: item.badge === "AI" ? "#7F77DD20" : item.badge === "CRITICAL" ? "#f0443820" : "#c8f13520", color: item.badge === "AI" ? "#7F77DD" : item.badge === "CRITICAL" ? "#f04438" : "#c8f135" }}>
+                      {item.badge}
+                    </span>
+                  )}
+                </div>
+                <div className="text-[12px] font-medium text-foreground mb-0.5">{item.label}</div>
+                <div className="text-[10px] text-muted-foreground">{item.sub}</div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
 

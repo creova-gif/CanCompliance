@@ -55,6 +55,16 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - `Account.tsx` — PIPEDA data rights: export all data as JSON + account deletion with confirmation
 - Plus 9 more compliance module pages: CCPSA, CPLA, Fintrac, ESG, SupplyChain, Payroll, GstHst, Employment, Privacy, Safety, Customs, AiGovernance, EPR
 
+**Intelligence tools (sidebar section "Intelligence"):**
+- `RedTapeCalculator.tsx` — Quantify compliance cost by industry/province/size; CFIB-methodology hours + dollar estimate; category breakdown; reduction actions
+- `LegislationTracker.tsx` — 8 tracked Canadian bills (C-27/CPPA, C-26/CCSPA, C-63, AIDA, S-211 expansion, Bill C-59, Law 25, WHMIS); status/risk badges; expandable detail with action steps; "Watch" button
+- `DocumentScanner.tsx` — Claude-powered contract/policy audit via SSE; flags CASL, PIPEDA/Law 25, employment standards, greenwashing, S-211; sample contracts included; structured finding output with statute citations
+- `Benchmarking.tsx` — Anonymous sector/province compliance score comparison; module breakdown vs. sector average; provincial context; sector intelligence insights
+- `SandboxAdvisor.tsx` — 6 government programs tracked (OSFI sandbox, FCAC pilot, CRI fund, CFIB partnership, BizPaL, CRA API); eligibility checker by sector/revenue/stage; expandable how-to-apply details
+
+**Dashboard additions:**
+- Intelligence row (5 cards): Legislation Tracker, Red Tape Calculator, Document Scanner, Benchmarking, Gov. Sandboxes
+
 ### Frontend Components (artifacts/cancompliance/src/components/)
 - `AppLayout.tsx` — Sidebar navigation with user avatar/email/sign-out, Privacy Policy link in header, Upgrade button
 - `OnboardingModal.tsx` — 4-step onboarding: province, business type, live CASL demo, score result

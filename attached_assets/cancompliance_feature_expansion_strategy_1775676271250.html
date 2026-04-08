@@ -1,0 +1,221 @@
+
+<style>
+.fw{font-family:var(--font-sans);color:var(--color-text-primary);padding:4px 0 20px}
+.ey{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:10px}
+.h2{font-size:18px;font-weight:500;margin-bottom:6px}
+.sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px;line-height:1.65}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:28px}
+.feat{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px 18px;position:relative;overflow:hidden}
+.feat::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%}
+.f-gov::before{background:#378ADD}.f-product::before{background:#1D9E75}.f-ai::before{background:#7F77DD}.f-data::before{background:#BA7517}.f-intl::before{background:#D85A30}
+.ftag{font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.f-gov .ftag{color:#185FA5}.f-product .ftag{color:#0F6E56}.f-ai .ftag{color:#534AB7}.f-data .ftag{color:#854F0B}.f-intl .ftag{color:#993C1D}
+.fname{font-size:14px;font-weight:500;margin-bottom:6px;color:var(--color-text-primary)}
+.fdesc{font-size:12px;color:var(--color-text-secondary);line-height:1.65;margin-bottom:10px}
+.fmeta{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary)}
+.fpill{font-size:10px;padding:2px 8px;border-radius:4px;background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.impact-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.impact-lbl{font-size:10px;color:var(--color-text-tertiary);width:50px}
+.impact-bar{flex:1;height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden}
+.impact-fill{height:100%;border-radius:2px}
+.impact-val{font-size:11px;font-weight:500;color:var(--color-text-primary);width:28px;text-align:right}
+.gov-ladder{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.gl-row{display:flex;align-items:stretch;gap:0}
+.gl-phase{flex-shrink:0;width:100px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md) 0 0 var(--border-radius-md);padding:12px 14px;display:flex;flex-direction:column;justify-content:center}
+.gl-ph-label{font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:4px}
+.gl-ph-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.gl-content{flex:1;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-left:none;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:12px 16px;display:flex;flex-direction:column;gap:4px}
+.gl-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.gl-desc{font-size:12px;color:var(--color-text-secondary);line-height:1.55}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:28px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem}
+.stat-val{font-size:24px;font-weight:500;color:var(--color-text-primary);margin-bottom:4px;letter-spacing:-0.5px}
+.stat-lbl{font-size:12px;color:var(--color-text-secondary)}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:24px 0}
+</style>
+
+<div class="fw">
+
+<div class="stat-row">
+  <div class="stat"><div class="stat-val">$51.5B</div><div class="stat-lbl">Annual Canadian compliance costs — CFIB 2024</div></div>
+  <div class="stat"><div class="stat-val">768M hrs</div><div class="stat-lbl">Hours spent on compliance per year — equiv. 394K full-time jobs</div></div>
+  <div class="stat"><div class="stat-val">$19.6B</div><div class="stat-lbl">Global RegTech market 2025 — 23% CAGR to 2032</div></div>
+  <div class="stat"><div class="stat-val">1 in 3</div><div class="stat-lbl">SMBs cite compliance complexity as top growth barrier — CFIB</div></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="ey">Tier 1 — Government alignment features</div>
+<div class="h2">Features that earn government support</div>
+<div class="sub">Research confirms the federal government is actively seeking private-sector RegTech partners to help reduce $17.9B in annual red tape. BizPaL is expanding. ISED is funding compliance digitization. These features position CanCompliance as infrastructure, not just a SaaS tool.</div>
+
+<div class="feat-grid">
+
+  <div class="feat f-gov">
+    <div class="ftag">Gov · Feature 1</div>
+    <div class="fname">BizPaL integration layer</div>
+    <div class="fdesc">The federal government's BizPaL platform is actively expanding to include compliance documentation. An API integration makes CanCompliance the user-facing layer for BizPaL's regulatory database — putting you inside the government's own infrastructure rollout. ISED is already funding this expansion.</div>
+    <div class="impact-row"><div class="impact-lbl">Gov. fit</div><div class="impact-bar"><div class="impact-fill" style="width:98%;background:#378ADD"></div></div><div class="impact-val">9.8</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:60%;background:#BA7517"></div></div><div class="impact-val">Med</div></div>
+    <div class="fmeta"><span class="fpill">ISED partnership</span><span class="fpill">API integration</span><span class="fpill">Federal legitimacy</span></div>
+  </div>
+
+  <div class="feat f-gov">
+    <div class="ftag">Gov · Feature 2</div>
+    <div class="fname">Digital regulatory reporting (DRR) pipeline</div>
+    <div class="fdesc">Regulators worldwide are shifting to real-time, API-based reporting rather than quarterly paper submissions. Build a "push to regulator" pipeline: CASL consent records structured for CRTC audit, FINTRAC reports formatted for PCMLTFA submission, WSIB premiums pre-calculated for remittance. First in Canada to do this.</div>
+    <div class="impact-row"><div class="impact-lbl">Gov. fit</div><div class="impact-bar"><div class="impact-fill" style="width:92%;background:#378ADD"></div></div><div class="impact-val">9.2</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:75%;background:#BA7517"></div></div><div class="impact-val">High</div></div>
+    <div class="fmeta"><span class="fpill">CRTC alignment</span><span class="fpill">FINTRAC integration</span><span class="fpill">SupTech play</span></div>
+  </div>
+
+  <div class="feat f-gov">
+    <div class="ftag">Gov · Feature 3</div>
+    <div class="fname">Red tape burden calculator</div>
+    <div class="fdesc">The CFIB measures $51.5B in compliance costs annually but has no tool that measures a specific business's burden. Build a "How much red tape does your business face?" calculator — hours lost, cost in dollars, comparison to industry average. Government can use this anonymized aggregate data to identify reform priorities. Publishable research.</div>
+    <div class="impact-row"><div class="impact-lbl">Gov. fit</div><div class="impact-bar"><div class="impact-fill" style="width:88%;background:#378ADD"></div></div><div class="impact-val">8.8</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:30%;background:#1D9E75"></div></div><div class="impact-val">Low</div></div>
+    <div class="fmeta"><span class="fpill">CFIB partnership angle</span><span class="fpill">Policy data asset</span><span class="fpill">PR / media hook</span></div>
+  </div>
+
+  <div class="feat f-gov">
+    <div class="ftag">Gov · Feature 4</div>
+    <div class="fname">Regulatory sandbox advisor</div>
+    <div class="fdesc">Canada's Centre for Regulatory Innovation has a $1.7M+ fund for RegTech. The OSFI and FCAC both run fintech sandboxes. Build a "Regulatory Sandbox Eligibility Checker" — businesses describe their product and the system identifies which sandbox programs they qualify for and what exemptions they can apply for. Positions CanCompliance as a government-adjacent advisor.</div>
+    <div class="impact-row"><div class="impact-lbl">Gov. fit</div><div class="impact-bar"><div class="impact-fill" style="width:85%;background:#378ADD"></div></div><div class="impact-val">8.5</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:45%;background:#1D9E75"></div></div><div class="impact-val">Med-low</div></div>
+    <div class="fmeta"><span class="fpill">OSFI / FCAC</span><span class="fpill">Innovation Canada</span><span class="fpill">ISED Centre</span></div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="ey">Tier 2 — Product features for public adoption</div>
+<div class="h2">Features that drive mass uptake</div>
+<div class="sub">Research shows 35% of regulations are pure red tape — unnecessary burden with no public interest value. The public adoption flywheel is built on making compliance feel like an advantage, not a tax. These features create network effects, habit formation, and defensible switching costs.</div>
+
+<div class="feat-grid">
+
+  <div class="feat f-product">
+    <div class="ftag">Product · Feature 5</div>
+    <div class="fname">Compliance health network (B2B2B)</div>
+    <div class="fdesc">When a business shares their compliance certificate, their suppliers see it. Build a "Request compliance proof from supplier" feature — a business can request that a vendor prove their CASL, PIPEDA, or S-211 status. Each request pulls a new user into the network. Network effects: every certified business becomes a distribution node for the next customer.</div>
+    <div class="impact-row"><div class="impact-lbl">Adoption</div><div class="impact-bar"><div class="impact-fill" style="width:94%;background:#1D9E75"></div></div><div class="impact-val">9.4</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:55%;background:#BA7517"></div></div><div class="impact-val">Med</div></div>
+    <div class="fmeta"><span class="fpill">Viral B2B loop</span><span class="fpill">Supply chain trust</span><span class="fpill">Network effect moat</span></div>
+  </div>
+
+  <div class="feat f-product">
+    <div class="ftag">Product · Feature 6</div>
+    <div class="fname">Compliance inbox (regulatory news, personalized)</div>
+    <div class="fdesc">A personalized weekly email digest: "3 regulatory changes that affect your business this week." Filtered by province, industry, and modules active on your account. The daily digest banner in the app already exists — this extends it to email. The CFIB publishes weekly regulatory updates. Becoming the filter layer between noisy government publications and the business owner is a massive retention mechanic.</div>
+    <div class="impact-row"><div class="impact-lbl">Adoption</div><div class="impact-bar"><div class="impact-fill" style="width:90%;background:#1D9E75"></div></div><div class="impact-val">9.0</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:40%;background:#1D9E75"></div></div><div class="impact-val">Low</div></div>
+    <div class="fmeta"><span class="fpill">Resend / email</span><span class="fpill">Weekly touchpoint</span><span class="fpill">Day 30+ retention</span></div>
+  </div>
+
+  <div class="feat f-ai">
+    <div class="ftag">AI · Feature 7</div>
+    <div class="fname">Contract & document scanner</div>
+    <div class="fdesc">Upload a contract, terms of service, privacy policy, supplier agreement, or employment contract. Claude reads it and flags: CASL non-compliance, PIPEDA gaps, employment standards violations, missing S-211 language, and Quebec Bill 96 bilingualism issues. Output is a compliance audit report with statute citations and exact fix recommendations. This is the "Grammarly for legal docs" moment — and it's why Pro tier at $79/mo is instantly justified.</div>
+    <div class="impact-row"><div class="impact-lbl">Revenue</div><div class="impact-bar"><div class="impact-fill" style="width:96%;background:#7F77DD"></div></div><div class="impact-val">9.6</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:45%;background:#1D9E75"></div></div><div class="impact-val">Med-low</div></div>
+    <div class="fmeta"><span class="fpill">Claude API · PDF input</span><span class="fpill">Pro tier anchor feature</span><span class="fpill">Immediate value</span></div>
+  </div>
+
+  <div class="feat f-ai">
+    <div class="ftag">AI · Feature 8</div>
+    <div class="fname">Upcoming legislation tracker (future-risk intelligence)</div>
+    <div class="fdesc">Canada has 12+ major pieces of legislation in active development: CPPA (privacy), C-8 (cybersecurity), AI regulation (Minister Solomon), S-209 (online harms), C-2 (border). Build a live tracker: "Laws in progress that will affect your business" — each with estimated in-force date, projected compliance cost, and a "Start preparing now" action. This is the Bill C-27 Future Risk Score from the strategy brief, operationalized. Investors love forward positioning.</div>
+    <div class="impact-row"><div class="impact-lbl">YC signal</div><div class="impact-bar"><div class="impact-fill" style="width:95%;background:#7F77DD"></div></div><div class="impact-val">9.5</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:35%;background:#1D9E75"></div></div><div class="impact-val">Low</div></div>
+    <div class="fmeta"><span class="fpill">Dashboard feature</span><span class="fpill">Investor narrative</span><span class="fpill">Retention driver</span></div>
+  </div>
+
+  <div class="feat f-data">
+    <div class="ftag">Data · Feature 9</div>
+    <div class="fname">Anonymous compliance benchmarking</div>
+    <div class="fdesc">With enough users, aggregate their anonymous compliance scores by province, industry, and size. Show each business: "Businesses like yours in Ontario average 62/100. You are at 74/100 — top 30% of your sector." This creates both retention (you want to maintain your rank) and social proof (government and investors can cite the aggregate data). The CFIB would publish this. Statistics Canada would cite it. Media would write about it.</div>
+    <div class="impact-row"><div class="impact-lbl">Network value</div><div class="impact-bar"><div class="impact-fill" style="width:91%;background:#BA7517"></div></div><div class="impact-val">9.1</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:50%;background:#BA7517"></div></div><div class="impact-val">Med</div></div>
+    <div class="fmeta"><span class="fpill">Privacy-safe aggregation</span><span class="fpill">CFIB partnership</span><span class="fpill">Data moat</span></div>
+  </div>
+
+  <div class="feat f-data">
+    <div class="ftag">Data · Feature 10</div>
+    <div class="fname">Compliance API (developer platform)</div>
+    <div class="fdesc">Expose CanCompliance as an API: POST a business profile, GET back a compliance assessment. Developers at accounting firms (Freshbooks, Wave), HR tools (Humi, Rippling Canada), e-commerce platforms (Shopify), and law firms can embed Canadian compliance into their own products. Network effect: every integration is a distribution channel. Pricing: $0.05/API call at Professional tier, unlimited at Agency. This is how you reach millions of SMBs without selling to each one directly.</div>
+    <div class="impact-row"><div class="impact-lbl">Distribution</div><div class="impact-bar"><div class="impact-fill" style="width:93%;background:#BA7517"></div></div><div class="impact-val">9.3</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:70%;background:#BA7517"></div></div><div class="impact-val">High</div></div>
+    <div class="fmeta"><span class="fpill">Shopify / Wave potential</span><span class="fpill">Usage-based revenue</span><span class="fpill">Platform play</span></div>
+  </div>
+
+  <div class="feat f-intl">
+    <div class="ftag">International · Feature 11</div>
+    <div class="fname">Tanzania compliance module (GoPay + CREOVA East Africa)</div>
+    <div class="fdesc">Tanzania's Finance Act 2025 (WVAT 3%/6%), DST 2%, TRA EFD system interfacing, PDPA data protection, EPOCA e-waste — all go live in a dedicated Tanzania module with the same architecture as the Canadian modules. Direct synergy with GoPay Tanzania and CREOVA SME OS. No other compliance SaaS in the world covers Canada + Tanzania. This is your global moat. Build after Canadian revenue is stable — but architect for it now.</div>
+    <div class="impact-row"><div class="impact-lbl">Global moat</div><div class="impact-bar"><div class="impact-fill" style="width:97%;background:#D85A30"></div></div><div class="impact-val">9.7</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:65%;background:#BA7517"></div></div><div class="impact-val">Med-high</div></div>
+    <div class="fmeta"><span class="fpill">GoPay Tanzania synergy</span><span class="fpill">CREOVA SME OS</span><span class="fpill">YC global story</span></div>
+  </div>
+
+  <div class="feat f-product">
+    <div class="ftag">Product · Feature 12</div>
+    <div class="fname">Compliance marketplace (accountant + lawyer network)</div>
+    <div class="fdesc">When a business gets a FAIL or FLAG that requires professional help, connect them with a vetted Canadian accountant, employment lawyer, or privacy specialist — with a pre-populated brief of their exact issue and relevant statutes. CanCompliance earns a referral fee (10-15%). The professional gets a warm lead with context. The business gets help fast. This turns compliance failures into revenue events and builds a network of professional advocates who recommend the platform.</div>
+    <div class="impact-row"><div class="impact-lbl">Revenue</div><div class="impact-bar"><div class="impact-fill" style="width:87%;background:#1D9E75"></div></div><div class="impact-val">8.7</div></div>
+    <div class="impact-row"><div class="impact-lbl">Build effort</div><div class="impact-bar"><div class="impact-fill" style="width:50%;background:#BA7517"></div></div><div class="impact-val">Med</div></div>
+    <div class="fmeta"><span class="fpill">Referral revenue</span><span class="fpill">Professional advocates</span><span class="fpill">Full-stack compliance</span></div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<div class="ey">Government partnership ladder</div>
+<div class="h2">How to earn government endorsement — in sequence</div>
+<div class="gov-ladder">
+  <div class="gl-row">
+    <div class="gl-phase"><div class="gl-ph-label">Now</div><div class="gl-ph-name">Phase 0</div></div>
+    <div class="gl-content">
+      <div class="gl-title">Build the red tape burden calculator + launch publicly</div>
+      <div class="gl-desc">Low effort, high government visibility. CFIB will cover it. Media will write about it. It costs $0 and positions you as a public-interest tool before you have 100 users.</div>
+    </div>
+  </div>
+  <div class="gl-row">
+    <div class="gl-phase"><div class="gl-ph-label">Month 3</div><div class="gl-ph-name">Phase 1</div></div>
+    <div class="gl-content">
+      <div class="gl-title">Submit to ISED's BizPaL and Centre for Regulatory Innovation</div>
+      <div class="gl-desc">Apply for the Centre for Regulatory Innovation's partnership program. Contact BizPaL's national office at ISED. Request to be listed as a preferred RegTech tool. These are open programs — no political connections needed.</div>
+    </div>
+  </div>
+  <div class="gl-row">
+    <div class="gl-phase"><div class="gl-ph-label">Month 6</div><div class="gl-ph-name">Phase 2</div></div>
+    <div class="gl-content">
+      <div class="gl-title">Publish the first Canadian SMB Compliance Benchmarking Report</div>
+      <div class="gl-desc">Anonymized aggregate data from your user base. Send to CFIB, Statistics Canada, the Treasury Board Secretariat, and every provincial chamber of commerce. This is the moment you become a policy-relevant data source — not just a SaaS tool.</div>
+    </div>
+  </div>
+  <div class="gl-row">
+    <div class="gl-phase"><div class="gl-ph-label">Month 9</div><div class="gl-ph-name">Phase 3</div></div>
+    <div class="gl-content">
+      <div class="gl-title">Pitch provincial governments as a preferred SMB compliance tool</div>
+      <div class="gl-desc">Ontario's Red Tape Challenge, Alberta's SMART Regulation initiative, and BC's Better Regulation Office all have procurement pathways for RegTech. A provincial "endorsed tool" badge is worth 10x more than any ad spend for SMB adoption.</div>
+    </div>
+  </div>
+  <div class="gl-row">
+    <div class="gl-phase"><div class="gl-ph-label">Year 2</div><div class="gl-ph-name">Phase 4</div></div>
+    <div class="gl-content">
+      <div class="gl-title">Regulatory Sandbox partnership with OSFI / FCAC / CRTC</div>
+      <div class="gl-desc">Apply to pilot the Digital Regulatory Reporting (DRR) pipeline with a single regulator — CRTC for CASL is the easiest first. Once one regulator accepts structured data from CanCompliance, you become part of Canada's compliance infrastructure. That is the moat no competitor can replicate.</div>
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:16px 20px">
+  <div style="font-size:13px;font-weight:500;margin-bottom:6px">The one-sentence positioning shift these features enable</div>
+  <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.8">CanCompliance stops being "a compliance tool for SMBs" and becomes "Canada's compliance infrastructure layer" — the platform that governments cite in policy papers, lawyers recommend to clients, accountants use to serve their books, and developers embed in their products. That is a different category of business, with a different multiple, and a different YC conversation.</div>
+</div>
+
+</div>

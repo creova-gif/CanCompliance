@@ -4,7 +4,8 @@ import {
   LayoutDashboard, ShieldCheck, Globe, Search, Leaf, Network,
   DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
-  TrendingUp, CreditCard, BookOpen, LogOut, UserCircle, Shield
+  TrendingUp, CreditCard, BookOpen, LogOut, UserCircle, Shield,
+  Calculator, Gavel, ScanLine, BarChart3, Lightbulb
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -33,8 +34,16 @@ const TOOLS = [
   { href: "/jurisdiction", label: "Jurisdiction", icon: MapPin },
   { href: "/control-mapper", label: "Control Mapper", icon: BookOpen },
   { href: "/ai-copilot", label: "AI Copilot", icon: Bot, badge: "AI" },
+  { href: "/document-scanner", label: "Doc Scanner", icon: ScanLine, badge: "AI" },
   { href: "/growth", label: "Growth Tools", icon: TrendingUp },
   { href: "/pricing", label: "Pricing", icon: CreditCard },
+];
+
+const INTELLIGENCE = [
+  { href: "/legislation-tracker", label: "Legislation", icon: Gavel, sub: "Bills in progress" },
+  { href: "/red-tape-calculator", label: "Red Tape Calc", icon: Calculator, sub: "Compliance cost" },
+  { href: "/benchmarking", label: "Benchmarking", icon: BarChart3, sub: "Sector compare" },
+  { href: "/sandbox-advisor", label: "Gov. Sandboxes", icon: Lightbulb, sub: "Programs & funding" },
 ];
 
 function NavItem({ href, label, sub, icon: Icon, badge }: { href: string; label: string; sub?: string; icon: any; badge?: string }) {
@@ -126,6 +135,11 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Tools &amp; Reporting</div>
           <div className="space-y-0.5">
             {TOOLS.map(t => <NavItem key={t.href} {...t} />)}
+          </div>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Intelligence</div>
+          <div className="space-y-0.5">
+            {INTELLIGENCE.map(t => <NavItem key={t.href} {...t} />)}
           </div>
         </nav>
 
