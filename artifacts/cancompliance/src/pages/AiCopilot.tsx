@@ -203,7 +203,7 @@ export default function AiCopilot() {
                 <button
                   data-testid={`btn-delete-conv-${conv.id}`}
                   onClick={(e) => { e.stopPropagation(); deleteConv.mutate({ id: conv.id }); }}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-red-400"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-fail"
                 >
                   <Trash2 className="w-3 h-3" />
                 </button>

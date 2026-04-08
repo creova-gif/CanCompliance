@@ -151,11 +151,11 @@ export default function OnboardingModal({ onComplete, onClose }: OnboardingModal
                     Business sends promotional emails (e-commerce)
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-fail" />
                     No express consent obtained
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-fail" />
                     No unsubscribe link in emails
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export default function OnboardingModal({ onComplete, onClose }: OnboardingModal
             <div>
               <div className="text-center mb-6">
                 <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-4">CASL Check Result</div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 font-mono text-[11px] uppercase tracking-widest mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fail/10 border border-fail/20 text-fail font-mono text-[11px] uppercase tracking-widest mb-4">
                   FAIL
                 </div>
                 <div className="font-mono text-[11px] text-muted-foreground bg-black/30 rounded-lg px-4 py-3 text-left">
@@ -196,12 +196,12 @@ export default function OnboardingModal({ onComplete, onClose }: OnboardingModal
                   <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Your compliance score</div>
                   <div className="h-2 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-red-400 rounded-full transition-all duration-1000"
+                      className="h-full bg-fail rounded-full transition-all duration-1000"
                       style={{ width: `${score ?? 0}%` }}
                     />
                   </div>
                 </div>
-                <div className="text-2xl font-semibold text-red-400 font-mono">{score ?? 0}%</div>
+                <div className="text-2xl font-semibold text-fail font-mono">{score ?? 0}%</div>
               </div>
 
               <button

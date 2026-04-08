@@ -57,6 +57,12 @@
   --color-sidebar-accent-border: var(--sidebar-accent-border);
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  /* ── Brand status tokens ── */
+  --color-pass: var(--green);
+  --color-fail: var(--red);
+  --color-flag: var(--amber);
+  --color-block: #ff3020;
+
   --font-sans: var(--app-font-sans);
   --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);

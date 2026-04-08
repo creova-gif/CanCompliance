@@ -59,7 +59,7 @@ export default function Growth() {
                 </div>
                 <div>
                   <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Score</div>
-                  <div className="text-amber-400 font-semibold">62 / 100</div>
+                  <div className="text-flag font-semibold">62 / 100</div>
                 </div>
                 <div>
                   <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Issued</div>
@@ -85,7 +85,7 @@ export default function Growth() {
                 target="_blank"
                 rel="noreferrer"
                 data-testid="btn-share-linkedin"
-                className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-[12px] font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Share on LinkedIn
@@ -163,7 +163,7 @@ export default function Growth() {
                 target="_blank"
                 rel="noreferrer"
                 data-testid="btn-share-referral-linkedin"
-                className="flex-1 py-2.5 rounded-lg bg-blue-600 text-white text-[12px] font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-lg bg-primary text-primary-foreground text-[12px] font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
               >
                 <Share2 className="w-3.5 h-3.5" />
                 Share on LinkedIn

@@ -14,10 +14,10 @@ interface ComplianceResult {
 }
 
 const STATUS_CONFIG = {
-  pass: { label: "PASS", color: "text-green-400", bg: "bg-green-500/5 border-green-500/20" },
-  fail: { label: "FAIL", color: "text-red-400", bg: "bg-red-500/5 border-red-500/20" },
-  flag: { label: "FLAG", color: "text-amber-400", bg: "bg-amber-500/5 border-amber-500/20" },
-  block: { label: "BLOCK", color: "text-red-300", bg: "bg-red-900/10 border-red-500/30" },
+  pass: { label: "PASS", color: "text-pass", bg: "bg-pass/5 border-pass/20" },
+  fail: { label: "FAIL", color: "text-fail", bg: "bg-fail/5 border-fail/20" },
+  flag: { label: "FLAG", color: "text-flag", bg: "bg-flag/5 border-flag/20" },
+  block: { label: "BLOCK", color: "text-block", bg: "bg-fail/8 border-fail/30" },
 };
 
 function ResultBox({ result }: { result: ComplianceResult }) {

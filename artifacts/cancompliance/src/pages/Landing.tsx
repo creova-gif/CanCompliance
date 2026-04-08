@@ -132,20 +132,20 @@ export default function Landing() {
       {/* Scan Results */}
       {scanResult && (
         <section ref={resultsRef} className="pb-16 px-6 max-w-2xl mx-auto">
-          <div className="bg-card border border-red-500/30 rounded-2xl overflow-hidden">
+          <div className="bg-card border border-fail/30 rounded-2xl overflow-hidden">
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
               <div>
                 <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-1">Scan Results</div>
                 <div className="text-[13px] text-muted-foreground">{scanResult.url}</div>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-semibold text-red-400">{scanResult.overallScore}</div>
+                <div className="text-3xl font-semibold text-fail">{scanResult.overallScore}</div>
                 <div className="text-[11px] text-muted-foreground font-mono">/ 100</div>
               </div>
             </div>
 
             <div className="p-6 space-y-4">
-              <div className="font-mono text-[10px] text-red-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+              <div className="font-mono text-[10px] text-fail uppercase tracking-widest mb-2 flex items-center gap-2">
                 <AlertTriangle className="w-3.5 h-3.5" />
                 {scanResult.violations.length} violations detected
               </div>
@@ -156,7 +156,7 @@ export default function Landing() {
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-primary/10 text-primary">{v.law}</span>
                       <span className={`font-mono text-[10px] px-2 py-0.5 rounded ${
-                        v.severity === "high" ? "bg-red-500/10 text-red-400" : "bg-amber-500/10 text-amber-400"
+                        v.severity === "high" ? "bg-fail/10 text-fail" : "bg-flag/10 text-flag"
                       }`}>
                         {v.severity.toUpperCase()}
                       </span>

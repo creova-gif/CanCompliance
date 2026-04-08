@@ -22,10 +22,10 @@ const RECENT_CHECKS = [
 ];
 
 const STATUS_CONFIG = {
-  pass: { label: "PASS", class: "bg-green-500/10 text-green-400 border border-green-500/20" },
-  fail: { label: "FAIL", class: "bg-red-500/10 text-red-400 border border-red-500/20" },
-  flag: { label: "FLAG", class: "bg-amber-500/10 text-amber-400 border border-amber-500/20" },
-  block: { label: "BLOCK", class: "bg-red-900/20 text-red-300 border border-red-500/30" },
+  pass: { label: "PASS", class: "bg-pass/10 text-pass border border-pass/20" },
+  fail: { label: "FAIL", class: "bg-fail/10 text-fail border border-fail/20" },
+  flag: { label: "FLAG", class: "bg-flag/10 text-flag border border-flag/20" },
+  block: { label: "BLOCK", class: "bg-fail/10 text-block border border-fail/30" },
 };
 
 export default function Dashboard() {
@@ -59,9 +59,9 @@ export default function Dashboard() {
       {/* Metrics */}
       <div className="grid grid-cols-4 gap-4 mb-7">
         {[
-          { label: "Compliance Score", value: "62", unit: "/100", color: "text-amber-400" },
+          { label: "Compliance Score", value: "62", unit: "/100", color: "text-flag" },
           { label: "Checks Run", value: "12", unit: "this month", color: "text-foreground" },
-          { label: "Issues Found", value: "4", unit: "unresolved", color: "text-red-400" },
+          { label: "Issues Found", value: "4", unit: "unresolved", color: "text-fail" },
           { label: "Streak", value: streak.toString(), unit: "days", color: "text-primary" },
         ].map((m) => (
           <div key={m.label} className="bg-card border border-border rounded-xl p-5">
@@ -118,9 +118,9 @@ export default function Dashboard() {
           {/* Streak tracker */}
           <div className="bg-card border border-border rounded-xl p-5">
             <div className="flex items-center gap-2 mb-3">
-              <Flame className="w-4 h-4 text-amber-400" />
+              <Flame className="w-4 h-4 text-flag" />
               <div className="text-[13px] font-medium text-foreground">Compliance Streak</div>
-              <div className="ml-auto font-mono text-[11px] text-amber-400">{streak} days</div>
+              <div className="ml-auto font-mono text-[11px] text-flag">{streak} days</div>
             </div>
             <div className="flex gap-2">
               {["M", "T", "W", "T", "F", "S", "S"].map((day, i) => {
