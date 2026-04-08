@@ -55,12 +55,20 @@ export default function Landing() {
           <span className="font-serif italic text-lg text-foreground cursor-pointer hover:opacity-80 transition-opacity">CanCompliance</span>
         </Link>
         <div className="ml-auto flex items-center gap-3">
+          <a href="#features" className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+            Features
+          </a>
           <Link href="/pricing">
             <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </button>
           </Link>
-          <Link href="/dashboard">
+          <Link href="/ai-copilot">
+            <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
+              AI Copilot
+            </button>
+          </Link>
+          <Link href="/sign-in">
             <button data-testid="btn-signin" className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground border border-border hover:bg-muted hover:text-foreground transition-colors">
               Sign In
             </button>
@@ -238,7 +246,7 @@ export default function Landing() {
       )}
 
       {/* Features */}
-      <section className="py-20 px-6 max-w-4xl mx-auto">
+      <section id="features" className="py-20 px-6 max-w-4xl mx-auto">
         <div className="text-center mb-14">
           <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-3">What's Included</div>
           <h2 className="font-serif italic text-3xl text-foreground">Everything Canadian businesses need</h2>
