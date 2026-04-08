@@ -1,0 +1,85 @@
+CANCompliance Landing Page & Auth Flow — Engineered Overview
+1️⃣ Landing Page (/)
+
+Purpose: Marketing + product showcase. Fully public.
+
+Structure:
+Navigation Bar (PublicNav)
+Links: Search, Features, Pricing, Community
+Primary Action: Sign In → /login
+Hero Section:
+Two primary CTAs:
+Start Free Trial → /signup
+Watch Demo → /features
+Content Sections:
+Feature cards (multi-framework dashboards, risk heatmaps)
+Testimonials
+Footer with repeated CTA links
+Authentication State: None (public view)
+2️⃣ Sign In Flow (/login)
+Entry Points:
+Clicking Sign In → /login
+Clicking Start Free Trial → /signup (guarded)
+Route Guard Behavior:
+Already authenticated → skip login/signup → redirect to /app/admin or /app/auditor depending on user role
+Not authenticated → render login page
+Login Page Functionality:
+Authentication Methods:
+Password login
+Magic Code (OTP)
+Demo Sessions:
+Try as Compliance Officer → instant demo session → /app/admin
+Try as Auditor → instant demo session → /app/auditor
+Try as Employee/User → instant demo session → /app/user
+Manual Login:
+Reads role from user profile → routes to /app/admin, /app/auditor, or /app/user
+3️⃣ Signup Flow (/signup)
+Entry:
+Clicking Start Free Trial
+Route Guard Behavior:
+Already logged in → redirect to /app/* according to role
+Form Flow:
+Role Selection:
+Compliance Officer (default), Auditor, Employee/User
+Profile Info: Name, Email, Password
+Submission:
+Account creation via Supabase
+Role set in profile
+Success screen (~1.5s) → redirect to role-specific dashboard (/app/admin, /app/auditor, /app/user)
+4️⃣ Route Guarding Logic
+ProtectedRoute (for /app/*):
+Checks authentication:
+Not logged in → redirect to /login
+Logged in → render dashboard per role
+PublicRoute (for /login and /signup):
+Already logged in → redirect to /app/* by role
+Not logged in → allow access
+Key Principle:
+
+Always reads the user’s role from auth context. The app never assumes which dashboard to show.
+
+5️⃣ Summary Diagram (Hierarchical Flow)
+/ (Landing)
+ ├── Sign In → /login
+ │      ├── [already logged in] → /app/admin | /app/auditor | /app/user
+ │      ├── Manual login → /app/* (by role)
+ │      ├── Demo Compliance Officer → /app/admin
+ │      ├── Demo Auditor → /app/auditor
+ │      └── Demo Employee/User → /app/user
+ │
+ └── Get Started → /signup
+        ├── [already logged in] → /app/* (by role)
+        └── Submit form → /app/* (by role chosen)
+
+/app/admin     ← Protected (Compliance Officer Dashboard + Features)
+/app/auditor   ← Protected (Auditor Dashboard)
+/app/user      ← Protected (Employee/User Portal)
+6️⃣ Implementation Notes for CANCompliance
+Role-Driven Routing: All route guards, login, signup, and demo sessions respect the user role.
+Demo Personas: Reflect compliance roles rather than generic users: Compliance Officer, Auditor, Employee/User.
+Auth Context: Central source of truth for role & session state.
+Supabase Integration: Handles auth, role assignment, session management.
+Extensible Design: Easy to add new compliance roles or dashboards later.
+
+✅ Outcome:
+A landing page and auth flow that’s aligned to a compliance platform, supports role-based dashboards, demo personas for testing, seamless public access, and prevents accidental access to protected areas.
