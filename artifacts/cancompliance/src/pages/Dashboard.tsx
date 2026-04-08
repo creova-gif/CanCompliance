@@ -4,13 +4,13 @@ import AppLayout from "@/components/AppLayout";
 import { ArrowRight, Flame } from "lucide-react";
 
 const DIGEST_UPDATES = [
-  { module: "EMPLOYMENT", headline: "Ontario minimum wage increases to $17.20/hr effective Oct 2024", href: "/casl" },
-  { module: "PIPEDA", headline: "Quebec Law 25 (Law 25) PIA requirements now in force — assess your data practices", href: "/pipeda" },
+  { module: "EMPLOYMENT", headline: "Ontario minimum wage increases to $17.20/hr effective Oct 2024", href: "/employment" },
+  { module: "PIPEDA", headline: "Quebec Law 25 (Law 25) PIA requirements now in force — assess your data practices", href: "/privacy" },
   { module: "CASL", headline: "CRTC enforcement: $200K fine issued to Toronto retailer for missing unsubscribe", href: "/casl" },
-  { module: "CARM", headline: "CARM Phase 2 deadline extended — update your customs broker authorization", href: "/casl" },
-  { module: "EMPLOYMENT", headline: "BC harassment and violence prevention requirements updated — review your policy", href: "/casl" },
-  { module: "AI LAW", headline: "Canada's proposed AI hiring law: disclosure requirements for automated screening", href: "/casl" },
-  { module: "S-211", headline: "Supply chain reporting: S-211 (Modern Slavery Act) deadline May 31 for fiscal-year reporters", href: "/casl" },
+  { module: "CARM", headline: "CARM Phase 2 deadline extended — update your customs broker authorization", href: "/customs" },
+  { module: "EMPLOYMENT", headline: "BC harassment and violence prevention requirements updated — review your policy", href: "/employment" },
+  { module: "AI LAW", headline: "Canada's proposed AI hiring law: disclosure requirements for automated screening", href: "/ai-governance" },
+  { module: "S-211", headline: "Supply chain reporting: S-211 (Modern Slavery Act) deadline May 31 for fiscal-year reporters", href: "/supply-chain" },
 ];
 
 const RECENT_CHECKS = [

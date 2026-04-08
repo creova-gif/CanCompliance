@@ -36,7 +36,7 @@ export default function PrivacyPolicy() {
               {[
                 ["Account data", "Email address and name provided when you sign up via our authentication provider (Clerk Inc., US-based)."],
                 ["Compliance check inputs", "Your answers to compliance module questions (e.g., \"Do you send commercial emails?\"). These are used to generate your compliance result."],
-                ["AI Copilot messages", "Questions you send to the AI Copilot and the assistant's responses. These are stored in our database and transmitted to Anthropic PBC (US-based) to generate answers."],
+                ["AI Copilot messages", "Questions you send to the AI Copilot and the assistant's responses. These are stored in our database and transmitted to Anthropic PBC or OpenAI Inc. (US-based) depending on the model you select."],
                 ["Usage events", "An immutable log of actions you take (compliance checks run, conversations created) for your own audit trail. We do not use this for advertising."],
               ].map(([title, desc]) => (
                 <li key={title} className="border border-border rounded-lg p-3">
@@ -54,7 +54,8 @@ export default function PrivacyPolicy() {
               <div className="space-y-1">
                 {[
                   ["Clerk Inc.", "Authentication", "United States", "SOC 2 Type II"],
-                  ["Anthropic PBC", "AI responses (AI Copilot only)", "United States", "Enterprise DPA available"],
+                  ["Anthropic PBC", "AI responses (Claude model)", "United States", "Enterprise DPA available"],
+                  ["OpenAI Inc.", "AI responses (GPT model)", "United States", "Enterprise DPA available"],
                   ["Replit Inc.", "Infrastructure hosting", "United States", "SOC 2 Type II"],
                   ["Neon Inc.", "Database hosting", "United States", "SOC 2 Type II"],
                 ].map(([vendor, purpose, location, cert]) => (
@@ -66,13 +67,13 @@ export default function PrivacyPolicy() {
                   </div>
                 ))}
               </div>
-              <p className="text-xs mt-2">By using the AI Copilot, you consent to your messages being processed by Anthropic in the United States. Do not enter personal information about third parties in the AI Copilot.</p>
+              <p className="text-xs mt-2">By using the AI Copilot, you consent to your messages being processed by Anthropic or OpenAI in the United States depending on your selected model. Do not enter personal information about third parties in the AI Copilot.</p>
             </div>
           </section>
 
           <section>
             <h2 className="text-base font-semibold text-foreground mb-2">4. Legal Basis (PIPEDA Principle 3 — Consent)</h2>
-            <p>We collect your data only for the purposes stated above. We do not sell your data. We do not use your compliance check data for training AI models. Your AI Copilot messages may be processed by Anthropic subject to their usage policies.</p>
+            <p>We collect your data only for the purposes stated above. We do not sell your data. We do not use your compliance check data for training AI models. Your AI Copilot messages may be processed by Anthropic or OpenAI subject to their respective usage policies.</p>
           </section>
 
           <section>

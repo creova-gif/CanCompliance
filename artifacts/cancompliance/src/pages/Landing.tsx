@@ -314,7 +314,7 @@ export default function Landing() {
             className="px-8 py-3.5 rounded-lg font-semibold text-[14px] hover:opacity-90 transition-opacity"
             style={{ background: "#c8f135", color: "#09090a" }}
           >
-            Get Started Free — It's Free
+            Get Started Free
           </button>
           <p className="mt-4 text-[11px] text-muted-foreground">3 checks free monthly · Cancel anytime · Not legal advice</p>
         </div>

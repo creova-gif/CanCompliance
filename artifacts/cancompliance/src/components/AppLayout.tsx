@@ -32,7 +32,7 @@ const TOOLS = [
   { href: "/deadlines", label: "Deadlines", icon: Clock },
   { href: "/jurisdiction", label: "Jurisdiction", icon: MapPin },
   { href: "/control-mapper", label: "Control Mapper", icon: BookOpen },
-  { href: "/ai-copilot", label: "AI Copilot", icon: Bot, badge: "CLAUDE" },
+  { href: "/ai-copilot", label: "AI Copilot", icon: Bot, badge: "AI" },
   { href: "/growth", label: "Growth Tools", icon: TrendingUp },
   { href: "/pricing", label: "Pricing", icon: CreditCard },
 ];

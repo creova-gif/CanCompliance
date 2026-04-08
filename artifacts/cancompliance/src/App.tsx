@@ -114,7 +114,7 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
             <div className="space-y-3">
               {[
                 "Real-time statute citations",
-                "AI Copilot powered by Claude",
+                "AI Copilot powered by Claude & GPT",
                 "Live compliance score",
                 "PIPEDA-compliant data handling",
               ].map((f) => (

@@ -8,6 +8,7 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 
 const app: Express = express();
+app.set("trust proxy", 1);
 
 app.use(
   pinoHttp({
@@ -46,6 +47,7 @@ const aiRateLimiter = rateLimit({
 });
 
 app.use("/api/anthropic/conversations/:id/messages", aiRateLimiter);
+app.use("/api/openai/conversations/:id/messages", aiRateLimiter);
 
 const apiRateLimiter = rateLimit({
   windowMs: 60 * 1000,
