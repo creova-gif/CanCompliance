@@ -5,7 +5,7 @@ import {
   DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
   TrendingUp, CreditCard, BookOpen, LogOut, UserCircle, Shield,
-  Calculator, Gavel, ScanLine, BarChart3, Lightbulb
+  Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -40,10 +40,12 @@ const TOOLS = [
 ];
 
 const INTELLIGENCE = [
+  { href: "/compliance-inbox", label: "Inbox", icon: Inbox, sub: "Regulatory updates", badge: "8" },
   { href: "/legislation-tracker", label: "Legislation", icon: Gavel, sub: "Bills in progress" },
   { href: "/red-tape-calculator", label: "Red Tape Calc", icon: Calculator, sub: "Compliance cost" },
   { href: "/benchmarking", label: "Benchmarking", icon: BarChart3, sub: "Sector compare" },
-  { href: "/sandbox-advisor", label: "Gov. Sandboxes", icon: Lightbulb, sub: "Programs & funding" },
+  { href: "/sandbox-advisor", label: "Gov. Programs", icon: Lightbulb, sub: "Grants & sandboxes" },
+  { href: "/trust-network", label: "Trust Network", icon: Share2, sub: "Supplier proofs" },
 ];
 
 function NavItem({ href, label, sub, icon: Icon, badge }: { href: string; label: string; sub?: string; icon: any; badge?: string }) {

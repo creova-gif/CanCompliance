@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import AppLayout from "@/components/AppLayout";
-import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine } from "lucide-react";
+import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine, Inbox, Share2 } from "lucide-react";
 
 const DIGEST_UPDATES = [
   { module: "EMPLOYMENT", headline: "Ontario minimum wage increases to $17.20/hr effective Oct 2024", href: "/employment" },
@@ -167,13 +167,15 @@ export default function Dashboard() {
       {/* Intelligence section */}
       <div className="mt-7">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-3">Intelligence Tools — New</div>
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-7 gap-3">
           {[
-            { icon: Gavel, label: "Legislation Tracker", sub: "12+ bills in progress", href: "/legislation-tracker", badge: "CRITICAL" },
-            { icon: Calculator, label: "Red Tape Calculator", sub: "Quantify your compliance cost", href: "/red-tape-calculator", badge: null },
-            { icon: ScanLine, label: "Document Scanner", sub: "Claude audits your contracts", href: "/document-scanner", badge: "AI" },
+            { icon: Inbox, label: "Compliance Inbox", sub: "Today's regulatory updates", href: "/compliance-inbox", badge: "8 NEW" },
+            { icon: Gavel, label: "Legislation Tracker", sub: "12 bills in progress", href: "/legislation-tracker", badge: "CRITICAL" },
+            { icon: Calculator, label: "Red Tape Calc", sub: "Quantify your cost", href: "/red-tape-calculator", badge: null },
+            { icon: ScanLine, label: "Document Scanner", sub: "Claude audits contracts", href: "/document-scanner", badge: "AI" },
             { icon: BarChart3, label: "Benchmarking", sub: "Compare to your sector", href: "/benchmarking", badge: null },
-            { icon: Lightbulb, label: "Gov. Sandboxes", sub: "Funding & eligibility", href: "/sandbox-advisor", badge: "$1.7M" },
+            { icon: Lightbulb, label: "Gov. Programs", sub: "Funding & sandboxes", href: "/sandbox-advisor", badge: "$3.8M" },
+            { icon: Share2, label: "Trust Network", sub: "Supplier compliance proofs", href: "/trust-network", badge: null },
           ].map(item => (
             <Link key={item.href} href={item.href}>
               <div

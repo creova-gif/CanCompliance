@@ -41,6 +41,8 @@ import LegislationTracker from "@/pages/LegislationTracker";
 import DocumentScanner from "@/pages/DocumentScanner";
 import Benchmarking from "@/pages/Benchmarking";
 import SandboxAdvisor from "@/pages/SandboxAdvisor";
+import ComplianceInbox from "@/pages/ComplianceInbox";
+import TrustNetwork from "@/pages/TrustNetwork";
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
@@ -232,6 +234,8 @@ function AppBody() {
       <Route path="/document-scanner" component={() => <ProtectedRoute component={DocumentScanner} />} />
       <Route path="/benchmarking" component={() => <ProtectedRoute component={Benchmarking} />} />
       <Route path="/sandbox-advisor" component={() => <ProtectedRoute component={SandboxAdvisor} />} />
+      <Route path="/compliance-inbox" component={() => <ProtectedRoute component={ComplianceInbox} />} />
+      <Route path="/trust-network" component={() => <ProtectedRoute component={TrustNetwork} />} />
       <Route component={NotFound} />
     </Switch>
   );

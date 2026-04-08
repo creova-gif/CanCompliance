@@ -74,10 +74,25 @@ const INDUSTRY_AVG: Record<string, number> = {
   "Non-profit": 55,
 };
 
+const REVENUE_MULT: Record<string, number> = {
+  "Under $100K": 0.7,
+  "$100K–$500K": 0.9,
+  "$500K–$1M": 1.0,
+  "$1M–$5M": 1.15,
+  "$5M–$20M": 1.3,
+  "Over $20M": 1.5,
+};
+
+const NATIONAL_AVG_HOURS = 735;
+
 interface Results {
   hoursPerYear: number;
+  redTapeHours: number;
   costPerYear: number;
+  redTapeCost: number;
+  savingsPotential: number;
   industryAvgHours: number;
+  vsNational: number;
   percentile: string;
   categories: { name: string; hours: number; statute: string }[];
 }
@@ -86,6 +101,7 @@ export default function RedTapeCalculator() {
   const [industry, setIndustry] = useState("");
   const [province, setProvince] = useState("");
   const [size, setSize] = useState<{ label: string; employees: number } | null>(null);
+  const [revenue, setRevenue] = useState("");
   const [hourlyRate, setHourlyRate] = useState("35");
   const [results, setResults] = useState<Results | null>(null);
   const [copied, setCopied] = useState(false);
@@ -93,14 +109,19 @@ export default function RedTapeCalculator() {
   function calculate() {
     if (!industry || !province || !size) return;
     const baseHoursPerEmployee = BURDEN_RATES[industry] ?? 6;
-    const mult = PROVINCE_MULT[province] ?? 1;
-    const hoursPerYear = Math.round(baseHoursPerEmployee * size.employees * mult);
+    const provMult = PROVINCE_MULT[province] ?? 1;
+    const revMult = revenue ? (REVENUE_MULT[revenue] ?? 1) : 1;
+    const hoursPerYear = Math.round(baseHoursPerEmployee * size.employees * provMult * revMult);
+    const redTapeHours = Math.round(hoursPerYear * 0.35);
     const rate = parseFloat(hourlyRate) || 35;
     const costPerYear = Math.round(hoursPerYear * rate);
-    const industryAvgHours = Math.round((INDUSTRY_AVG[industry] ?? 60) * mult);
-    let percentile = "top 50%";
-    if (hoursPerYear < industryAvgHours * 0.75) percentile = "top 25% (lower burden)";
-    else if (hoursPerYear > industryAvgHours * 1.25) percentile = "bottom 25% (higher burden)";
+    const redTapeCost = Math.round(redTapeHours * rate);
+    const savingsPotential = Math.round(redTapeCost * 0.65);
+    const industryAvgHours = Math.round((INDUSTRY_AVG[industry] ?? 60) * provMult);
+    const vsNational = Math.round(((hoursPerYear - NATIONAL_AVG_HOURS) / NATIONAL_AVG_HOURS) * 100);
+    let percentile = "near the average";
+    if (hoursPerYear < industryAvgHours * 0.75) percentile = "lower burden than most";
+    else if (hoursPerYear > industryAvgHours * 1.25) percentile = "higher burden than most";
 
     const categories = [
       { name: "Tax & Payroll (CRA, CPP, EI)", hours: Math.round(hoursPerYear * 0.28), statute: "ITA, CPP Act, EI Act" },
@@ -112,12 +133,12 @@ export default function RedTapeCalculator() {
       { name: "Environmental & EPR", hours: Math.round(hoursPerYear * 0.08), statute: "CEPA, Blue Box regs" },
     ];
 
-    setResults({ hoursPerYear, costPerYear, industryAvgHours, percentile, categories });
+    setResults({ hoursPerYear, redTapeHours, costPerYear, redTapeCost, savingsPotential, industryAvgHours, vsNational, percentile, categories });
   }
 
   function shareResults() {
     if (!results) return;
-    const text = `My business spends ${results.hoursPerYear} hours/year on compliance — costing $${results.costPerYear.toLocaleString()}. Calculated with CanCompliance.`;
+    const text = `My business spends ${results.hoursPerYear} hours/year on compliance — costing $${results.costPerYear.toLocaleString()} — including $${results.redTapeCost.toLocaleString()} in pure red tape. That's ${results.vsNational > 0 ? "+" : ""}${results.vsNational}% vs. the Canadian average of ${NATIONAL_AVG_HOURS} hrs. Calculated with CanCompliance.`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -191,8 +212,23 @@ export default function RedTapeCalculator() {
               </div>
             </div>
             <div>
+              <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">Annual Revenue (CAD)</label>
+              <select
+                data-testid="select-revenue"
+                value={revenue}
+                onChange={e => setRevenue(e.target.value)}
+                className="w-full bg-muted border border-border rounded-md px-3 py-2 text-[13px] text-foreground focus:outline-none focus:border-primary"
+              >
+                <option value="">Select range (optional)</option>
+                {Object.keys(REVENUE_MULT).map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
+              <div className="text-[10px] text-muted-foreground mt-1 font-mono">Higher revenue → more complex reporting obligations</div>
+            </div>
+          </div>
+          <div className="px-5 pb-2">
+            <div>
               <label className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">Owner/Staff Hourly Rate (CAD)</label>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 max-w-xs">
                 <span className="text-muted-foreground text-[13px]">$</span>
                 <input
                   data-testid="input-hourly-rate"
@@ -224,31 +260,69 @@ export default function RedTapeCalculator() {
         {/* Results */}
         {results && (
           <>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Clock className="w-4 h-4 text-flag" />
-                  <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Hours Lost / Year</div>
+                  <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Total Hours Lost / Year</div>
                 </div>
                 <div className="text-3xl font-semibold text-flag mb-1">{results.hoursPerYear.toLocaleString()}</div>
-                <div className="text-[11px] text-muted-foreground">hours on compliance tasks</div>
+                <div className="text-[11px] text-muted-foreground">
+                  {results.redTapeHours.toLocaleString()} hrs pure red tape (35% per CFIB) · national avg {NATIONAL_AVG_HOURS} hrs
+                </div>
+                <div className="mt-2">
+                  <span
+                    className="font-mono text-[10px] px-2 py-0.5 rounded"
+                    style={results.vsNational > 0
+                      ? { background: "#f0443815", color: "#f04438" }
+                      : { background: "#12b76a15", color: "#12b76a" }
+                    }
+                  >
+                    {results.vsNational > 0 ? "+" : ""}{results.vsNational}% vs. Canadian average
+                  </span>
+                </div>
               </div>
               <div className="bg-card border border-border rounded-xl p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <DollarSign className="w-4 h-4 text-fail" />
-                  <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Cost / Year</div>
+                  <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Total Compliance Cost / Year</div>
                 </div>
                 <div className="text-3xl font-semibold text-fail mb-1">${results.costPerYear.toLocaleString()}</div>
-                <div className="text-[11px] text-muted-foreground">at ${hourlyRate}/hr opportunity cost</div>
-              </div>
-              <div className="bg-card border border-border rounded-xl p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <BarChart3 className="w-4 h-4 text-primary" />
-                  <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">vs. Industry Avg</div>
+                <div className="text-[11px] text-muted-foreground">
+                  ${results.redTapeCost.toLocaleString()} in pure red tape · you are {results.percentile} in your industry
                 </div>
-                <div className="text-3xl font-semibold text-foreground mb-1">{results.industryAvgHours.toLocaleString()}</div>
-                <div className="text-[11px] text-muted-foreground">hrs avg · you are {results.percentile}</div>
+                <div className="mt-2">
+                  <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground">
+                    Industry avg: {results.industryAvgHours.toLocaleString()} hrs
+                  </span>
+                </div>
               </div>
+            </div>
+
+            {/* CanCompliance Savings Card */}
+            <div className="rounded-xl p-5 flex items-start gap-4" style={{ background: "#c8f135" }}>
+              <div className="w-10 h-10 rounded-xl bg-black/10 flex items-center justify-center flex-shrink-0">
+                <TrendingDown className="w-5 h-5" style={{ color: "#09090a" }} />
+              </div>
+              <div className="flex-1">
+                <div className="font-mono text-[10px] uppercase tracking-widest mb-1" style={{ color: "#09090a99" }}>CanCompliance can save you</div>
+                <div className="text-2xl font-bold mb-1" style={{ color: "#09090a" }}>
+                  ${results.savingsPotential.toLocaleString()}/year
+                </div>
+                <div className="text-[12px]" style={{ color: "#09090aCC" }}>
+                  Based on 65% automation of your ${results.redTapeCost.toLocaleString()} red tape cost — 
+                  {results.redTapeHours} hrs of avoidable work freed up every year for growth.
+                </div>
+              </div>
+              <button
+                data-testid="btn-share-results"
+                onClick={shareResults}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-md text-[11px] font-semibold hover:bg-black/10 transition-colors flex-shrink-0"
+                style={{ color: "#09090a" }}
+              >
+                <Share2 className="w-3.5 h-3.5" />
+                {copied ? "Copied!" : "Share on LinkedIn / X"}
+              </button>
             </div>
 
             {/* Category breakdown */}

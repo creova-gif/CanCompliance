@@ -2,7 +2,16 @@
 
 ## Overview
 
-**CanCompliance v2** — a full-stack Canadian compliance SaaS web app for SMBs. 13 compliance modules with live score engine, CASL consent ledger, audit trail, deadlines calendar, jurisdiction intelligence, and control mapper. Full security hardening: Clerk auth, user-scoped DB persistence, CORS/rate limiting, privacy policy, AI consent gate, and PIPEDA-compliant data rights.
+**CanCompliance v5.0** — a full-stack Canadian compliance SaaS web app for SMBs. 13 compliance modules with live score engine, CASL consent ledger, audit trail, deadlines calendar, jurisdiction intelligence, and control mapper. Full security hardening: Clerk auth, user-scoped DB persistence, CORS/rate limiting, privacy policy, AI consent gate, and PIPEDA-compliant data rights.
+
+**v5.0 Intelligence Layer (7 features fully implemented):**
+1. **Compliance Inbox** — 8 real regulatory updates (CRTC $1.1M CASL fine, CPPA Senate reading, BC Pay Transparency, Quebec Law 25 audits, etc.), filterable by tag/jurisdiction/severity, email subscription, links to modules
+2. **Trust Network** — B2B compliance proof requests from suppliers via email, trust profile builds as you run passing checks, network score, verified badge pills, viral loop mechanic
+3. **Red Tape Calculator** — 5 inputs (size/industry/province/revenue/hourly rate), 7-category breakdown bar chart per CFIB data, 735-hr national average, 35% red-tape-specific cost, "CanCompliance can save you" savings card, LinkedIn/X share
+4. **Legislation Tracker** — 12 real Canadian bills (C-27, C-26, C-63, AIDA, BC Pay Transparency, S-209, Solomon AI Bill, C-244, more), filterable by category, readiness scoring panel (6 critical bills with % readiness bars)
+5. **Compliance Benchmarking** — Score vs. national/industry/province averages, percentile rank, module breakdown bars, score distribution histogram, network-wide pass rates (CASL 48%, PIPEDA 44%), 6 most common violations by sector
+6. **Document Scanner** — Claude Sonnet AI with Canadian compliance system prompt, paste-and-audit any contract/policy/agreement, structured violation report with statute citations and penalty quantification, audit trail logging
+7. **Government Partnership Hub** — 9 programs (OSFI FinTech Sandbox, FCAC Pilot, CRI $1.7M fund, CFIB Partnership, BizPaL Integration, CRA API, Regulators' Capacity Fund $3.8M, Ontario Red Tape Challenge, BC Better Regulation Office), eligibility checker
 
 pnpm workspace monorepo using TypeScript. Each package manages its own dependencies.
 

@@ -130,6 +130,62 @@ const BILLS: Bill[] = [
     action: "Inventory your hazardous products. Contact suppliers for updated SDS when regulations come into force. Update WHMIS training materials.",
     statute: "Hazardous Products Act; WHMIS Regulations",
   },
+  {
+    id: "BC-PAY-TRANS",
+    title: "BC Pay Transparency Act — Full Implementation",
+    shortName: "BC Pay Transparency",
+    status: "Royal Assent",
+    category: "Employment",
+    estimatedInForce: "Nov 1, 2025 — all employers",
+    riskLevel: "High",
+    affectedModules: ["Employment Standards", "Payroll"],
+    summary: "British Columbia's Pay Transparency Act requires all employers (not just large ones) to post wage or salary ranges on all job postings by November 1, 2025. Employers cannot ask job applicants about their pay history. Civil liability for retaliation applies. Annual pay transparency reports are required for larger employers. BC is the first province to mandate pay range disclosure for all employer sizes.",
+    complianceCost: "$500–$3,000 to update job templates and HR systems",
+    action: "Update all job posting templates to include salary ranges. Brief your HR or hiring team on the prohibition against asking about pay history. Establish a pay band framework before Nov 1.",
+    statute: "BC Pay Transparency Act, SBC 2023 c 18",
+  },
+  {
+    id: "S-209",
+    title: "S-209 — Online Harms Complementary Legislation",
+    shortName: "Bill S-209",
+    status: "Introduced",
+    category: "Cybersecurity",
+    estimatedInForce: "Q2 2026 (est.)",
+    riskLevel: "Medium",
+    affectedModules: ["CASL", "Privacy / PIPEDA"],
+    summary: "Bill S-209 is a Senate complement to the Online Harms Act (C-63), expanding platform operator obligations to mid-size platforms (500K+ monthly users). Introduces a digital safety regulator with inspection powers, content take-down authority, and a user reporting system. Platforms must publish transparency reports and maintain accessible appeals processes for moderation decisions.",
+    complianceCost: "$8,000–$30,000 for mid-size platforms",
+    action: "If you operate an online platform with user-generated content and 500K+ monthly users, retain digital law counsel and begin drafting your transparency report framework.",
+    statute: "S-209 (Senate); Online Harms Act C-63",
+  },
+  {
+    id: "SOLOMON-AI",
+    title: "Minister Solomon Standalone AI Governance Bill",
+    shortName: "Solomon AI Bill",
+    status: "Pre-legislative",
+    category: "AI",
+    estimatedInForce: "Q4 2026 (est.)",
+    riskLevel: "Critical",
+    affectedModules: ["AI Governance", "Privacy / PIPEDA", "Employment Standards"],
+    summary: "Minister François-Philippe Champagne (Industry) confirmed a standalone AI governance bill separate from Bill C-27/AIDA, following extensive consultation failures. The bill is expected to adopt a risk-tiered approach: general-purpose AI (GPAIs) face lighter disclosure rules, while high-impact systems (hiring, lending, medical) face mandatory impact assessments and algorithmic audits. Predicted to align with EU AI Act categories but with Canadian SMB carve-outs.",
+    complianceCost: "$15,000–$80,000 for businesses with high-impact AI systems",
+    action: "If you use AI for hiring decisions, credit scoring, medical diagnosis, or content moderation, document your AI systems now. Establish an AI governance policy using CanCompliance's AI Governance module.",
+    statute: "Forthcoming — Minister Solomon AI Bill (pre-legislative consultation)",
+  },
+  {
+    id: "C-244",
+    title: "Right to Repair Act (Consumer Products)",
+    shortName: "Bill C-244",
+    status: "3rd Reading",
+    category: "Trade",
+    estimatedInForce: "Q2 2025 (est.)",
+    riskLevel: "Medium",
+    affectedModules: ["CASL", "Supply Chain"],
+    summary: "Bill C-244 amends the Copyright Act to permit circumvention of technological protection measures for the purpose of repair and maintenance of consumer products. Affects electronics retailers, appliance sellers, and aftermarket repair businesses. Manufacturers can no longer use copyright law to block independent repair service providers. Creates a compliance gap for businesses whose supply contracts include repair exclusivity clauses.",
+    complianceCost: "$1,000–$8,000 to review and update supply contracts",
+    action: "Review supplier contracts for repair exclusivity clauses that may conflict with C-244. If you sell consumer electronics or appliances, update your customer terms to reflect the new right to repair.",
+    statute: "Copyright Act (as amended by Bill C-244)",
+  },
 ];
 
 const STATUS_COLORS: Record<Bill["status"], string> = {
@@ -326,6 +382,43 @@ export default function LegislationTracker() {
             </div>
           </div>
         )}
+
+        {/* Readiness Scoring Panel */}
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
+          <div className="px-5 py-4 border-b border-border">
+            <div className="text-[13px] font-medium text-foreground">Legislative Readiness Score</div>
+            <div className="text-[11px] text-muted-foreground font-mono">How prepared are you for the critical bills coming into force?</div>
+          </div>
+          <div className="p-5 space-y-4">
+            <div className="space-y-3">
+              {[
+                { bill: "Bill C-27 (CPPA)", readiness: 38, action: "Gap analysis needed — start with consent flows", color: "#f04438" },
+                { bill: "AIDA / AI Regulations", readiness: 22, action: "AI inventory not yet documented", color: "#f04438" },
+                { bill: "Bill C-26 (CCSPA)", readiness: 61, action: "Incident response plan exists — needs testing", color: "#f5a623" },
+                { bill: "BC Pay Transparency", readiness: 45, action: "Job postings need salary range additions", color: "#f5a623" },
+                { bill: "Law 25 Phase 3", readiness: 72, action: "PIA completed — verify portability mechanism", color: "#c8f135" },
+                { bill: "Bill C-59 Greenwashing", readiness: 88, action: "Claims substantiated — re-audit quarterly", color: "#12b76a" },
+              ].map(item => (
+                <div key={item.bill}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[12px] text-foreground">{item.bill}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] text-muted-foreground font-mono">{item.action}</span>
+                      <span className="font-mono text-[12px] font-semibold" style={{ color: item.color }}>{item.readiness}%</span>
+                    </div>
+                  </div>
+                  <div className="h-1.5 bg-muted rounded-full">
+                    <div className="h-full rounded-full transition-all" style={{ width: `${item.readiness}%`, background: item.color }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="pt-3 border-t border-border flex items-start gap-2 text-[11px] text-muted-foreground">
+              <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-flag" />
+              <span>Readiness scores are estimated based on your completed compliance checks and current module scores. Run the relevant compliance modules to improve your readiness for each bill.</span>
+            </div>
+          </div>
+        </div>
       </div>
     </AppLayout>
   );

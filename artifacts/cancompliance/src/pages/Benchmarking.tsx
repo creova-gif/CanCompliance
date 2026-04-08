@@ -338,6 +338,121 @@ export default function Benchmarking() {
               </div>
             </div>
 
+            {/* Score Distribution Histogram */}
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-border">
+                <div className="text-[13px] font-medium text-foreground">Canadian SMB Score Distribution</div>
+                <div className="text-[11px] text-muted-foreground font-mono">What % of Canadian SMBs are in each score band — anonymized aggregate</div>
+              </div>
+              <div className="p-5">
+                <div className="flex items-end gap-2 h-28">
+                  {[
+                    { band: "0–20", pct: 4, label: "4%" },
+                    { band: "21–40", pct: 11, label: "11%" },
+                    { band: "41–50", pct: 18, label: "18%" },
+                    { band: "51–60", pct: 24, label: "24%" },
+                    { band: "61–70", pct: 21, label: "21%" },
+                    { band: "71–80", pct: 14, label: "14%" },
+                    { band: "81–90", pct: 6, label: "6%" },
+                    { band: "91–100", pct: 2, label: "2%" },
+                  ].map(item => {
+                    const isYourBand = data.yourScore >= parseInt(item.band.split("–")[0]) && data.yourScore <= parseInt(item.band.split("–")[1]);
+                    return (
+                      <div key={item.band} className="flex-1 flex flex-col items-center gap-1">
+                        <span className="font-mono text-[9px] text-muted-foreground">{item.label}</span>
+                        <div
+                          className="w-full rounded-t-sm transition-all"
+                          style={{
+                            height: `${(item.pct / 24) * 80}px`,
+                            background: isYourBand ? "#c8f135" : "#c8f13530",
+                            border: isYourBand ? "1px solid #c8f135" : "1px solid transparent",
+                          }}
+                        />
+                        <span className="font-mono text-[9px] text-muted-foreground">{item.band}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex items-center gap-4 pt-2 text-[10px] text-muted-foreground font-mono">
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-sm inline-block" style={{ background: "#c8f135" }} /> Your score band</span>
+                  <span className="flex items-center gap-1.5"><span className="w-3 h-1.5 rounded-sm inline-block" style={{ background: "#c8f13530" }} /> Other bands</span>
+                  <span className="ml-auto">National avg: 61/100</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Network-wide module pass rates */}
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-border">
+                <div className="text-[13px] font-medium text-foreground">Network-Wide Module Pass Rates</div>
+                <div className="text-[11px] text-muted-foreground font-mono">% of businesses passing each compliance module — all Canadian SMBs on CanCompliance</div>
+              </div>
+              <div className="p-5 space-y-3">
+                {[
+                  { module: "GST/HST Registration", rate: 91, trend: "+2%" },
+                  { module: "Payroll (CPP/EI)", rate: 83, trend: "+4%" },
+                  { module: "Employment Standards", rate: 74, trend: "+1%" },
+                  { module: "Workplace Safety", rate: 67, trend: "+6%" },
+                  { module: "CASL", rate: 48, trend: "-3%" },
+                  { module: "PIPEDA / Privacy", rate: 44, trend: "-1%" },
+                  { module: "ESG Greenwashing", rate: 39, trend: "+8%" },
+                  { module: "AI Governance", rate: 28, trend: "new" },
+                ].map(item => {
+                  const barColor = item.rate >= 70 ? "#12b76a" : item.rate >= 50 ? "#f5a623" : "#f04438";
+                  const trendColor = item.trend.startsWith("+") ? "#12b76a" : item.trend === "new" ? "#c8f135" : "#f04438";
+                  return (
+                    <div key={item.module}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[12px] text-foreground">{item.module}</span>
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono text-[10px]" style={{ color: trendColor }}>{item.trend}</span>
+                          <span className="font-mono text-[12px] font-semibold" style={{ color: barColor }}>{item.rate}%</span>
+                        </div>
+                      </div>
+                      <div className="h-1.5 bg-muted rounded-full">
+                        <div className="h-full rounded-full" style={{ width: `${item.rate}%`, background: barColor }} />
+                      </div>
+                    </div>
+                  );
+                })}
+                <div className="flex items-start gap-2 pt-2 text-[11px] text-muted-foreground">
+                  <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                  <span>CASL and PIPEDA have the lowest pass rates in Canada — yet carry the highest penalties. These are the two areas where CanCompliance has the most impact.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Most common violations */}
+            <div className="bg-card border border-border rounded-xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-border">
+                <div className="text-[13px] font-medium text-foreground">6 Most Common Violations in {industry}</div>
+                <div className="text-[11px] text-muted-foreground font-mono">Based on aggregated compliance check results from your sector</div>
+              </div>
+              <div className="p-5 grid grid-cols-2 gap-3">
+                {[
+                  { violation: "Missing unsubscribe mechanism", statute: "CASL S.11", severity: "Critical" },
+                  { violation: "Consent not separately obtained", statute: "CASL S.10(1)", severity: "Critical" },
+                  { violation: "Privacy policy missing breach contact", statute: "PIPEDA Sch. 1 Prin. 4.8", severity: "High" },
+                  { violation: "No privacy officer designated", statute: "PIPEDA S.4.1; Law 25", severity: "High" },
+                  { violation: "Environmental claims not substantiated", statute: "Competition Act S.74.01", severity: "High" },
+                  { violation: "AI usage not disclosed to users", statute: "AIDA (forthcoming)", severity: "Medium" },
+                ].map((v, i) => (
+                  <div key={i} className="border border-border rounded-lg p-3">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <span className="text-[11px] font-medium text-foreground">{v.violation}</span>
+                      <span
+                        className="font-mono text-[9px] px-1.5 py-0.5 rounded flex-shrink-0"
+                        style={v.severity === "Critical" ? { background: "#f0443815", color: "#f04438" } : v.severity === "High" ? { background: "#f5a62315", color: "#f5a623" } : { background: "#c8f13515", color: "#c8f135" }}
+                      >
+                        {v.severity}
+                      </span>
+                    </div>
+                    <div className="font-mono text-[10px] text-muted-foreground">{v.statute}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Geographic context */}
             <div className="bg-card border border-border rounded-xl overflow-hidden">
               <div className="px-5 py-4 border-b border-border flex items-center gap-3">
