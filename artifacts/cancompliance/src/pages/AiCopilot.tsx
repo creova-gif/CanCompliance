@@ -23,6 +23,13 @@ const QUICK_PROMPTS = [
   "What are the new Ontario employment standards for remote workers?",
 ];
 
+type ModelId = "claude" | "gpt";
+
+const MODELS: { id: ModelId; label: string; sub: string }[] = [
+  { id: "claude", label: "Claude Sonnet", sub: "by Anthropic" },
+  { id: "gpt", label: "GPT-5.2", sub: "by OpenAI" },
+];
+
 interface Message {
   id: number;
   conversationId: number;
@@ -41,7 +48,7 @@ function AiConsentGate({ onConsent }: { onConsent: () => void }) {
           </div>
           <div>
             <div className="font-semibold text-foreground text-sm">CanCompliance AI Copilot</div>
-            <div className="text-xs text-muted-foreground font-mono">Powered by Anthropic Claude</div>
+            <div className="text-xs text-muted-foreground font-mono">Powered by Claude & GPT</div>
           </div>
         </div>
 
@@ -53,7 +60,7 @@ function AiConsentGate({ onConsent }: { onConsent: () => void }) {
               <Globe className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
               <div>
                 <div className="text-foreground font-medium mb-0.5">Cross-border data transfer</div>
-                <div className="text-muted-foreground text-xs">Your questions are sent to <span className="text-foreground">Anthropic PBC</span> in the United States to generate responses. This is a cross-border transfer under PIPEDA.</div>
+                <div className="text-muted-foreground text-xs">Your questions are sent to <span className="text-foreground">Anthropic PBC</span> or <span className="text-foreground">OpenAI</span> in the United States to generate responses. This is a cross-border transfer under PIPEDA.</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -89,11 +96,34 @@ function AiConsentGate({ onConsent }: { onConsent: () => void }) {
   );
 }
 
+function ModelPicker({ model, onChange }: { model: ModelId; onChange: (m: ModelId) => void }) {
+  return (
+    <div className="flex items-center gap-1 bg-muted rounded-lg p-0.5">
+      {MODELS.map((m) => (
+        <button
+          key={m.id}
+          data-testid={`model-${m.id}`}
+          onClick={() => onChange(m.id)}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-medium transition-all ${
+            model === m.id
+              ? "bg-card text-foreground shadow-sm border border-border"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <span>{m.label}</span>
+          <span className={`font-mono text-[9px] ${model === m.id ? "text-primary" : "text-muted-foreground"}`}>{m.sub}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function AiCopilot() {
   const [selectedConvId, setSelectedConvId] = useState<number | null>(null);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState("");
+  const [model, setModel] = useState<ModelId>("claude");
   const [hasConsented, setHasConsented] = useState(() => localStorage.getItem(CONSENT_KEY) === "true");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const activeConvIdRef = useRef<number | null>(null);
@@ -146,9 +176,7 @@ export default function AiCopilot() {
     if (!content.trim() || isStreaming) return;
 
     const convId = overrideConvId ?? selectedConvId;
-    if (!convId) {
-      return;
-    }
+    if (!convId) return;
 
     activeConvIdRef.current = convId;
     setInput("");
@@ -163,7 +191,8 @@ export default function AiCopilot() {
     try {
       const baseUrl = import.meta.env.BASE_URL || "/";
       const apiBase = baseUrl === "/" ? "" : baseUrl.replace(/\/$/, "");
-      const response = await fetch(`${apiBase}/api/anthropic/conversations/${convId}/messages`, {
+      const provider = model === "gpt" ? "openai" : "anthropic";
+      const response = await fetch(`${apiBase}/api/${provider}/conversations/${convId}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -201,7 +230,7 @@ export default function AiCopilot() {
           }
         }
       }
-    } catch (err) {
+    } catch {
       setStreamingContent("Sorry, there was an error connecting to the AI. Please try again.");
     } finally {
       setIsStreaming(false);
@@ -242,8 +271,10 @@ export default function AiCopilot() {
       ]
     : [];
 
+  const currentModel = MODELS.find((m) => m.id === model)!;
+
   return (
-    <AppLayout title="AI Copilot" subtitle="Claude-powered compliance expert">
+    <AppLayout title="AI Copilot" subtitle="Claude & GPT-powered compliance expert">
       {!hasConsented ? (
         <AiConsentGate onConsent={handleConsent} />
       ) : (
@@ -292,12 +323,21 @@ export default function AiCopilot() {
 
         {/* Chat area */}
         <div className="flex-1 bg-card border border-border rounded-xl flex flex-col overflow-hidden">
+          {/* Model picker header */}
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
+            <div className="text-[11px] text-muted-foreground font-mono">AI Model</div>
+            <ModelPicker model={model} onChange={setModel} />
+          </div>
+
           {!displayConvId ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8">
               <Bot className="w-12 h-12 text-primary mb-4" />
               <h2 className="font-serif italic text-2xl text-foreground mb-2">CanCompliance AI Copilot</h2>
-              <p className="text-[13px] text-muted-foreground text-center max-w-md mb-8">
+              <p className="text-[13px] text-muted-foreground text-center max-w-md mb-2">
                 Ask any question about Canadian compliance — CASL, PIPEDA, Bill 96, employment law, and more. Every answer cites the exact statute.
+              </p>
+              <p className="text-[11px] text-muted-foreground font-mono mb-8">
+                Using <span style={{ color: "#c8f135" }}>{currentModel.label}</span> {currentModel.sub}
               </p>
               <div className="grid grid-cols-2 gap-2 w-full max-w-xl">
                 {QUICK_PROMPTS.map((prompt) => (
@@ -350,7 +390,9 @@ export default function AiCopilot() {
                               <div key={i} className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: `${i * 0.15}s` }} />
                             ))}
                           </div>
-                          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Generating...</span>
+                          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
+                            {currentModel.label} generating...
+                          </span>
                         </div>
                       )}
                       <div className="whitespace-pre-wrap">{msg.content}</div>
@@ -370,7 +412,7 @@ export default function AiCopilot() {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Ask a compliance question..."
+                    placeholder={`Ask a compliance question (${currentModel.label})...`}
                     rows={1}
                     className="flex-1 bg-muted border border-border rounded-lg px-4 py-2.5 text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors resize-none"
                   />
