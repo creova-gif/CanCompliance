@@ -51,10 +51,12 @@ export default function Landing() {
 
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-background/95 backdrop-blur border-b border-border flex items-center px-6 gap-4">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-[10px] text-primary tracking-widest uppercase">CANCOMPLIANCE</span>
-          <span className="font-serif italic text-lg text-foreground">CanCompliance</span>
-        </div>
+        <Link href="/">
+          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+            <span className="font-mono text-[10px] text-primary tracking-widest uppercase">CANCOMPLIANCE</span>
+            <span className="font-serif italic text-lg text-foreground">CanCompliance</span>
+          </div>
+        </Link>
         <div className="ml-auto flex items-center gap-3">
           <Link href="/pricing">
             <button className="px-3 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground transition-colors">
@@ -330,16 +332,32 @@ export default function Landing() {
               <div>
                 <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest mb-3">Product</div>
                 <div className="space-y-2">
-                  {["Dashboard", "Pricing", "AI Copilot", "Score Engine"].map((l) => (
-                    <div key={l} className="text-[12px] text-muted-foreground hover:text-foreground cursor-pointer transition-colors">{l}</div>
+                  {[
+                    { label: "Dashboard", href: "/dashboard" },
+                    { label: "Pricing", href: "/pricing" },
+                    { label: "AI Copilot", href: "/ai-copilot" },
+                    { label: "Score Engine", href: "/compliance-score" },
+                    { label: "Privacy Policy", href: "/privacy-policy" },
+                  ].map((l) => (
+                    <Link key={l.label} href={l.href}>
+                      <div className="text-[12px] text-muted-foreground hover:text-foreground cursor-pointer transition-colors">{l.label}</div>
+                    </Link>
                   ))}
                 </div>
               </div>
               <div>
                 <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest mb-3">Compliance</div>
                 <div className="space-y-2">
-                  {["CASL", "PIPEDA", "Bill 96", "FINTRAC", "Employment"].map((l) => (
-                    <div key={l} className="text-[12px] text-muted-foreground hover:text-foreground cursor-pointer transition-colors">{l}</div>
+                  {[
+                    { label: "CASL", href: "/casl" },
+                    { label: "PIPEDA", href: "/pipeda" },
+                    { label: "Bill 96", href: "/bill96" },
+                    { label: "FINTRAC", href: "/fintrac" },
+                    { label: "Employment", href: "/employment" },
+                  ].map((l) => (
+                    <Link key={l.label} href={l.href}>
+                      <div className="text-[12px] text-muted-foreground hover:text-foreground cursor-pointer transition-colors">{l.label}</div>
+                    </Link>
                   ))}
                 </div>
               </div>
