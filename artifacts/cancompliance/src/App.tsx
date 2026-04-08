@@ -149,29 +149,92 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// PublicRoute: if already signed in, skip auth pages and go straight to dashboard
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { isSignedIn, isLoaded } = useAuth();
+  if (!isLoaded) return null;
+  if (isSignedIn) return <Redirect to="/dashboard" />;
+  return <>{children}</>;
+}
+
+const DEMO_PERSONAS = [
+  {
+    role: "Compliance Officer",
+    desc: "Full dashboard — all 14 modules, AI Copilot, score engine, policy generator",
+    icon: "⚖️",
+    color: "#c8f135",
+  },
+  {
+    role: "Auditor",
+    desc: "Audit trail, control mapper, document scanner, remediation planner",
+    icon: "🔍",
+    color: "#12b76a",
+  },
+  {
+    role: "Business Owner",
+    desc: "Quick compliance scan, jurisdiction setup, CASL ledger, deadlines",
+    icon: "🏢",
+    color: "#f5a623",
+  },
+];
+
 function SignInPage() {
+  const [, setLocation] = useLocation();
   return (
-    <AuthLayout>
-      <SignIn
-        routing="path"
-        path={`${basePath}/sign-in`}
-        signUpUrl={`${basePath}/sign-up`}
-        forceRedirectUrl={`${basePath}/dashboard`}
-      />
-    </AuthLayout>
+    <PublicRoute>
+      <AuthLayout>
+        <div className="w-full max-w-sm">
+          <SignIn
+            routing="path"
+            path={`${basePath}/sign-in`}
+            signUpUrl={`${basePath}/sign-up`}
+            forceRedirectUrl={`${basePath}/dashboard`}
+          />
+
+          {/* Demo persona section */}
+          <div className="mt-6 pt-6 border-t border-border">
+            <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground text-center mb-4">
+              Or explore as a demo persona
+            </div>
+            <div className="space-y-2">
+              {DEMO_PERSONAS.map((p) => (
+                <button
+                  key={p.role}
+                  data-testid={`demo-${p.role.toLowerCase().replace(/\s+/g, "-")}`}
+                  onClick={() => setLocation(`/sign-up?role=${encodeURIComponent(p.role)}`)}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/20 hover:bg-muted/50 transition-all text-left group"
+                >
+                  <span className="text-base flex-shrink-0">{p.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[12px] font-semibold text-foreground group-hover:text-primary transition-colors">{p.role}</div>
+                    <div className="text-[10px] text-muted-foreground truncate">{p.desc}</div>
+                  </div>
+                  <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: p.color }} />
+                </button>
+              ))}
+            </div>
+            <p className="text-center text-[10px] text-muted-foreground mt-3">
+              Demo sign-up is free — no credit card needed
+            </p>
+          </div>
+        </div>
+      </AuthLayout>
+    </PublicRoute>
   );
 }
 
 function SignUpPage() {
   return (
-    <AuthLayout>
-      <SignUp
-        routing="path"
-        path={`${basePath}/sign-up`}
-        signInUrl={`${basePath}/sign-in`}
-        forceRedirectUrl={`${basePath}/dashboard`}
-      />
-    </AuthLayout>
+    <PublicRoute>
+      <AuthLayout>
+        <SignUp
+          routing="path"
+          path={`${basePath}/sign-up`}
+          signInUrl={`${basePath}/sign-in`}
+          forceRedirectUrl={`${basePath}/dashboard`}
+        />
+      </AuthLayout>
+    </PublicRoute>
   );
 }
 

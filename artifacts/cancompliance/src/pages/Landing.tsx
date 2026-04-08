@@ -1,8 +1,7 @@
 import { useState, useRef } from "react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { ArrowRight, Scan, AlertTriangle, Shield, Globe, Mail, Bot, FileText, Zap, Lock, BarChart3, ChevronRight } from "lucide-react";
 import { useScanUrl } from "@workspace/api-client-react";
-import OnboardingModal from "@/components/OnboardingModal";
 
 const TRUST_BADGES = ["CASL", "PIPEDA", "Bill 96", "FINTRAC", "CCPSA", "ESG", "S-211", "GST/HST", "OHS", "CBSA", "AIDA", "EPR", "Law 25"];
 
@@ -14,8 +13,6 @@ export default function Landing() {
     isDemo: boolean;
     violations: Array<{ law: string; issue: string; severity: string; citation: string }>;
   }>(null);
-  const [showOnboarding, setShowOnboarding] = useState(false);
-  const [, setLocation] = useLocation();
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const scanMutation = useScanUrl({
@@ -34,20 +31,8 @@ export default function Landing() {
     scanMutation.mutate({ data: { url: normalized } });
   };
 
-  const handleGetFullReport = () => {
-    setShowOnboarding(true);
-  };
-
-  const handleOnboardingComplete = () => {
-    setShowOnboarding(false);
-    setLocation("/dashboard");
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {showOnboarding && (
-        <OnboardingModal onComplete={handleOnboardingComplete} onClose={() => setShowOnboarding(false)} />
-      )}
 
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-background/95 backdrop-blur border-b border-border flex items-center px-6 gap-4">
