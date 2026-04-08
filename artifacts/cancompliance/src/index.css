@@ -61,7 +61,7 @@
   --color-pass: var(--green);
   --color-fail: var(--red);
   --color-flag: var(--amber);
-  --color-block: #ff3020;
+  --color-block: #f04438;
 
   --font-sans: var(--app-font-sans);
   --font-serif: var(--app-font-serif);
@@ -82,54 +82,55 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 50 10% 5%;
-  --foreground: 40 15% 90%;
-  --border: 50 8% 13%;
-  --card: 50 10% 8%;
-  --card-foreground: 40 15% 90%;
-  --card-border: 50 8% 14%;
-  --sidebar: 50 10% 7%;
-  --sidebar-foreground: 40 15% 85%;
-  --sidebar-border: 50 8% 12%;
-  --sidebar-primary: 74 91% 61%;
-  --sidebar-primary-foreground: 50 10% 5%;
-  --sidebar-accent: 50 8% 13%;
-  --sidebar-accent-foreground: 40 15% 80%;
-  --sidebar-ring: 74 91% 61%;
-  --popover: 50 10% 8%;
-  --popover-foreground: 40 15% 90%;
-  --popover-border: 50 8% 14%;
-  --primary: 74 91% 61%;
-  --primary-foreground: 50 10% 5%;
-  --secondary: 50 8% 13%;
-  --secondary-foreground: 40 15% 75%;
-  --muted: 50 8% 11%;
-  --muted-foreground: 40 10% 45%;
-  --accent: 74 91% 61%;
-  --accent-foreground: 50 10% 5%;
-  --destructive: 5 90% 60%;
+  /* ── New palette: #09090a bg, #c8f135 accent, #12b76a green, #f04438 red ── */
+  --background: 240 5% 4%;
+  --foreground: 70 8% 93%;
+  --border: 240 5% 12%;
+  --card: 240 4% 7%;
+  --card-foreground: 70 8% 93%;
+  --card-border: 240 5% 12%;
+  --sidebar: 240 4% 7%;
+  --sidebar-foreground: 70 8% 90%;
+  --sidebar-border: 240 5% 11%;
+  --sidebar-primary: 73 86% 58%;
+  --sidebar-primary-foreground: 240 5% 4%;
+  --sidebar-accent: 240 5% 11%;
+  --sidebar-accent-foreground: 70 8% 80%;
+  --sidebar-ring: 73 86% 58%;
+  --popover: 240 4% 7%;
+  --popover-foreground: 70 8% 93%;
+  --popover-border: 240 5% 12%;
+  --primary: 73 86% 58%;
+  --primary-foreground: 240 5% 4%;
+  --secondary: 240 5% 11%;
+  --secondary-foreground: 50 2% 53%;
+  --muted: 240 5% 10%;
+  --muted-foreground: 50 2% 53%;
+  --accent: 73 86% 58%;
+  --accent-foreground: 240 5% 4%;
+  --destructive: 4 86% 58%;
   --destructive-foreground: 0 0% 100%;
-  --input: 50 8% 15%;
-  --ring: 74 91% 61%;
-  --chart-1: 74 91% 61%;
-  --chart-2: 145 55% 55%;
+  --input: 240 5% 11%;
+  --ring: 73 86% 58%;
+  --chart-1: 73 86% 58%;
+  --chart-2: 152 82% 40%;
   --chart-3: 30 90% 55%;
-  --chart-4: 200 80% 60%;
-  --chart-5: 5 90% 60%;
+  --chart-4: 209 83% 63%;
+  --chart-5: 4 86% 58%;
 
   --app-font-sans: 'Manrope', sans-serif;
   --app-font-serif: 'Instrument Serif', serif;
   --app-font-mono: 'IBM Plex Mono', monospace;
-  --radius: 0.5rem;
+  --radius: 0.4375rem;
 
-  --shadow-2xs: 0px 2px 0px 0px hsl(50 10% 5% / 0.20);
-  --shadow-xs: 0px 2px 0px 0px hsl(50 10% 5% / 0.20);
-  --shadow-sm: 0px 2px 0px 0px hsl(50 10% 5% / 0.20), 0px 1px 2px -1px hsl(50 10% 5% / 0.20);
-  --shadow: 0px 2px 0px 0px hsl(50 10% 5% / 0.20), 0px 1px 2px -1px hsl(50 10% 5% / 0.20);
-  --shadow-md: 0px 2px 0px 0px hsl(50 10% 5% / 0.20), 0px 2px 4px -1px hsl(50 10% 5% / 0.20);
-  --shadow-lg: 0px 2px 0px 0px hsl(50 10% 5% / 0.20), 0px 4px 6px -1px hsl(50 10% 5% / 0.20);
-  --shadow-xl: 0px 2px 0px 0px hsl(50 10% 5% / 0.20), 0px 8px 10px -1px hsl(50 10% 5% / 0.20);
-  --shadow-2xl: 0px 2px 0px 0px hsl(50 10% 5% / 0.20);
+  --shadow-2xs: 0px 1px 2px rgba(0,0,0,0.4);
+  --shadow-xs: 0px 1px 2px rgba(0,0,0,0.4), 0px 2px 6px rgba(0,0,0,0.3);
+  --shadow-sm: 0px 1px 2px rgba(0,0,0,0.4), 0px 4px 12px rgba(0,0,0,0.3);
+  --shadow: 0px 1px 2px rgba(0,0,0,0.4), 0px 4px 12px rgba(0,0,0,0.3);
+  --shadow-md: 0px 2px 4px rgba(0,0,0,0.4), 0px 8px 16px rgba(0,0,0,0.3);
+  --shadow-lg: 0px 4px 24px rgba(0,0,0,0.5), 0px 1px 3px rgba(0,0,0,0.4);
+  --shadow-xl: 0px 8px 32px rgba(0,0,0,0.6), 0px 2px 6px rgba(0,0,0,0.4);
+  --shadow-2xl: 0px 16px 48px rgba(0,0,0,0.7);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -154,18 +155,39 @@
 
 /* ── Module page utilities ── */
 :root, .dark {
-  --green: #36c97e;
+  /* Status colors — exact hex from reference */
+  --green: #12b76a;
+  --green-bg: rgba(18,183,106,0.08);
   --amber: #f5a623;
-  --red: #ff4d3a;
-  --blue: #4db8ff;
-  --text1: hsl(40 15% 90%);
-  --text2: hsl(40 10% 65%);
-  --text3: hsl(40 8% 40%);
-  --bg2: hsl(50 10% 8%);
-  --bg3: hsl(50 8% 11%);
-  --bg4: hsl(50 8% 13%);
-  --border: hsl(50 8% 13%);
-  --primary: hsl(74 91% 61%);
+  --amber-bg: rgba(245,166,35,0.08);
+  --red: #f04438;
+  --red-bg: rgba(240,68,56,0.08);
+  --blue: #4f9cf0;
+  --blue-bg: rgba(79,156,240,0.08);
+  --purple: #9b8afb;
+  --purple-bg: rgba(155,138,251,0.08);
+
+  /* Accent — #c8f135 */
+  --primary: #c8f135;
+  --accent-dim: rgba(200,241,53,0.12);
+
+  /* Background layers */
+  --bg:  #09090a;
+  --bg2: #111113;
+  --bg3: #18181b;
+  --bg4: #222226;
+  --bg5: #2a2a30;
+
+  /* Borders */
+  --border-raw: rgba(255,255,255,0.06);
+  --border2-raw: rgba(255,255,255,0.11);
+  --border3-raw: rgba(255,255,255,0.18);
+
+  /* Text */
+  --text1: #ededea;
+  --text2: #8a8a85;
+  --text3: #4a4a46;
+
   --mono: 'IBM Plex Mono', monospace;
 }
 
@@ -185,7 +207,7 @@
 }
 
 .page-header svg {
-  color: hsl(74 91% 61%);
+  color: var(--primary);
 }
 
 .page-desc {
@@ -227,7 +249,7 @@
 }
 
 .form-input:focus, .form-select:focus {
-  border-color: hsl(74 91% 61% / 0.5);
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
 }
 
 .form-input::placeholder { color: var(--text3); }
@@ -253,12 +275,12 @@
   transition: border-color 0.15s;
 }
 
-.check-row:hover { border-color: hsl(74 91% 61% / 0.3); }
+.check-row:hover { border-color: color-mix(in srgb, var(--primary) 30%, transparent); }
 
 .check-row input[type="checkbox"] {
   flex-shrink: 0;
   margin-top: 2px;
-  accent-color: hsl(74 91% 61%);
+  accent-color: var(--primary);
 }
 
 .run-btn {
@@ -267,8 +289,8 @@
   gap: 7px;
   margin-top: 20px;
   padding: 9px 20px;
-  background: hsl(74 91% 61%);
-  color: hsl(50 10% 5%);
+  background: var(--primary);
+  color: var(--bg);
   border: none;
   border-radius: 7px;
   font-size: 13px;

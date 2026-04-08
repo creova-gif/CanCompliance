@@ -122,7 +122,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
 
         <div className="p-3 border-t border-sidebar-border">
           <div className="flex items-center gap-2 text-[10px] text-muted-foreground font-mono">
-            <div className="w-1.5 h-1.5 rounded-full bg-pass shadow-[0_0_6px_rgba(54,201,126,0.8)]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-pass shadow-[0_0_5px_rgba(18,183,106,0.7)]" />
             Engine online
           </div>
         </div>
