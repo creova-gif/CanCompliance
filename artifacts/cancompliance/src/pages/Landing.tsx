@@ -52,10 +52,7 @@ export default function Landing() {
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-background/95 backdrop-blur border-b border-border flex items-center px-6 gap-4">
         <Link href="/">
-          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-            <span className="font-mono text-[10px] text-primary tracking-widest uppercase">CANCOMPLIANCE</span>
-            <span className="font-serif italic text-lg text-foreground">CanCompliance</span>
-          </div>
+          <span className="font-serif italic text-lg text-foreground cursor-pointer hover:opacity-80 transition-opacity">CanCompliance</span>
         </Link>
         <div className="ml-auto flex items-center gap-3">
           <Link href="/pricing">
