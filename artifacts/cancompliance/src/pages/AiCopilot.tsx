@@ -96,6 +96,7 @@ export default function AiCopilot() {
   const [streamingContent, setStreamingContent] = useState("");
   const [hasConsented, setHasConsented] = useState(() => localStorage.getItem(CONSENT_KEY) === "true");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const activeConvIdRef = useRef<number | null>(null);
   const queryClient = useQueryClient();
 
   const handleConsent = () => {
@@ -141,14 +142,15 @@ export default function AiCopilot() {
     }
   };
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (content: string, overrideConvId?: number) => {
     if (!content.trim() || isStreaming) return;
 
-    let convId = selectedConvId;
+    const convId = overrideConvId ?? selectedConvId;
     if (!convId) {
       return;
     }
 
+    activeConvIdRef.current = convId;
     setInput("");
     setIsStreaming(true);
     setStreamingContent("");
@@ -223,9 +225,7 @@ export default function AiCopilot() {
           onSuccess: async (conv) => {
             queryClient.invalidateQueries({ queryKey: getListAnthropicConversationsQueryKey() });
             setSelectedConvId(conv.id);
-            setTimeout(() => {
-              sendMessage(prompt);
-            }, 300);
+            sendMessage(prompt, conv.id);
           },
         }
       );
@@ -234,10 +234,11 @@ export default function AiCopilot() {
     }
   };
 
-  const allMessages = selectedConvId
+  const displayConvId = selectedConvId ?? activeConvIdRef.current;
+  const allMessages = displayConvId
     ? [
         ...(messages as Message[]),
-        ...(streamingContent ? [{ id: -1, conversationId: selectedConvId, role: "assistant", content: streamingContent, createdAt: new Date().toISOString() }] : []),
+        ...(streamingContent ? [{ id: -1, conversationId: displayConvId, role: "assistant", content: streamingContent, createdAt: new Date().toISOString() }] : []),
       ]
     : [];
 
@@ -291,7 +292,7 @@ export default function AiCopilot() {
 
         {/* Chat area */}
         <div className="flex-1 bg-card border border-border rounded-xl flex flex-col overflow-hidden">
-          {!selectedConvId ? (
+          {!displayConvId ? (
             <div className="flex-1 flex flex-col items-center justify-center p-8">
               <Bot className="w-12 h-12 text-primary mb-4" />
               <h2 className="font-serif italic text-2xl text-foreground mb-2">CanCompliance AI Copilot</h2>
