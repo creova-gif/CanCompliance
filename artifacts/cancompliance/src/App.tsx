@@ -45,6 +45,7 @@ import Benchmarking from "@/pages/Benchmarking";
 import SandboxAdvisor from "@/pages/SandboxAdvisor";
 import ComplianceInbox from "@/pages/ComplianceInbox";
 import TrustNetwork from "@/pages/TrustNetwork";
+import PolicyGenerator from "@/pages/PolicyGenerator";
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
@@ -240,6 +241,7 @@ function AppBody() {
       <Route path="/sandbox-advisor" component={() => <ProtectedRoute component={SandboxAdvisor} />} />
       <Route path="/compliance-inbox" component={() => <ProtectedRoute component={ComplianceInbox} />} />
       <Route path="/trust-network" component={() => <ProtectedRoute component={TrustNetwork} />} />
+      <Route path="/policy-generator" component={() => <ProtectedRoute component={PolicyGenerator} />} />
       <Route component={NotFound} />
     </Switch>
   );

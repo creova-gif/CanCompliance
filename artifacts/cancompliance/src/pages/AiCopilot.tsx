@@ -172,6 +172,19 @@ export default function AiCopilot() {
     }
   };
 
+  // System 4 — Compliance Copilot v2: inject April 2026 enforcement context into first message
+  const ENFORCEMENT_CONTEXT_2026 = `[ENFORCEMENT CONTEXT — April 2026]
+Key Canadian regulatory changes active right now:
+• Bill C-12 IN FORCE (Mar 26, 2026): FINTRAC "effectiveness" standard — penalties up to $20M or 3% global revenue
+• CRTC: 4 CASL enforcement fines Q1 2026 — implied consent expiry is top trigger ($1.1M fine Jan 2026)
+• Quebec CAI + CRTC joint audits — Law 25 + CASL cross-compliance now enforced simultaneously
+• WorkSafeBC: First psychological safety enforcement orders (Sept 2025 obligation)
+• Ontario Workers for Workers Act IV: AI tool disclosure required in hiring processes
+• CPPA (Consumer Privacy Protection Act): Third Reading passed — expected in force 2025/2026
+• Competition Act (Bill C-59): Greenwashing provisions — up to 3% global revenue fine
+• CBSA CARM Phase 3: Importer bond requirements mandatory — non-compliance causes seizures
+Please answer the following question with this current enforcement context in mind:\n\n`;
+
   const sendMessage = async (content: string, overrideConvId?: number) => {
     if (!content.trim() || isStreaming) return;
 
@@ -188,6 +201,10 @@ export default function AiCopilot() {
       [...(messages as Message[]), { id: Date.now(), conversationId: convId, role: "user", content, createdAt: new Date().toISOString() }]
     );
 
+    // System 4: prepend 2026 enforcement context to first message in new conversations
+    const isFirstMessage = !messages || (messages as Message[]).length === 0;
+    const enrichedContent = isFirstMessage ? `${ENFORCEMENT_CONTEXT_2026}${content}` : content;
+
     try {
       const baseUrl = import.meta.env.BASE_URL || "/";
       const apiBase = baseUrl === "/" ? "" : baseUrl.replace(/\/$/, "");
@@ -196,7 +213,7 @@ export default function AiCopilot() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content: enrichedContent }),
       });
 
       if (!response.body) throw new Error("No response body");

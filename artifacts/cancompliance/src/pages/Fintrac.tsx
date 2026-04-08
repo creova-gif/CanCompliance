@@ -67,6 +67,34 @@ export default function Fintrac() {
 
   return (
     <div className="page-content">
+      {/* System 7 — FINTRAC Bill C-12 Patch */}
+      <div style={{ background: "rgba(240,68,56,0.12)", border: "1px solid rgba(240,68,56,0.35)", borderRadius: 10, padding: "14px 18px", marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 14 }}>
+        <div style={{ flexShrink: 0 }}>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 8, fontWeight: 700, letterSpacing: "2px", color: "var(--red)", background: "rgba(240,68,56,0.25)", padding: "2px 8px", borderRadius: 4, display: "inline-block", marginBottom: 4 }}>BILL C-12 · IN FORCE · MAR 26, 2026</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: 8, color: "var(--text3)", marginTop: 2 }}>SYSTEM 7 — FINTRAC BILL C-12 PATCH</div>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--red)", marginBottom: 6 }}>New "effectiveness" standard — FINTRAC can now challenge your compliance program design</div>
+          <div style={{ fontSize: 11, color: "var(--text2)", lineHeight: 1.65, marginBottom: 8 }}>
+            Bill C-12 amended PCMLTFA effective <strong>March 26, 2026</strong>. FINTRAC can now impose penalties if your compliance program is not "reasonably designed, risk-based and effective" — even if you technically met every specific requirement. This is a fundamental shift from rule-based to principles-based enforcement.
+          </div>
+          <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
+            <div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--text3)", marginBottom: 2 }}>PENALTY INCREASE</div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--red)", fontWeight: 700 }}>40× — Up to $20M or 3% global revenue</div>
+            </div>
+            <div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--text3)", marginBottom: 2 }}>NEW VIOLATION TYPE</div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--amber)" }}>PCMLTFA S.9.6 "Very Serious" · Effectiveness standard</div>
+            </div>
+            <div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 9, color: "var(--text3)", marginBottom: 2 }}>ENFORCEMENT RECORD</div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--red)" }}>$176.9M AMP — Oct 2025 (pre-C-12)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="page-header">
         <Search size={20} />
         <span>FINTRAC — AML / KYC</span>

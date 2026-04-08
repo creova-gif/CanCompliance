@@ -159,27 +159,59 @@ export default function DocumentScanner() {
 
     try {
       const token = await getToken();
-      const systemPrompt = `You are a Canadian legal compliance expert. Analyze the provided document and identify compliance issues with Canadian laws.
+
+      // System 5 — Document Scanner v2: per-type specialized prompts
+      // Detect document type from content and filename to choose specialized prompt
+      const textLower = (docText + " " + docName).toLowerCase();
+      let detectedType = "general";
+      if (textLower.includes("privacy") || textLower.includes("personal information") || textLower.includes("data protection")) detectedType = "privacy";
+      else if (textLower.includes("employment") || textLower.includes("employee") || textLower.includes("termination") || textLower.includes("salary")) detectedType = "employment";
+      else if (textLower.includes("supplier") || textLower.includes("vendor") || textLower.includes("supply chain") || textLower.includes("forced labour")) detectedType = "supplier";
+      else if (textLower.includes("terms of service") || textLower.includes("terms and conditions") || textLower.includes("user agreement")) detectedType = "tos";
+      else if (textLower.includes("marketing") || textLower.includes("email") || textLower.includes("consent") || textLower.includes("unsubscribe")) detectedType = "casl";
+      else if (textLower.includes("esg") || textLower.includes("sustainability") || textLower.includes("environmental") || textLower.includes("green")) detectedType = "esg";
+      else if (textLower.includes("contract") || textLower.includes("agreement") || textLower.includes("services agreement")) detectedType = "contract";
+
+      const TYPE_EXPERT_PROMPTS: Record<string, string> = {
+        privacy: `You are a Canadian privacy law expert specializing in PIPEDA, Quebec Law 25, and the incoming CPPA 2026. Focus your analysis on: (1) PIPEDA's 10 fair information principles, especially consent, purpose limitation, and data retention, (2) Quebec Law 25 — privacy impact assessments, explicit consent for sensitive data, right to deindexing, (3) CPPA incoming — automated decision-making, algorithmic transparency, right to deletion, (4) CASL intersection — if marketing is mentioned, email consent requirements, (5) Cross-border data transfer clauses (PIPEDA S.7), (6) Data breach notification language (under 72-hour requirement).`,
+        employment: `You are a Canadian employment law expert covering all provinces. Focus on: (1) Employment Standards Acts — province-specific overtime thresholds (ON: 44hrs/week, BC: 40hrs/week), vacation entitlements (ON: min 2 weeks/year), (2) Termination clauses — working notice, pay in lieu, ESA minimums vs. common law, (3) Non-compete enforceability — Ontario ban on non-competes since Oct 2021 (ESA S.67.2), BC and other provinces, (4) WSIB/WCB mandatory coverage disclosure, (5) Ontario AI hiring disclosure (Workers for Workers Act IV), (6) Pay transparency requirements (BC Pay Transparency Act, Ontario Pay Transparency Act), (7) Misclassification of employees as independent contractors.`,
+        supplier: `You are a Canadian trade and supply chain compliance expert. Focus on: (1) Fighting Against Forced Labour and Child Labour in Supply Chains Act (S-211) — due diligence requirements, annual reporting obligation (May 31 deadline), (2) CBSA CARM — bond requirements, classification obligations, (3) PIPEDA data sharing clauses for supplier data, (4) Competition Act S.74.01 — misleading claims in supplier representations, (5) Product safety obligations under CCPSA if goods are involved, (6) French language requirements under Bill 96 for Quebec suppliers, (7) Environmental compliance for goods imported or manufactured.`,
+        tos: `You are a Canadian consumer protection and digital law expert. Focus on: (1) CASL S.6 — if electronic messages are mentioned, consent and unsubscribe requirements, (2) Consumer Protection Acts (Ontario CPA, BC BPCPA) — unfair practices, cooling-off periods, (3) Competition Act — misleading advertising, drip pricing (S.74.01(1.1) — mandatory price components disclosure), (4) PIPEDA data collection through terms — implied consent is insufficient for digital services under CAI guidelines, (5) Quebec Law 25 — francophone users must receive services in French, (6) Limitation of liability clauses vs. consumer rights that cannot be waived, (7) Auto-renewal subscription disclosure requirements.`,
+        casl: `You are a CASL (Canada's Anti-Spam Legislation) expert. This document may involve commercial electronic messages. Focus exclusively on: (1) CASL S.6 — three requirements: consent (express vs. implied), sender identification, unsubscribe mechanism, (2) Express consent requirements — specific request, cannot be bundled with other consents, pre-checked boxes ARE invalid (CRTC Bulletin), (3) Implied consent categories — existing business relationship (expires 2 years after last transaction per S.10(9)(a)), existing non-business relationship (expires 2 years), conspicuous publication (S.10(9)(b)), (4) Unsubscribe mechanism — must process within 10 business days per S.11(3), (5) CRTC enforcement context: 4 fines Q1 2026, $1.1M fine January 2026, implied consent expiry top trigger, (6) S.13 — prohibition on harvesting email addresses, (7) CASL S.2 "commercial electronic message" definition — does this document involve CEMs?`,
+        esg: `You are a Canadian ESG, competition, and environmental compliance expert. Focus on: (1) Competition Act (Bill C-59, in force) — greenwashing provisions S.74.01(1)(b), environmental claims must have "adequate and proper testing", up to 3% global revenue or $10M penalty, (2) S-211 Forced Labour Act — ESG supply chain due diligence reporting, (3) Ontario Blue Box EPR and provincial EPR schemes — producer responsibility reporting, (4) Federal TCFD-aligned climate disclosure requirements for public companies, (5) Corporate Net-Zero claims — Competition Bureau guidance on sustainability claim substantiation, (6) Environmental false or misleading representations in advertising.`,
+        contract: `You are a Canadian commercial contracts and regulatory compliance expert. Focus on: (1) PIPEDA data sharing provisions in the contract, (2) CASL compliance for any marketing or communications provisions, (3) S-211 forced labour representation and warranty clauses, (4) Competition Act — representations that could be misleading, (5) Province-specific law governing clauses — enforceability by province, (6) Limitation of liability vs. negligence standards, (7) Termination and dispute resolution — arbitration clauses and consumer rights in Quebec (CAI).`,
+        general: `You are a senior Canadian business compliance lawyer with expertise across CASL, PIPEDA, Law 25, CPPA, Employment Standards (all provinces), CCPSA, Competition Act (including Bill C-59 greenwashing), S-211, FINTRAC, Bill 96, OHSA, and customs/trade law. Analyze this document comprehensively.`,
+      };
+
+      const expertContext = TYPE_EXPERT_PROMPTS[detectedType] || TYPE_EXPERT_PROMPTS.general;
+
+      const systemPrompt = `${expertContext}
+
+ENFORCEMENT CONTEXT (April 2026):
+- Bill C-12 IN FORCE (Mar 26, 2026): FINTRAC effectiveness standard changed — if FINTRAC is relevant, flag it
+- CRTC: 4 CASL enforcement fines Q1 2026 — implied consent expiry is top trigger
+- Quebec CAI joint audits with CRTC — Law 25 + CASL cross-compliance
+- Competition Bureau: actively pursuing greenwashing cases under Bill C-59
 
 Return a JSON object with this exact structure:
 {
-  "documentType": "Privacy Policy | Employment Contract | Supplier Agreement | Terms of Service | Other",
+  "documentType": "Privacy Policy | Employment Contract | Supplier Agreement | Terms of Service | CASL/Marketing | ESG Policy | Commercial Contract | Other",
   "overallRisk": "Critical | High | Medium | Low | Pass",
-  "summary": "2-3 sentence summary of the document's overall compliance status",
+  "summary": "2-3 sentence summary of compliance status, mentioning the most serious issues",
   "findingsCount": { "critical": 0, "high": 0, "medium": 0, "low": 0, "pass": 0 },
   "findings": [
     {
       "severity": "CRITICAL | HIGH | MEDIUM | LOW | PASS",
-      "law": "CASL | PIPEDA | Law 25 | Bill 96 | Employment Standards | S-211 | Competition Act | OHSA",
-      "clause": "specific clause or section",
-      "issue": "what is wrong",
-      "fix": "specific recommendation to fix this",
-      "statute": "exact statute reference e.g. CASL S.6(1)"
+      "law": "CASL | PIPEDA | Law 25 | CPPA | Bill 96 | Employment Standards | S-211 | Competition Act | OHSA | FINTRAC | Other",
+      "clause": "specific clause text or section reference from the document",
+      "issue": "what is specifically wrong with this clause under Canadian law",
+      "fix": "exact corrective language or action required",
+      "statute": "exact statute section e.g. CASL S.6(1)(a), PIPEDA Schedule 1 Principle 4.3"
     }
   ]
 }
 
-Focus on: CASL (consent, unsubscribe, sender ID), PIPEDA/Law 25 (data collection, consent, purpose limitation, cross-border transfers, retention), Employment Standards (overtime, termination notice, vacation pay, non-competes), Competition Act (greenwashing, misleading claims), S-211 (supply chain forced labour), Bill 96 (bilingualism for Quebec), OHSA (safety obligations). Include both issues AND things done correctly (PASS findings). Be specific and cite exact statutes.`;
+Include both issues (CRITICAL/HIGH/MEDIUM/LOW) AND things done correctly (PASS). Be specific — cite the exact clause from the document and the exact statute. Do not be generic. This is Canadian law, not American.`;
 
       const response = await fetch(`${API_BASE}/api/anthropic/conversations`, {
         method: "POST",

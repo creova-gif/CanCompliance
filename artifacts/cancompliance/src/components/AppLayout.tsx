@@ -5,10 +5,12 @@ import {
   DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
   TrendingUp, BookOpen, LogOut, UserCircle, Shield,
-  Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2
+  Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
+import EnforcementTicker from "./EnforcementTicker";
+import PredictiveAlerts from "./PredictiveAlerts";
 
 const MODULES = [
   { href: "/ccpsa", label: "CCPSA", sub: "Product Safety", icon: ShieldCheck },
@@ -35,6 +37,7 @@ const TOOLS = [
   { href: "/control-mapper", label: "Control Mapper", icon: BookOpen },
   { href: "/copilot", label: "AI Copilot", icon: Bot, badge: "AI" },
   { href: "/document-scanner", label: "Doc Scanner", icon: ScanLine, badge: "AI" },
+  { href: "/policy-generator", label: "Policy Gen.", icon: Wand2, badge: "NEW" },
   { href: "/growth", label: "Growth Tools", icon: TrendingUp },
 ];
 
@@ -180,6 +183,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
       </aside>
 
       <div className="ml-52 flex-1 flex flex-col min-h-screen">
+        <EnforcementTicker />
         <header className="h-12 bg-card border-b border-border flex items-center px-6 gap-4 sticky top-0 z-40">
           {title && (
             <>
@@ -208,6 +212,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
         </header>
 
         <main className="flex-1 p-6">
+          <PredictiveAlerts />
           {children}
         </main>
       </div>

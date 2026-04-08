@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { Mail, Plus, Trash2, UserX } from "lucide-react";
+import { Mail, Plus, Trash2, UserX, Activity, AlertTriangle, CheckCircle, Loader2 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { useAudit, uid, CaslRecord } from "../context/AuditContext";
+import { useAuth } from "@clerk/react";
+
+const API_BASE = import.meta.env.VITE_API_URL ?? "";
 
 export default function CaslLedger() {
   const { caslRecords, addCaslRecord, unsubscribeCasl } = useAudit();
+  const { getToken } = useAuth();
   const [showForm, setShowForm] = useState(false);
+  const [analyzerLoading, setAnalyzerLoading] = useState(false);
+  const [healthScore, setHealthScore] = useState<number | null>(null);
+  const [healthAnalysis, setHealthAnalysis] = useState("");
+  const [analyzerError, setAnalyzerError] = useState("");
 
   const [email, setEmail] = useState("");
   const [type, setType] = useState("express");
@@ -55,6 +63,110 @@ export default function CaslLedger() {
     if (r.unsubscribed) return "UNSUBSCRIBED";
     if (isExpired(r)) return "EXPIRED";
     return "ACTIVE";
+  };
+
+  // System 9 — CASL Consent Health Analyzer
+  const runHealthAnalysis = async () => {
+    setAnalyzerLoading(true);
+    setHealthAnalysis("");
+    setAnalyzerError("");
+
+    const total = caslRecords.length;
+    const express = caslRecords.filter(r => r.type === "express").length;
+    const implied = caslRecords.filter(r => r.type !== "express").length;
+    const active = caslRecords.filter(r => !r.unsubscribed && !isExpired(r)).length;
+    const expired = caslRecords.filter(isExpired).length;
+    const unsubscribed = caslRecords.filter(r => r.unsubscribed).length;
+    const missingConsentText = caslRecords.filter(r => !r.consentText).length;
+    const missingSource = caslRecords.filter(r => !r.source).length;
+    const now = new Date();
+    const expiringSoon = caslRecords.filter(r => {
+      if (!r.expiresAt || r.unsubscribed) return false;
+      const diff = new Date(r.expiresAt).getTime() - now.getTime();
+      return diff > 0 && diff < 60 * 24 * 60 * 60 * 1000;
+    }).length;
+
+    // Compute raw health score
+    let score = 100;
+    if (total === 0) { score = 0; }
+    else {
+      score -= (expired / total) * 30;
+      score -= (missingConsentText / total) * 20;
+      score -= (missingSource / total) * 10;
+      score -= expiringSoon > 0 ? 10 : 0;
+      score -= implied > express ? 10 : 0;
+    }
+    const finalScore = Math.max(0, Math.round(score));
+    setHealthScore(finalScore);
+
+    const prompt = `You are a CASL compliance expert. Analyze this CASL consent ledger and provide specific, actionable recommendations.
+
+LEDGER STATISTICS:
+- Total records: ${total}
+- Express consent: ${express} (${total > 0 ? Math.round(express/total*100) : 0}%)
+- Implied consent: ${implied} (${total > 0 ? Math.round(implied/total*100) : 0}%)
+- Currently active: ${active}
+- Expired records: ${expired}
+- Unsubscribed: ${unsubscribed}
+- Missing consent text: ${missingConsentText}
+- Missing source/collection point: ${missingSource}
+- Expiring in 60 days: ${expiringSoon}
+
+CRTC ENFORCEMENT CONTEXT (2026):
+- CRTC issued 4 CASL fines in Q1 2026 — implied consent expiry is the #1 trigger
+- $1.1M fine in January 2026 — failure to maintain adequate consent records
+- Bill C-12 in force March 26, 2026 — though this affects FINTRAC, CRTC is coordinating with CAI
+
+Provide a CASL Consent Health Analysis with:
+
+1. HEALTH SCORE INTERPRETATION: What this ${finalScore}/100 score means for CRTC risk exposure
+
+2. CRITICAL ISSUES (if any): Specific problems that must be fixed immediately with statute citations (CASL S.10(1), S.11, CRTC Reg 2012-36)
+
+3. IMPROVEMENT ACTIONS: 3-5 specific, numbered actions to improve the ledger — with deadlines and exact statute references
+
+4. CRTC AUDIT READINESS: What a CRTC auditor would look for in this ledger and what's missing
+
+Keep response under 400 words. Be direct and specific, not generic.`;
+
+    try {
+      const token = await getToken();
+      const resp = await fetch(`${API_BASE}/api/anthropic/conversations`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ title: "CASL Health Analysis" }),
+      });
+      if (!resp.ok) throw new Error("Failed to start analysis");
+      const { id: convId } = await resp.json();
+
+      const msgResp = await fetch(`${API_BASE}/api/anthropic/conversations/${convId}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ content: prompt }),
+      });
+      if (!msgResp.ok) throw new Error("Failed to generate analysis");
+
+      const reader = msgResp.body!.getReader();
+      const decoder = new TextDecoder();
+      let full = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        for (const line of chunk.split("\n")) {
+          if (line.startsWith("data: ")) {
+            try {
+              const d = JSON.parse(line.slice(6));
+              if (d.content) { full += d.content; setHealthAnalysis(full); }
+            } catch {}
+          }
+        }
+      }
+    } catch (e: any) {
+      setAnalyzerError(e.message || "Analysis failed");
+    } finally {
+      setAnalyzerLoading(false);
+    }
   };
 
   return (
@@ -177,6 +289,75 @@ export default function CaslLedger() {
         <div style={{ marginTop: 14, fontSize: 10, color: "var(--text3)", fontFamily: "var(--mono)", lineHeight: 1.6 }}>
           CASL (Canada's Anti-Spam Legislation) s.10 — Express consent is indefinite; implied consent expires on the dates shown. Records must be retained for the period that consent is relied upon plus 3 years. Penalty: up to $10,000,000 per violation.
         </div>
+
+        {/* System 9 — CASL Consent Health Analyzer */}
+        <div style={{ marginTop: 20, background: "var(--bg2)", border: "1px solid rgba(200,241,53,0.15)", borderRadius: 12, overflow: "hidden" }}>
+          <div style={{ padding: "14px 20px", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: 10, justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Activity size={14} style={{ color: "#c8f135" }} />
+              <span style={{ fontFamily: "var(--mono)", fontSize: 10, color: "#c8f135" }}>SYSTEM 9 — CASL CONSENT HEALTH ANALYZER · AI-powered ledger audit</span>
+            </div>
+            {healthScore !== null && (
+              <div style={{ fontFamily: "var(--mono)", fontSize: 13, fontWeight: 700, color: healthScore >= 80 ? "var(--green)" : healthScore >= 60 ? "var(--amber)" : "var(--red)" }}>
+                Health Score: {healthScore}/100
+              </div>
+            )}
+          </div>
+          <div style={{ padding: "16px 20px" }}>
+            {!healthAnalysis && !analyzerLoading && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                <div style={{ fontSize: 12, color: "var(--text3)", lineHeight: 1.6 }}>
+                  Analyze your full CASL consent ledger against 2026 CRTC enforcement patterns. Generates a 0–100 health score and Claude-powered gap analysis with specific remediation actions.
+                </div>
+                <button
+                  data-testid="btn-casl-health"
+                  onClick={runHealthAnalysis}
+                  disabled={analyzerLoading || caslRecords.length === 0}
+                  style={{ flexShrink: 0, padding: "8px 16px", background: "#c8f135", color: "#09090a", border: "none", borderRadius: 7, fontSize: 11, fontWeight: 700, cursor: caslRecords.length === 0 ? "not-allowed" : "pointer", opacity: caslRecords.length === 0 ? 0.5 : 1, display: "flex", alignItems: "center", gap: 6 }}
+                >
+                  <Activity size={13} />
+                  {caslRecords.length === 0 ? "Add records first" : "Analyze Ledger"}
+                </button>
+              </div>
+            )}
+
+            {analyzerLoading && !healthAnalysis && (
+              <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--text3)", fontSize: 12 }}>
+                <Loader2 size={14} style={{ animation: "spin 1s linear infinite", color: "#c8f135" }} />
+                Claude is analyzing your CASL consent ledger...
+              </div>
+            )}
+
+            {analyzerError && (
+              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: 12, background: "rgba(240,68,56,0.1)", border: "1px solid rgba(240,68,56,0.2)", borderRadius: 8 }}>
+                <AlertTriangle size={14} style={{ color: "var(--red)" }} />
+                <span style={{ fontSize: 12, color: "var(--red)" }}>{analyzerError}</span>
+              </div>
+            )}
+
+            {(healthAnalysis || (healthScore !== null && analyzerLoading)) && (
+              <div>
+                {healthScore !== null && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14, padding: "10px 14px", background: "var(--bg3)", borderRadius: 8, border: "1px solid var(--border)" }}>
+                    <div style={{ fontSize: 32, fontFamily: "var(--mono)", fontWeight: 700, color: healthScore >= 80 ? "var(--green)" : healthScore >= 60 ? "var(--amber)" : "var(--red)" }}>{healthScore}</div>
+                    <div>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: healthScore >= 80 ? "var(--green)" : healthScore >= 60 ? "var(--amber)" : "var(--red)" }}>
+                        {healthScore >= 80 ? "Strong consent posture" : healthScore >= 60 ? "Moderate risk — action needed" : "High CRTC risk — urgent action required"}
+                      </div>
+                      <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--mono)", marginTop: 2 }}>CASL Consent Health Score · 0–100 scale</div>
+                    </div>
+                    <button onClick={() => { setHealthScore(null); setHealthAnalysis(""); }} style={{ marginLeft: "auto", background: "none", border: "none", color: "var(--text3)", cursor: "pointer", fontSize: 16 }}>✕</button>
+                  </div>
+                )}
+                <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--text2)", whiteSpace: "pre-wrap", lineHeight: 1.7 }}>
+                  {healthAnalysis}
+                  {analyzerLoading && <span style={{ color: "#c8f135" }}>▌</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       </div>
     </AppLayout>
   );
