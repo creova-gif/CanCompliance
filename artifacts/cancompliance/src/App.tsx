@@ -92,29 +92,76 @@ function HomeRoute() {
   return <Landing />;
 }
 
+function AuthLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-background flex">
+      {/* Left branding panel */}
+      <div className="hidden lg:flex flex-col justify-between w-[420px] flex-shrink-0 border-r border-border px-10 py-12"
+        style={{ background: "linear-gradient(160deg, rgba(200,241,53,0.04) 0%, transparent 60%)" }}>
+        <div>
+          <a href={basePath || "/"} className="font-serif italic text-xl text-foreground hover:opacity-80 transition-opacity">
+            CanCompliance
+          </a>
+          <div className="mt-16">
+            <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-4">Canada Compliance Engine</div>
+            <h2 className="font-serif italic text-3xl text-foreground leading-snug mb-6">
+              Stay <span style={{ color: "#c8f135" }}>compliant.</span><br />
+              Avoid the fines.
+            </h2>
+            <p className="text-[13px] text-muted-foreground leading-relaxed mb-10">
+              13 Canadian laws, one platform. CASL, PIPEDA, Bill 96, FINTRAC, Employment Standards, and more — checked in seconds.
+            </p>
+            <div className="space-y-3">
+              {[
+                "Real-time statute citations",
+                "AI Copilot powered by Claude",
+                "Live compliance score",
+                "PIPEDA-compliant data handling",
+              ].map((f) => (
+                <div key={f} className="flex items-center gap-2.5">
+                  <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#c8f135" }} />
+                  <span className="text-[13px] text-muted-foreground">{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="font-mono text-[11px] text-muted-foreground">
+          Not legal advice · Built for Canadian SMBs
+        </div>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 function SignInPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <AuthLayout>
       <SignIn
         routing="path"
         path={`${basePath}/sign-in`}
         signUpUrl={`${basePath}/sign-up`}
         forceRedirectUrl={`${basePath}/dashboard`}
       />
-    </div>
+    </AuthLayout>
   );
 }
 
 function SignUpPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <AuthLayout>
       <SignUp
         routing="path"
         path={`${basePath}/sign-up`}
         signInUrl={`${basePath}/sign-in`}
         forceRedirectUrl={`${basePath}/dashboard`}
       />
-    </div>
+    </AuthLayout>
   );
 }
 
