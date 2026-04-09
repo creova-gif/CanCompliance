@@ -1,0 +1,163 @@
+Full-System Debug & Recovery for Blank Pages in Role-Based SaaS (React + Supabase)”
+
+🧠 CORE INSTRUCTION
+
+You are a senior full-stack engineer and QA system. Your job is to aggressively debug, trace, and FIX all blank page issues in a role-based SaaS application (CANCompliance). You must not assume anything works. You must trace every render path, auth state, route guard, and async dependency. Output root causes and exact fixes.
+
+1️⃣ GLOBAL RENDER DEBUG
+Detect any route rendering blank UI
+For each blank page:
+Check if component is mounted
+Check if it crashes silently
+Check if it returns null or empty JSX
+
+Inject fallback UI:
+
+if (!data) return <div>Loading...</div>
+
+Force-add error boundaries around ALL pages:
+
+<ErrorBoundary fallback={<div>Something broke</div>}>
+  <Page />
+</ErrorBoundary>
+2️⃣ ROUTE GUARD DEBUG (MOST COMMON ISSUE)
+
+Test ALL routes:
+
+/
+/login
+/signup
+/app/admin
+/app/auditor
+/app/user
+Validate:
+Is auth state loading?
+If yes → render loading screen instead of blank
+Is redirect firing too early?
+Is there a redirect loop?
+Fix pattern:
+if (loading) return <LoadingScreen />
+
+if (!user) return <Navigate to="/login" />
+
+return children
+3️⃣ ROLE-BASED ROUTING VALIDATION
+Log user role on EVERY render:
+console.log("User Role:", user?.role)
+Check:
+Is role undefined at first render?
+Does role mismatch route?
+Fix:
+if (!user?.role) return <LoadingScreen />
+4️⃣ SUPABASE AUTH STATE DEBUG
+Verify:
+getSession() resolves before render
+onAuthStateChange is working
+Detect:
+null session flicker
+delayed auth hydration
+Fix:
+Add global auth loader:
+if (!sessionLoaded) return <FullPageLoader />
+5️⃣ API / DATA FETCH FAILURES
+Check ALL pages for:
+undefined data
+failed fetch calls
+unhandled promises
+Add defensive UI:
+if (error) return <ErrorState message="Failed to load data" />
+6️⃣ COMPONENT CRASH DETECTION
+Scan for:
+accessing undefined props
+.map() on undefined arrays
+destructuring null values
+Fix pattern:
+const items = data?.items || []
+7️⃣ CONSOLE & NETWORK INSPECTION
+Log ALL:
+console errors
+failed API calls
+401 / 403 responses
+If blank page:
+
+👉 Assume a silent crash until proven otherwise
+
+8️⃣ UI/UX FALLBACK SYSTEM (CRITICAL)
+
+NO page should ever be blank.
+
+Add 3 global states:
+
+Loading
+Error
+Empty
+
+Example:
+
+if (loading) return <Spinner />
+if (error) return <ErrorState />
+if (!data) return <EmptyState />
+9️⃣ DEMO USER FLOW DEBUG
+
+Test:
+
+“Try as Compliance Officer”
+“Try as Auditor”
+“Try as User”
+Check:
+Does demo session actually set role?
+Does it bypass auth incorrectly?
+Does it land on correct dashboard?
+🔟 HARD NAVIGATION TEST
+
+Manually test:
+
+Direct URL access:
+/app/admin
+/app/auditor
+Refresh page on protected routes
+Open in incognito
+
+👉 These often break apps
+
+1️⃣1️⃣ REACT STRICT MODE ISSUES
+Detect double rendering issues
+Check for side effects firing twice
+1️⃣2️⃣ FINAL OUTPUT FORMAT
+
+For EVERY blank page found:
+
+PAGE: /app/admin
+
+ISSUE:
+Component crashes due to undefined user.role
+
+ROOT CAUSE:
+Auth state not loaded before render
+
+FIX:
+Add loading guard before role check
+
+CODE FIX:
+if (!user) return <LoadingScreen />
+🚨 EXTRA BRUTE MODE
+Simulate:
+slow internet (3G)
+no backend response
+expired session
+invalid role
+Force:
+random null values
+broken API responses
+Ensure:
+👉 app NEVER renders blank screen
+💡 REAL TALK
+
+If pages are blank “even after fixing”:
+
+👉 90% chance it's one of these:
+
+auth state race condition
+route guard misfire
+undefined data crash
+missing loading state

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Component, ReactNode } from "react";
 import { Switch, Route, Router as WouterRouter, Redirect, useLocation } from "wouter";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { ClerkProvider, SignIn, SignUp, useAuth, useClerk } from "@clerk/react";
@@ -47,6 +47,54 @@ import ComplianceInbox from "@/pages/ComplianceInbox";
 import TrustNetwork from "@/pages/TrustNetwork";
 import PolicyGenerator from "@/pages/PolicyGenerator";
 
+// ─── Global Error Boundary ────────────────────────────────────────────────────
+interface EBState { hasError: boolean; message: string }
+class ErrorBoundary extends Component<{ children: ReactNode; label?: string }, EBState> {
+  state: EBState = { hasError: false, message: "" };
+  static getDerivedStateFromError(err: Error): EBState {
+    return { hasError: true, message: err.message };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-6"
+          style={{ background: "#09090a" }}>
+          <div className="w-10 h-10 rounded-full flex items-center justify-center"
+            style={{ background: "rgba(240,68,56,0.12)", border: "1px solid rgba(240,68,56,0.3)" }}>
+            <span className="text-lg">!</span>
+          </div>
+          <div>
+            <p className="font-mono text-xs uppercase tracking-widest mb-1" style={{ color: "#f04438" }}>
+              {this.props.label ?? "Page Error"}
+            </p>
+            <p className="text-sm text-muted-foreground max-w-sm">{this.state.message || "Something went wrong loading this page."}</p>
+          </div>
+          <button
+            onClick={() => { this.setState({ hasError: false, message: "" }); window.location.reload(); }}
+            className="px-4 py-2 rounded-lg text-xs font-mono border border-border hover:border-primary/40 transition-colors"
+          >
+            Reload page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// ─── Auth Loading Spinner ─────────────────────────────────────────────────────
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "#09090a" }}>
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-8 h-8 rounded-full border-2 border-transparent animate-spin"
+          style={{ borderTopColor: "#c8f135", borderRightColor: "rgba(200,241,53,0.3)" }} />
+        <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -90,15 +138,19 @@ const WrappedComplianceScore = withLayout(ComplianceScore, "Live Compliance Scor
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isSignedIn, isLoaded } = useAuth();
-  if (!isLoaded) return null;
+  if (!isLoaded) return <PageLoader />;
   if (!isSignedIn) return <Redirect to="/sign-in" />;
-  return <Component />;
+  return (
+    <ErrorBoundary label="Module Error">
+      <Component />
+    </ErrorBoundary>
+  );
 }
 
 function HomeRoute() {
   const { isSignedIn, isLoaded } = useAuth();
-  if (!isLoaded) return null;
-  if (isSignedIn) return <Redirect to="/dashboard" />;
+  // Render landing immediately — redirect fires only once auth is confirmed
+  if (isLoaded && isSignedIn) return <Redirect to="/dashboard" />;
   return <Landing />;
 }
 
@@ -324,7 +376,9 @@ function ClerkProviderWithRoutes() {
         <ClerkQueryCacheInvalidator />
         <TooltipProvider>
           <AuditProvider>
-            <AppBody />
+            <ErrorBoundary label="Application Error">
+              <AppBody />
+            </ErrorBoundary>
           </AuditProvider>
           <Toaster />
         </TooltipProvider>
