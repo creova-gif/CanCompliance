@@ -2,7 +2,7 @@ import { useEffect, useRef, Component, ReactNode, useState } from "react";
 import { Switch, Route, Router as WouterRouter, Redirect, useLocation, Link } from "wouter";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { ClerkProvider, useAuth, useClerk, useSignIn, useSignUp, AuthenticateWithRedirectCallback } from "@clerk/react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Scale, ClipboardCheck, Building2, ArrowRight } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuditProvider } from "./context/AuditContext";
@@ -213,21 +213,30 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 const DEMO_PERSONAS = [
   {
     role: "Compliance Officer",
-    desc: "Full dashboard — all 14 modules, AI Copilot, score engine, policy generator",
-    icon: "⚖️",
+    short: "Full platform",
+    desc: "All 14 modules, AI Copilot, score engine, policy generator",
+    Icon: Scale,
     color: "#c8f135",
+    bg: "rgba(200,241,53,0.08)",
+    border: "rgba(200,241,53,0.2)",
   },
   {
     role: "Auditor",
+    short: "Deep audit",
     desc: "Audit trail, control mapper, document scanner, remediation planner",
-    icon: "🔍",
+    Icon: ClipboardCheck,
     color: "#12b76a",
+    bg: "rgba(18,183,106,0.08)",
+    border: "rgba(18,183,106,0.2)",
   },
   {
     role: "Business Owner",
-    desc: "Quick compliance scan, jurisdiction setup, CASL ledger, deadlines",
-    icon: "🏢",
+    short: "Quick scan",
+    desc: "Compliance scan, jurisdiction setup, CASL ledger, deadlines",
+    Icon: Building2,
     color: "#f5a623",
+    bg: "rgba(245,166,35,0.08)",
+    border: "rgba(245,166,35,0.2)",
   },
 ];
 
@@ -358,25 +367,45 @@ function SignInPage() {
           </p>
 
           <div className="mt-6 pt-5 border-t border-border">
-            <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground text-center mb-3">
-              Or explore as a demo persona
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex-1 h-px bg-border" />
+              <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground whitespace-nowrap">Try a demo role</span>
+              <div className="flex-1 h-px bg-border" />
             </div>
-            <div className="space-y-2">
+            <div className="grid grid-cols-3 gap-2">
               {DEMO_PERSONAS.map((p) => (
                 <Link key={p.role} href={`/sign-up?role=${encodeURIComponent(p.role)}`}>
-                  <div data-testid={`demo-${p.role.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/20 hover:bg-muted/50 transition-all text-left group cursor-pointer">
-                    <span className="text-base flex-shrink-0">{p.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[12px] font-semibold text-foreground group-hover:text-primary transition-colors">{p.role}</div>
-                      <div className="text-[10px] text-muted-foreground truncate">{p.desc}</div>
+                  <div
+                    data-testid={`demo-${p.role.toLowerCase().replace(/\s+/g, "-")}`}
+                    className="group flex flex-col items-start gap-2.5 p-3 rounded-xl border transition-all duration-200 cursor-pointer h-full"
+                    style={{
+                      borderColor: "rgba(255,255,255,0.07)",
+                      background: "rgba(255,255,255,0.02)",
+                    }}
+                    onMouseEnter={e => {
+                      (e.currentTarget as HTMLDivElement).style.borderColor = p.border;
+                      (e.currentTarget as HTMLDivElement).style.background = p.bg;
+                    }}
+                    onMouseLeave={e => {
+                      (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,0.07)";
+                      (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.02)";
+                    }}
+                  >
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{ background: p.bg, border: `1px solid ${p.border}` }}>
+                      <p.Icon size={14} style={{ color: p.color }} />
                     </div>
-                    <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: p.color }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[11px] font-semibold text-foreground leading-tight mb-0.5"
+                        style={{ color: "inherit" }}>{p.role}</div>
+                      <div className="font-mono text-[9px] uppercase tracking-wide" style={{ color: p.color }}>{p.short}</div>
+                    </div>
+                    <ArrowRight size={11} className="text-muted-foreground group-hover:translate-x-0.5 transition-transform self-end" />
                   </div>
                 </Link>
               ))}
             </div>
-            <p className="text-center text-[10px] text-muted-foreground mt-3">Demo sign-up is free — no credit card needed</p>
+            <p className="text-center text-[10px] text-muted-foreground mt-3">Free forever — no credit card needed</p>
           </div>
         </div>
       </AuthLayout>
