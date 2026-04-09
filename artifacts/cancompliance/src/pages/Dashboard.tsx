@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import AppLayout from "@/components/AppLayout";
-import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine, Inbox, Share2 } from "lucide-react";
+import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine, Inbox, Share2, Scale, ClipboardCheck, Building2 } from "lucide-react";
+import { useUser } from "@clerk/react";
 
 const DIGEST_UPDATES = [
   { module: "EMPLOYMENT", headline: "Ontario minimum wage increases to $17.20/hr effective Oct 2024", href: "/employment" },
@@ -28,10 +29,81 @@ const STATUS_CONFIG = {
   block: { label: "BLOCK", class: "bg-fail/10 text-block border border-fail/30" },
 };
 
+const ROLE_CONFIG: Record<string, {
+  Icon: any;
+  color: string;
+  bg: string;
+  border: string;
+  welcome: string;
+  subtitle: string;
+  pinnedLabel: string;
+  pinned: { label: string; href: string; badge?: string }[];
+}> = {
+  "Compliance Officer": {
+    Icon: Scale,
+    color: "#c8f135",
+    bg: "rgba(200,241,53,0.06)",
+    border: "rgba(200,241,53,0.2)",
+    welcome: "Compliance Officer view",
+    subtitle: "Full platform — all 14 modules, AI Copilot, score engine, policy generator",
+    pinnedLabel: "Your pinned tools",
+    pinned: [
+      { label: "AI Copilot", href: "/copilot", badge: "AI" },
+      { label: "Compliance Score", href: "/compliance-score" },
+      { label: "Policy Generator", href: "/policy-generator", badge: "NEW" },
+      { label: "Audit Trail", href: "/audit-trail" },
+      { label: "CASL check", href: "/casl" },
+    ],
+  },
+  "Auditor": {
+    Icon: ClipboardCheck,
+    color: "#12b76a",
+    bg: "rgba(18,183,106,0.06)",
+    border: "rgba(18,183,106,0.2)",
+    welcome: "Auditor view",
+    subtitle: "Audit trail, control mapper, document scanner, remediation planner",
+    pinnedLabel: "Your audit tools",
+    pinned: [
+      { label: "Audit Trail", href: "/audit-trail" },
+      { label: "Control Mapper", href: "/control-mapper" },
+      { label: "Document Scanner", href: "/document-scanner", badge: "AI" },
+      { label: "Benchmarking", href: "/benchmarking" },
+      { label: "Compliance Score", href: "/compliance-score" },
+    ],
+  },
+  "Business Owner": {
+    Icon: Building2,
+    color: "#f5a623",
+    bg: "rgba(245,166,35,0.06)",
+    border: "rgba(245,166,35,0.2)",
+    welcome: "Business Owner view",
+    subtitle: "Quick compliance scan, jurisdiction setup, CASL ledger, deadlines",
+    pinnedLabel: "Your key actions",
+    pinned: [
+      { label: "CASL Ledger", href: "/casl-ledger" },
+      { label: "Jurisdiction Setup", href: "/jurisdiction" },
+      { label: "Deadlines", href: "/deadlines" },
+      { label: "Red Tape Calculator", href: "/red-tape-calculator" },
+      { label: "Run CASL check", href: "/casl" },
+    ],
+  },
+};
+
+const DEFAULT_QUICK_ACTIONS = [
+  { label: "Run CASL check", href: "/casl" },
+  { label: "Check PIPEDA compliance", href: "/pipeda" },
+  { label: "Quebec Bill 96 review", href: "/bill96" },
+  { label: "Ask AI Copilot", href: "/copilot" },
+  { label: "View compliance score", href: "/compliance-score" },
+];
+
 export default function Dashboard() {
   const [digest] = useState(() => DIGEST_UPDATES[Math.floor(Math.random() * DIGEST_UPDATES.length)]);
   const [streak] = useState(3);
   const today = new Date().getDay();
+  const { user } = useUser();
+  const role = (user?.unsafeMetadata?.role as string) ?? "";
+  const roleConfig = ROLE_CONFIG[role] ?? null;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -41,8 +113,31 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, []);
 
+  const quickActions = roleConfig ? roleConfig.pinned : DEFAULT_QUICK_ACTIONS;
+
   return (
-    <AppLayout title="Dashboard" subtitle="Overview">
+    <AppLayout title="Dashboard" subtitle={roleConfig ? roleConfig.welcome : "Overview"}>
+      {/* Role welcome banner */}
+      {roleConfig && (
+        <div className="flex items-center gap-4 px-5 py-3.5 rounded-xl border mb-5"
+          style={{ borderColor: roleConfig.border, background: roleConfig.bg }}>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: roleConfig.border }}>
+            <roleConfig.Icon size={14} style={{ color: roleConfig.color }} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[12px] font-semibold" style={{ color: roleConfig.color }}>
+              {roleConfig.welcome}
+            </div>
+            <div className="text-[11px] text-muted-foreground">{roleConfig.subtitle}</div>
+          </div>
+          <span className="font-mono text-[9px] px-2 py-0.5 rounded border flex-shrink-0 uppercase tracking-widest"
+            style={{ color: roleConfig.color, borderColor: roleConfig.border, background: "transparent" }}>
+            {role.toUpperCase()}
+          </span>
+        </div>
+      )}
+
       {/* Daily Digest Banner */}
       <div className="bg-primary/5 border border-primary/20 rounded-xl px-5 py-3 flex items-center gap-4 mb-7">
         <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-primary/10 text-primary uppercase tracking-widest flex-shrink-0">
@@ -139,23 +234,36 @@ export default function Dashboard() {
           </div>
 
           {/* Quick actions */}
-          <div className="bg-card border border-border rounded-xl p-5">
-            <div className="text-[13px] font-medium text-foreground mb-4">Quick Actions</div>
+          <div className="bg-card border border-border rounded-xl p-5"
+            style={roleConfig ? { borderColor: roleConfig.border } : undefined}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-[13px] font-medium text-foreground">
+                {roleConfig ? roleConfig.pinnedLabel : "Quick Actions"}
+              </div>
+              {roleConfig && (
+                <span className="font-mono text-[9px] px-1.5 py-0.5 rounded uppercase tracking-widest"
+                  style={{ color: roleConfig.color, background: roleConfig.bg }}>
+                  Personalized
+                </span>
+              )}
+            </div>
             <div className="space-y-2">
-              {[
-                { label: "Run CASL check", href: "/casl" },
-                { label: "Check PIPEDA compliance", href: "/pipeda" },
-                { label: "Quebec Bill 96 review", href: "/bill96" },
-                { label: "Ask AI Copilot", href: "/copilot" },
-                { label: "View compliance score", href: "/compliance-score" },
-              ].map((a) => (
+              {quickActions.map((a) => (
                 <Link key={a.label} href={a.href}>
                   <div
                     data-testid={`quick-action-${a.label.toLowerCase().replace(/\s+/g, "-")}`}
                     className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-muted transition-colors cursor-pointer"
                   >
                     <span className="text-[12px] text-muted-foreground hover:text-foreground">{a.label}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50" />
+                    <div className="flex items-center gap-2">
+                      {"badge" in a && a.badge && (
+                        <span className="font-mono text-[9px] px-1.5 py-0.5 rounded"
+                          style={{ background: a.badge === "AI" ? "rgba(127,119,221,0.15)" : "rgba(200,241,53,0.1)", color: a.badge === "AI" ? "#7F77DD" : "#c8f135" }}>
+                          {a.badge}
+                        </span>
+                      )}
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50" />
+                    </div>
                   </div>
                 </Link>
               ))}

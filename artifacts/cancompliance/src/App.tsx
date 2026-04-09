@@ -423,12 +423,21 @@ function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Read ?role= from URL
+  const urlRole = new URLSearchParams(window.location.search).get("role") ?? "";
+  const persona = DEMO_PERSONAS.find(p => p.role === urlRole);
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoaded || loading) return;
     setLoading(true); setError("");
     try {
-      await signUp!.create({ emailAddress: email, password });
+      // Persist the demo role into Clerk unsafeMetadata from day 1
+      await signUp!.create({
+        emailAddress: email,
+        password,
+        ...(urlRole ? { unsafeMetadata: { role: urlRole } } : {}),
+      });
       await signUp!.prepareEmailAddressVerification({ strategy: "email_code" });
       setStep("verify");
     } catch (err: any) {
@@ -509,7 +518,22 @@ function SignUpPage() {
       <AuthLayout>
         <div className="w-full max-w-sm">
           <div className="mb-7">
-            <h1 className="font-serif italic text-2xl text-foreground mb-1">Create your account</h1>
+            {persona && (
+              <div className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl border mb-5"
+                style={{ borderColor: persona.border, background: persona.bg }}>
+                <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: persona.bg, border: `1px solid ${persona.border}` }}>
+                  <persona.Icon size={13} style={{ color: persona.color }} />
+                </div>
+                <div>
+                  <div className="text-[11px] font-semibold" style={{ color: persona.color }}>{persona.role}</div>
+                  <div className="text-[10px] text-muted-foreground">{persona.short} access · {persona.desc.split(",")[0]}</div>
+                </div>
+              </div>
+            )}
+            <h1 className="font-serif italic text-2xl text-foreground mb-1">
+              {persona ? `Create your ${persona.role} account` : "Create your account"}
+            </h1>
             <p className="text-[13px] text-muted-foreground">Welcome! Please fill in the details to get started.</p>
           </div>
 

@@ -90,6 +90,13 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const displayName = user?.firstName ?? email.split("@")[0] ?? "Account";
   const initials = displayName.slice(0, 1).toUpperCase();
+  const userRole = (user?.unsafeMetadata?.role as string) ?? "";
+  const ROLE_COLORS: Record<string, { color: string; bg: string }> = {
+    "Compliance Officer": { color: "#c8f135", bg: "rgba(200,241,53,0.1)" },
+    "Auditor": { color: "#12b76a", bg: "rgba(18,183,106,0.1)" },
+    "Business Owner": { color: "#f5a623", bg: "rgba(245,166,35,0.1)" },
+  };
+  const roleStyle = ROLE_COLORS[userRole] ?? null;
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -160,6 +167,14 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] font-medium text-foreground truncate">{displayName}</div>
                 <div className="text-[9px] text-muted-foreground truncate font-mono">{email}</div>
+                {userRole && roleStyle && (
+                  <div className="mt-0.5">
+                    <span className="font-mono text-[8px] px-1.5 py-0.5 rounded uppercase tracking-widest"
+                      style={{ color: roleStyle.color, background: roleStyle.bg }}>
+                      {userRole}
+                    </span>
+                  </div>
+                )}
               </div>
               <UserCircle className="w-3 h-3 text-muted-foreground flex-shrink-0" />
             </div>
