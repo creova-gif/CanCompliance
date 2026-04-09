@@ -248,20 +248,21 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
 
       <div className="ml-52 flex-1 flex flex-col min-h-screen">
         <EnforcementTicker />
-        {isDemoMode && (
-          <div className="sticky top-0 z-50 flex items-center gap-3 px-5 py-2 text-[11px]"
-            style={{ background: "rgba(245,166,35,0.12)", borderBottom: "1px solid rgba(245,166,35,0.25)" }}>
-            <FlaskConical size={12} style={{ color: "#f5a623" }} />
-            <span style={{ color: "#f5a623" }} className="font-mono uppercase tracking-widest">Demo Mode</span>
-            <span className="text-muted-foreground">· You are viewing as <span className="font-medium" style={{ color: "#f5a623" }}>{userRole}</span> ({displayName}) · data is not saved</span>
-            <button onClick={handleExitDemo}
-              className="ml-auto font-mono text-[10px] px-2.5 py-1 rounded border transition-colors hover:bg-muted"
-              style={{ borderColor: "rgba(245,166,35,0.4)", color: "#f5a623" }}>
-              Exit Demo
-            </button>
-          </div>
-        )}
-        <header className="h-12 bg-card border-b border-border flex items-center px-6 gap-4 sticky top-0 z-40">
+        <div className="sticky top-0 z-50">
+          {isDemoMode && (
+            <div className="flex items-center gap-3 px-5 py-2 text-[11px]"
+              style={{ background: "rgba(245,166,35,0.12)", borderBottom: "1px solid rgba(245,166,35,0.25)" }}>
+              <FlaskConical size={12} style={{ color: "#f5a623" }} />
+              <span style={{ color: "#f5a623" }} className="font-mono uppercase tracking-widest">Demo Mode</span>
+              <span className="text-muted-foreground">· You are viewing as <span className="font-medium" style={{ color: "#f5a623" }}>{userRole}</span> ({displayName}) · data is not saved</span>
+              <button onClick={handleExitDemo}
+                className="ml-auto font-mono text-[10px] px-2.5 py-1 rounded border transition-colors hover:bg-muted"
+                style={{ borderColor: "rgba(245,166,35,0.4)", color: "#f5a623" }}>
+                Exit Demo
+              </button>
+            </div>
+          )}
+          <header className="h-12 bg-card border-b border-border flex items-center px-6 gap-4">
           {title && (
             <>
               <div className="text-[13px] font-medium text-foreground">{title}</div>
@@ -287,6 +288,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
             </Link>
           </div>
         </header>
+        </div>
 
         <main key={location} className="flex-1 p-6 page-enter">
           <PredictiveAlerts />
