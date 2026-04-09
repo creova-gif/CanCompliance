@@ -5,12 +5,13 @@ import {
   DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
   TrendingUp, BookOpen, LogOut, UserCircle, Shield,
-  Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2
+  Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2, FlaskConical
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
 import EnforcementTicker from "./EnforcementTicker";
 import PredictiveAlerts from "./PredictiveAlerts";
+import { getDemoRole, getDemoUser, clearDemoRole } from "@/lib/demoSession";
 
 const MODULES = [
   { href: "/ccpsa", label: "CCPSA", sub: "Product Safety", icon: ShieldCheck },
@@ -87,16 +88,27 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
   const { user } = useUser();
   const { signOut } = useClerk();
 
-  const email = user?.primaryEmailAddress?.emailAddress ?? "";
-  const displayName = user?.firstName ?? email.split("@")[0] ?? "Account";
-  const initials = displayName.slice(0, 1).toUpperCase();
-  const userRole = (user?.unsafeMetadata?.role as string) ?? "";
+  // Demo session takes precedence over Clerk user
+  const demoUser = getDemoUser();
+  const isDemoMode = !!demoUser;
+  const demoRole = getDemoRole();
+
+  const email = demoUser?.email ?? user?.primaryEmailAddress?.emailAddress ?? "";
+  const displayName = demoUser?.displayName ?? user?.firstName ?? email.split("@")[0] ?? "Account";
+  const initials = demoUser?.initials ?? displayName.slice(0, 1).toUpperCase();
+  const userRole = demoRole ?? (user?.unsafeMetadata?.role as string) ?? "";
+
   const ROLE_COLORS: Record<string, { color: string; bg: string }> = {
     "Compliance Officer": { color: "#c8f135", bg: "rgba(200,241,53,0.1)" },
     "Auditor": { color: "#12b76a", bg: "rgba(18,183,106,0.1)" },
     "Business Owner": { color: "#f5a623", bg: "rgba(245,166,35,0.1)" },
   };
   const roleStyle = ROLE_COLORS[userRole] ?? null;
+
+  const handleExitDemo = () => {
+    clearDemoRole();
+    window.location.href = "/sign-in";
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -186,12 +198,12 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
             </div>
             <button
               data-testid="btn-sign-out"
-              onClick={() => signOut()}
+              onClick={() => isDemoMode ? handleExitDemo() : signOut()}
               className="flex items-center gap-1 text-[9px] text-muted-foreground hover:text-foreground transition-colors font-mono"
-              title="Sign out"
+              title={isDemoMode ? "Exit Demo" : "Sign out"}
             >
               <LogOut className="w-3 h-3" />
-              Sign out
+              {isDemoMode ? "Exit Demo" : "Sign out"}
             </button>
           </div>
         </div>
@@ -199,6 +211,19 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
 
       <div className="ml-52 flex-1 flex flex-col min-h-screen">
         <EnforcementTicker />
+        {isDemoMode && (
+          <div className="sticky top-0 z-50 flex items-center gap-3 px-5 py-2 text-[11px]"
+            style={{ background: "rgba(245,166,35,0.12)", borderBottom: "1px solid rgba(245,166,35,0.25)" }}>
+            <FlaskConical size={12} style={{ color: "#f5a623" }} />
+            <span style={{ color: "#f5a623" }} className="font-mono uppercase tracking-widest">Demo Mode</span>
+            <span className="text-muted-foreground">· You are viewing as <span className="font-medium" style={{ color: "#f5a623" }}>{userRole}</span> ({displayName}) · data is not saved</span>
+            <button onClick={handleExitDemo}
+              className="ml-auto font-mono text-[10px] px-2.5 py-1 rounded border transition-colors hover:bg-muted"
+              style={{ borderColor: "rgba(245,166,35,0.4)", color: "#f5a623" }}>
+              Exit Demo
+            </button>
+          </div>
+        )}
         <header className="h-12 bg-card border-b border-border flex items-center px-6 gap-4 sticky top-0 z-40">
           {title && (
             <>

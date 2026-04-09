@@ -1,0 +1,104 @@
+Engineered Prompt: Multi-Framework Compliance Engine
+
+Prompt Title:
+“Build a Multi-Framework Compliance Engine with Current UI/UX Schema”
+
+Prompt Instructions (for AI or dev team):
+
+Objective:
+Implement a Canadian-first multi-framework compliance engine that supports SOC 2, ISO 27001, GDPR, HIPAA, CASL, PIPEDA, Quebec Law 25, AI frameworks (NIST AI RMF, ISO 42001, EU AI Act), and optionally other global standards. The system must integrate seamlessly with the existing UI/UX schema, preserving current design patterns, font/color palettes, and animation/interaction flows.
+
+Step 1 — Control Layer (Database & Schema)
+
+Create a universal control library (~50–60 core controls) covering:
+Access & Identity Management
+Data encryption & masking
+Logging & monitoring
+Vendor/third-party risk
+Incident response & breach management
+Privacy & consent management
+AI governance controls (for future-proofing)
+Implement framework mapping table to link each control to multiple frameworks (SOC 2, ISO, GDPR, HIPAA, PIPEDA, Law 25, etc.)
+Include jurisdiction and industry tagging for dynamic display (healthcare, SaaS, finance, AI products)
+
+Step 2 — Policy & Evidence Management
+
+Implement policy library with:
+Version control, approval workflows, attestation tracking
+Automated notifications for policy updates
+Build evidence locker:
+Timestamped documents, screenshots, logs
+Audit-ready report export
+Integration with cloud storage (AWS S3, Google Drive, Microsoft 365)
+Track audit trail per control: which employee completed, which system verified
+
+Step 3 — Risk, Gap, and Assessment Engine
+
+AI-powered continuous gap detection
+Risk scoring & heat-map visualization
+Privacy Impact Assessment (PIA) builder for Quebec Law 25 & GDPR DPIA
+Automated overdue task alerts and predictive risk scoring
+
+Step 4 — Incident & Breach Workflow
+
+Workflow engine for detecting, escalating, and documenting breaches
+Automatic 72-hour notification tracker (Law 25)
+Evidence collection for regulator submissions (PIPEDA, HIPAA, GDPR)
+
+Step 5 — Consent & Privacy Rights Module
+
+Consent ledger (CASL, GDPR, PIPEDA)
+Automated expiry tracking
+Subject access request portal (SAR)
+Data retention & deletion automation
+
+Step 6 — Vendor & Third-Party Management
+
+Vendor risk database
+Automatic risk alerts if vendor security posture drops
+Integration with framework mappings for shared responsibility tracking
+
+Step 7 — UI/UX Integration
+
+Map current UI schema to each module:
+Dashboard with compliance score, heat maps, alerts, and evidence snapshots
+Animated charts for risk & compliance visualization
+Modular card/grid system for frameworks
+Responsive for mobile, tablet, desktop
+Maintain current creative fonts, color palette, and micro-interactions/animations
+Bilingual support (English/French) for Canada-specific frameworks
+
+Step 8 — Reporting & Analytics
+
+Customizable reporting module by framework, control, department
+Predictive analytics for gaps & overdue tasks
+Drill-down functionality from dashboard → control → evidence
+Export to PDF/Excel with automated timestamps and branding
+
+Step 9 — Integration Layer
+
+Connect with:
+Google Workspace / Microsoft 365
+GitHub / Jira / DevOps tools
+Slack / Teams notifications
+Cloud environments (AWS, Azure)
+AI chatbot assistant for compliance guidance per framework
+
+Step 10 — Execution & Testing
+
+Build MVP in phases:
+Phase 1: SOC 2, ISO 27001, PIPEDA, CASL
+Phase 2: GDPR, HIPAA, Law 25
+Phase 3: AI frameworks + global regulations
+Test responsive UI/UX and workflow automation
+Include audit simulation with sample data to validate evidence and control mapping
+
+Extra Notes / Optimizations:
+
+Ensure the system is future-proof, supporting additional/custom frameworks dynamically via JSON mapping
+All compliance logic should be abstracted from UI so frameworks can be added without code changes
+Animate dashboards for real-time risk visualization using existing motion patterns
+Include role-based access for employees, auditors, and C-level executives
+
+💡 Outcome Expected:
+A fully integrated, scalable compliance engine that maps business activity into multi-framework compliance, retains the creative look & feel of the current UI/UX schema, supports audit-ready evidence, and prepares for Canadian + global regulatory expansion.

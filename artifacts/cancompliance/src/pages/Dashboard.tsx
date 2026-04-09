@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import AppLayout from "@/components/AppLayout";
 import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine, Inbox, Share2, Scale, ClipboardCheck, Building2 } from "lucide-react";
 import { useUser } from "@clerk/react";
+import { getDemoRole } from "@/lib/demoSession";
 
 const DIGEST_UPDATES = [
   { module: "EMPLOYMENT", headline: "Ontario minimum wage increases to $17.20/hr effective Oct 2024", href: "/employment" },
@@ -102,7 +103,7 @@ export default function Dashboard() {
   const [streak] = useState(3);
   const today = new Date().getDay();
   const { user } = useUser();
-  const role = (user?.unsafeMetadata?.role as string) ?? "";
+  const role = getDemoRole() ?? (user?.unsafeMetadata?.role as string) ?? "";
   const roleConfig = ROLE_CONFIG[role] ?? null;
 
   useEffect(() => {

@@ -1,0 +1,173 @@
+1. CORE SECURITY & COMPLIANCE FRAMEWORKS
+SOC 2
+
+Focus: Trust (security, availability, confidentiality)
+
+What your system needs:
+Access control tracking (who has access to what)
+Audit logs (user/system activity)
+Vendor management system
+Incident response workflows
+Evidence collection (screenshots, logs, configs)
+Policy management (security, access, change mgmt)
+ISO 27001
+
+Focus: Full Information Security Management System (ISMS)
+
+Requirements:
+Risk register + treatment plan
+Asset inventory (devices, data, systems)
+Statement of Applicability (SoA)
+Internal audit tracking
+Continuous monitoring
+Policy lifecycle management
+ISO 42001
+
+Focus: AI governance (NEW 🔥)
+
+Requirements:
+AI system inventory
+Risk classification (high-risk AI)
+Bias detection + mitigation logs
+Model monitoring (performance + drift)
+Human oversight documentation
+AI lifecycle governance
+🔐 2. PRIVACY & DATA PROTECTION
+GDPR
+
+Focus: User data rights + strict privacy controls
+
+Requirements:
+Consent management system
+Data subject request portal (access, delete, correct)
+Data mapping (where data is stored)
+Data retention automation
+Breach notification workflows (72 hrs)
+DPIA (Data Protection Impact Assessment)
+HIPAA
+
+Focus: Healthcare data protection (PHI)
+
+Requirements:
+Role-based access to health data
+Audit trails for PHI access
+Encryption (in transit + at rest)
+Business Associate Agreements tracking
+Incident/breach reporting
+Secure messaging/logging
+🇨🇦 CANADA (CRITICAL DIFFERENTIATOR)
+PIPEDA
+Consent tracking
+Data access request workflows
+Accountability logs
+Safeguard controls
+Breach reporting
+CASL
+Consent ledger (express vs implied)
+Email campaign compliance tracking
+Unsubscribe system validation
+Consent expiry tracking
+Quebec Law 25
+Privacy Impact Assessments (PIA)
+72-hour breach notification tracker
+Data transfer risk assessment
+French/English policy management
+🛡️ 3. CYBERSECURITY & GOVERNMENT FRAMEWORKS
+FedRAMP
+
+Focus: Cloud security for US government
+
+Requirements:
+Continuous monitoring dashboards
+System Security Plan (SSP)
+Control validation automation
+Vulnerability scanning integration
+Audit-ready documentation
+CMMC
+
+Focus: Defense contractors
+
+Requirements:
+Maturity level tracking (Level 1–3)
+Controlled Unclassified Information (CUI) handling
+Access restrictions
+Endpoint monitoring
+CJIS
+
+Focus: Law enforcement data
+
+Requirements:
+Background check tracking
+Device/location restrictions
+Encryption + access logging
+Personnel access controls
+🌍 4. EUROPEAN CYBER & FINANCE
+NIS2
+Incident reporting system
+Supply chain risk management
+Business continuity tracking
+Security governance controls
+DORA
+ICT risk management system
+Third-party risk monitoring
+Resilience testing logs
+Incident classification + reporting
+🤖 5. AI & FUTURE GOVERNANCE
+NIST AI RMF
+
+Focus: Responsible AI
+
+Requirements:
+AI risk scoring system
+Model transparency documentation
+Bias + fairness testing logs
+Explainability tracking
+Governance workflows
+EU AI Act
+
+Focus: Regulated AI deployment
+
+Requirements:
+AI risk classification (prohibited / high-risk)
+Conformity assessments
+Dataset documentation
+Monitoring + reporting system
+Human oversight controls
+🌏 6. OTHER GLOBAL FRAMEWORKS
+CPS 234 (Australia)
+Security capability validation
+Incident response tracking
+Third-party risk management
+Essential Eight
+Patch management tracking
+Application control logs
+Backup verification
+Access restrictions
+Cyber Essentials
+Basic cyber hygiene checks
+Firewall + malware protection validation
+Access control verification
+🧩 7. WHAT YOUR SYSTEM MUST HAVE (UNIVERSAL)
+
+To support ALL frameworks, your platform needs:
+
+🔑 Core Modules
+Control library (50–60 universal controls)
+Framework mapping engine
+Policy management system
+Risk register + scoring
+Audit/evidence locker
+Incident & breach workflows
+Vendor risk management
+Consent & privacy engine
+AI governance module (future-proof)
+🔗 Integrations (CRITICAL)
+AWS / cloud
+Google Workspace / Microsoft 365
+GitHub / DevOps
+Slack / internal comms
+🧠 Intelligence Layer (Your moat)
+AI gap detection
+Auto control mapping
+Real-time compliance scoring
+Predictive risk alerts

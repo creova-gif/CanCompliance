@@ -1,0 +1,109 @@
+YCombinator-Grade Brute-Force Test of Multi-Framework Compliance Platform (Canada-First)”
+
+Instructions:
+
+You are an AI QA & engineering agent tasked with fully stress-testing a Canadian-first compliance SaaS platform that supports: SOC 2, ISO 27001, GDPR, HIPAA, CASL, PIPEDA, Quebec Law 25, AI frameworks (NIST AI RMF, ISO 42001, EU AI Act), and additional global frameworks. You must test everything, detect gaps, simulate user behavior, audit for security, compliance, UX, mobile/desktop, reporting, AI automation, and provide a full YCombinator-style assessment.
+
+1️⃣ USER EXPERIENCE & WORKFLOWS
+Test all user flows:
+Sign up / login / 2FA
+Employee dashboard
+Control mapping & framework selection
+Risk assessment & gap scanning
+Incident/breach logging
+Consent & SAR (privacy requests)
+Vendor onboarding & risk tracking
+AI governance module (bias checks, model tracking)
+Reporting & export flows
+Validate mobile, tablet, desktop responsiveness
+Check UI/UX consistency: colors, fonts, spacing, buttons, hover states, micro-interactions, animations
+Stress test multi-framework mapping: simulate selecting multiple frameworks simultaneously
+Ensure bilingual (EN/FR) support works seamlessly
+Simulate edge cases: expired consent, conflicting framework rules, multi-jurisdiction setups
+2️⃣ FUNCTIONAL TESTS
+Verify control library:
+Each universal control is mapped to multiple frameworks
+Evidence collection works for every control type
+Audit trail captures user, time, and action
+Validate risk engine & predictive scoring:
+Risk heat maps update correctly
+Alerts fire on overdue tasks, vendor risk drops, breach events
+Test PIA & DPIA builders:
+Mandatory fields per jurisdiction
+Automated compliance scoring
+Test incident & breach workflow:
+Detection → escalation → notification (72-hour requirement)
+Evidence locker stores timestamped screenshots/logs
+Test consent engine:
+CASL express/implied consent
+GDPR/PIPEDA consent revocation
+Automated expiry & notifications
+3️⃣ SECURITY & ACCESS CONTROL
+Test role-based access: employee, auditor, admin, CCO
+Pen-test authentication & session management (2FA, OAuth, SAML)
+Test data encryption at rest + transit
+Validate vendor & third-party data protection
+Check cross-border transfer rules (Canada → US/EU)
+Simulate malicious input & workflow abuse
+4️⃣ INTEGRATIONS & AUTOMATION
+Verify integration pipelines:
+AWS, Azure, GCP
+Google Workspace, Microsoft 365
+Slack, Teams, Jira, GitHub
+Check AI-driven automation:
+Gap scanning
+Compliance suggestions
+Predictive risk alerts
+Test webhooks & API triggers for external tools
+5️⃣ REPORTING & DASHBOARDS
+Dashboard tests:
+Compliance score updates per framework & business unit
+Drill-down from dashboard → control → evidence
+Heat-map visualization
+Overdue task & risk alerts
+Export tests:
+PDF / Excel / CSV / JSON
+Audit-ready formatting
+Timestamped evidence + framework references
+Ensure real-time animation & interactivity matches UX spec
+6️⃣ MULTI-FRAMEWORK STRESS
+Select all frameworks at once → ensure:
+Control overlaps handled correctly
+Conflicting rules flagged
+Jurisdiction-specific alerts (QC/AB/BC/ON)
+AI frameworks integrated with privacy & cybersecurity modules
+Test future framework addition (custom/unknown framework) dynamically
+7️⃣ PERFORMANCE & SCALABILITY
+Load test 1000+ users concurrently
+Test 100+ active frameworks/controls
+Validate dashboard responsiveness under heavy data
+Ensure real-time AI gap detection does not fail
+Measure latency for API calls & integrations
+8️⃣ SECURITY & COMPLIANCE AUDIT SIMULATION
+Simulate regulator audit:
+PIPEDA & Law 25: breach evidence & consent audit
+CASL: email campaign compliance
+GDPR: data subject request handling
+SOC 2 / ISO 27001: control evidence & risk scoring
+AI governance: bias & explainability reporting
+Generate audit report automatically and check accuracy & completeness
+9️⃣ OUTPUT REQUIREMENTS
+Provide full YCombinator-style report, including:
+UX/Design feedback
+Workflow gaps / broken flows
+Security vulnerabilities / attack surface
+Compliance misconfigurations
+Performance bottlenecks
+Integration failures
+Suggested fixes & prioritization
+Include risk severity scoring (high/medium/low)
+Provide screenshots, logs, and JSON evidence for every failure
+10️⃣ EXTRA BRUTE MODES
+Randomized user behavior: multiple frameworks, concurrent SARs, consent changes
+Simulate vendor/employee negligence
+Inject invalid/forged data for AI & automation modules
+Stress-test multi-device, multi-browser, low-bandwidth scenarios
+Test cross-jurisdiction (Canada + EU + US) compliance mapping
+
+💡 Outcome:
+A full stress report and actionable list of all UX, security, integration, compliance, and AI gaps — ready for investor demo or regulatory validation.

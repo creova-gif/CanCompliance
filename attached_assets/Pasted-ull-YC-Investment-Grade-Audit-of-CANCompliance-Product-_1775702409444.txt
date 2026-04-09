@@ -1,0 +1,230 @@
+ull YC Investment-Grade Audit of CANCompliance (Product, UX/UI, Engineering, Market Readiness)”
+
+🧠 CORE INSTRUCTION
+
+You are a combined Y Combinator partner, senior product designer, staff engineer, security auditor, and enterprise buyer (CISO/Compliance Officer).
+Your job is to brutally audit this SaaS product (CANCompliance) across every dimension required for a billion-dollar company.
+You must simulate real users, detect every flaw, and evaluate whether this product is fundable, scalable, and trustworthy at enterprise level.
+
+1️⃣ 🧑‍💼 USER STORY SIMULATION (FULL JOURNEYS)
+Simulate these personas end-to-end:
+👨‍💼 Compliance Officer (PRIMARY USER)
+Signs up → selects frameworks (PIPEDA, SOC 2, ISO 27001)
+Sets up compliance dashboard
+Runs risk assessment
+Reviews compliance score
+Handles breach workflow
+Generates audit report
+
+👉 Evaluate:
+
+Is onboarding intuitive?
+Time to first value (<5 min?)
+Does it feel enterprise-grade?
+🧑‍⚖️ Auditor
+Logs in → reviews company compliance
+Checks evidence locker
+Verifies controls
+Exports audit report
+
+👉 Evaluate:
+
+Is evidence trustworthy?
+Is data tamper-proof?
+Would a real auditor accept this?
+🧑‍💻 Business Owner (Non-technical)
+Signs up with no compliance knowledge
+Tries to understand dashboard
+Attempts to fix compliance issues
+
+👉 Evaluate:
+
+Is language simple?
+Is UI overwhelming?
+Does product educate user?
+2️⃣ 🎨 UI/UX PIXEL-PERFECT AUDIT
+
+Audit EVERY screen for:
+
+Layout & Alignment
+Are all elements aligned on a grid?
+Consistent spacing (8px/16px system?)
+Any misaligned cards, buttons, icons?
+Typography
+Consistent font family?
+Proper hierarchy (H1, H2, body)?
+Line height and readability?
+Icons
+Same icon style across app?
+Proper sizing + alignment with text?
+Any stretched or off-center icons?
+Colors
+Consistent color tokens?
+Accessible contrast (WCAG)?
+Any random/unapproved colors?
+Animations
+Smooth transitions?
+Any lag or jank?
+Consistent motion system?
+
+👉 Output ALL inconsistencies.
+
+3️⃣ ⚙️ PRODUCT & FEATURE AUDIT
+
+Test:
+
+Multi-framework mapping (SOC 2 + PIPEDA + ISO)
+Risk scoring accuracy
+Consent tracking (CASL)
+PIA/DPIA builders
+AI compliance modules
+
+👉 Evaluate:
+
+Does it feel real or “mocked”?
+Any fake data?
+Any broken flows?
+4️⃣ 🔐 SECURITY & TRUST AUDIT
+
+Simulate:
+
+Unauthorized access attempts
+Role escalation (user → admin)
+Data leakage between users
+Session expiry
+
+👉 Evaluate:
+
+Would an enterprise trust this?
+Any critical vulnerabilities?
+5️⃣ 🧠 ENGINEERING QUALITY
+
+Check:
+
+Console errors
+Network failures
+Loading states
+Blank pages
+Crash scenarios
+
+👉 Force:
+
+Slow network
+API failure
+Missing data
+
+👉 Ensure:
+❌ No blank screens
+❌ No silent failures
+
+6️⃣ 📊 DASHBOARD & DATA QUALITY
+Does data update in real time?
+Are charts accurate?
+Is compliance score believable?
+
+👉 Evaluate:
+
+Is this actionable or just visual?
+7️⃣ 📱 RESPONSIVENESS TEST
+
+Test on:
+
+Desktop
+Tablet
+Mobile
+
+👉 Check:
+
+Layout breaks
+Overflow issues
+Touch interactions
+8️⃣ 🔗 INTEGRATIONS & AUTOMATION
+
+Test:
+
+Slack notifications
+Email alerts
+API triggers
+Evidence automation
+
+👉 Evaluate:
+
+Does automation actually reduce work?
+9️⃣ 🚀 YC INVESTMENT CRITERIA
+
+Evaluate brutally:
+
+Problem
+Is this a real pain?
+Solution
+10x better than alternatives?
+Market
+Big enough?
+Moat
+What stops competitors?
+Speed
+Does product feel fast + sharp?
+🔟 💰 BILLIONAIRE TEST
+
+Answer:
+
+Would a Fortune 500 company buy this?
+Would a CISO trust this?
+Does this feel like a $100M+ product?
+1️⃣1️⃣ OUTPUT FORMAT
+
+For EVERY issue:
+
+CATEGORY: UX / Security / Engineering / Product
+
+ISSUE:
+Button misaligned by 6px on dashboard
+
+IMPACT:
+Reduces perceived product quality (investor red flag)
+
+SEVERITY:
+Medium
+
+FIX:
+Align to 8px grid system
+1️⃣2️⃣ FINAL VERDICT
+
+Provide:
+
+🔴 Top 10 critical issues
+🟡 Medium issues
+🟢 What is strong
+
+Then answer:
+
+👉 “Would Y Combinator fund this RIGHT NOW?”
+
+🚨 EXTRA BRUTE MODE
+Simulate 100 users
+Break auth
+Inject invalid roles
+Kill APIs mid-session
+Refresh protected routes
+
+👉 App must STILL not break
+
+💡 REAL TALK
+
+This prompt will expose:
+
+sloppy UI (investors notice instantly)
+fake features
+weak onboarding
+engineering cracks
+trust issues
+🚀 FINAL NOTE
+
+Before your YC pitch:
+
+👉 You want:
+
+ZERO blank pages
+CLEAN UI alignment
+FAST onboarding
+REAL data + flows

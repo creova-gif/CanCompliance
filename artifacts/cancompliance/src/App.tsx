@@ -3,6 +3,7 @@ import { Switch, Route, Router as WouterRouter, Redirect, useLocation, Link } fr
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { ClerkProvider, useAuth, useClerk, useSignIn, useSignUp, AuthenticateWithRedirectCallback } from "@clerk/react";
 import { Eye, EyeOff, Scale, ClipboardCheck, Building2, ArrowRight } from "lucide-react";
+import { getDemoRole, setDemoRole } from "@/lib/demoSession";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuditProvider } from "./context/AuditContext";
@@ -139,6 +140,14 @@ const WrappedComplianceScore = withLayout(ComplianceScore, "Live Compliance Scor
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isSignedIn, isLoaded } = useAuth();
+  // Allow demo sessions to bypass Clerk auth
+  if (getDemoRole()) {
+    return (
+      <ErrorBoundary label="Module Error">
+        <Component />
+      </ErrorBoundary>
+    );
+  }
   if (!isLoaded) return <PageLoader />;
   if (!isSignedIn) return <Redirect to="/sign-in" />;
   return (
@@ -374,38 +383,38 @@ function SignInPage() {
             </div>
             <div className="grid grid-cols-3 gap-2">
               {DEMO_PERSONAS.map((p) => (
-                <Link key={p.role} href={`/sign-up?role=${encodeURIComponent(p.role)}`}>
-                  <div
-                    data-testid={`demo-${p.role.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="group flex flex-col items-start gap-2.5 p-3 rounded-xl border transition-all duration-200 cursor-pointer h-full"
-                    style={{
-                      borderColor: "rgba(255,255,255,0.07)",
-                      background: "rgba(255,255,255,0.02)",
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLDivElement).style.borderColor = p.border;
-                      (e.currentTarget as HTMLDivElement).style.background = p.bg;
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(255,255,255,0.07)";
-                      (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.02)";
-                    }}
-                  >
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{ background: p.bg, border: `1px solid ${p.border}` }}>
-                      <p.Icon size={14} style={{ color: p.color }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[11px] font-semibold text-foreground leading-tight mb-0.5"
-                        style={{ color: "inherit" }}>{p.role}</div>
-                      <div className="font-mono text-[9px] uppercase tracking-wide" style={{ color: p.color }}>{p.short}</div>
-                    </div>
-                    <ArrowRight size={11} className="text-muted-foreground group-hover:translate-x-0.5 transition-transform self-end" />
+                <button
+                  key={p.role}
+                  type="button"
+                  data-testid={`demo-${p.role.toLowerCase().replace(/\s+/g, "-")}`}
+                  onClick={() => { setDemoRole(p.role); setLocation("/dashboard"); }}
+                  className="group flex flex-col items-start gap-2.5 p-3 rounded-xl border transition-all duration-200 cursor-pointer h-full w-full text-left"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.07)",
+                    background: "rgba(255,255,255,0.02)",
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = p.border;
+                    (e.currentTarget as HTMLButtonElement).style.background = p.bg;
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.07)";
+                    (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.02)";
+                  }}
+                >
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: p.bg, border: `1px solid ${p.border}` }}>
+                    <p.Icon size={14} style={{ color: p.color }} />
                   </div>
-                </Link>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[11px] font-semibold text-foreground leading-tight mb-0.5">{p.role}</div>
+                    <div className="font-mono text-[9px] uppercase tracking-wide" style={{ color: p.color }}>{p.short}</div>
+                  </div>
+                  <ArrowRight size={11} className="text-muted-foreground group-hover:translate-x-0.5 transition-transform self-end" />
+                </button>
               ))}
             </div>
-            <p className="text-center text-[10px] text-muted-foreground mt-3">Free forever — no credit card needed</p>
+            <p className="text-center text-[10px] text-muted-foreground mt-3">No sign-up needed · demo resets on tab close</p>
           </div>
         </div>
       </AuthLayout>
