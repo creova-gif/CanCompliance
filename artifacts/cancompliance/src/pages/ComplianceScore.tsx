@@ -257,7 +257,7 @@ For each action, cite the exact statute section and maximum penalty avoided. Be 
 
             {topRisks.length === 0 ? (
               <div style={{ fontSize: 12, color: "var(--text3)", textAlign: "center", padding: "12px 0", fontFamily: "var(--mono)" }}>
-                No failures detected — risk score is low. Run checks across all 14 modules to assess exposure.
+                No failures detected — risk score is low. Run checks across all 16 modules to assess exposure.
               </div>
             ) : (
               <div style={{ display: "grid", gap: 8 }}>

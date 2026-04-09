@@ -74,7 +74,7 @@ function analyzePatterns(auditLog: any[]) {
   if (auditLog.length >= 5 && insights.filter(i => i.type === "warning").length === 0) {
     insights.push({
       type: "info",
-      text: `Good compliance coverage: ${checkedModules.size} module(s) checked. Recommendation: run all 14 modules quarterly to maintain full coverage and generate an audit-ready compliance certificate.`,
+      text: `Good compliance coverage: ${checkedModules.size} module(s) checked. Recommendation: run all 16 modules quarterly to maintain full coverage and generate an audit-ready compliance certificate.`,
     });
   }
 

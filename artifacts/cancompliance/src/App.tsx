@@ -190,7 +190,7 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
               Avoid the fines.
             </h2>
             <p className="text-[13px] text-muted-foreground leading-relaxed mb-10">
-              13 Canadian laws, one platform. CASL, PIPEDA, Bill 96, FINTRAC, Employment Standards, and more — checked in seconds.
+              16 compliance modules, one platform. CASL, PIPEDA, Bill 96, FINTRAC, Employment Standards, and more — checked in seconds.
             </p>
             <div className="space-y-3">
               {[

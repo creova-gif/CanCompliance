@@ -80,7 +80,7 @@ export default function Landing() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 font-mono text-[10px] text-primary tracking-[3px] uppercase mb-6 border border-primary/20 rounded-full px-3 py-1 bg-primary/5">
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            Canada Compliance Engine — 13 laws covered
+            Canada Compliance Engine — 16 modules covered
           </div>
 
           <h1 className="font-serif italic text-5xl md:text-6xl text-foreground leading-tight mb-5">
@@ -88,7 +88,7 @@ export default function Landing() {
             Avoid the fines.
           </h1>
           <p className="text-[15px] text-muted-foreground max-w-xl mx-auto leading-relaxed mb-8">
-            CanCompliance checks your business against CASL, PIPEDA, Bill 96, FINTRAC, employment standards, and 8 more — in seconds. Built for Canadian SMBs.
+            CanCompliance checks your business against CASL, PIPEDA, Bill 96, FINTRAC, employment standards, and 11 more — 16 modules total. Built for Canadian SMBs.
           </p>
 
           {/* Hero CTAs */}
@@ -240,7 +240,7 @@ export default function Landing() {
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {[
-            { icon: Shield, title: "13 Compliance Modules", desc: "CASL, PIPEDA, Bill 96, FINTRAC, ESG, Payroll, CCPSA, OHS, Customs, AI Governance, EPR, Employment & Supply Chain — all in one engine." },
+            { icon: Shield, title: "16 Compliance Modules", desc: "CASL, PIPEDA, Bill 96, FINTRAC, ESG, Payroll, CCPSA, OHS, Customs, AI Governance, EPR, Employment, Supply Chain, CPLA, CCPSA & more — all in one engine." },
             { icon: FileText, title: "Real-time Statute Citations", desc: "Every check cites the exact statute section, maximum penalty, and actionable remediation steps." },
             { icon: Bot, title: "AI Copilot (Claude-powered)", desc: "Ask any compliance question and get a precise answer with statute citations — powered by Claude Sonnet." },
             { icon: BarChart3, title: "Live Compliance Score", desc: "Your real-time score updates as you run checks. Export a compliance certificate to share with investors and clients." },
@@ -325,7 +325,7 @@ export default function Landing() {
                 <span className="font-serif italic text-base text-foreground">CanCompliance</span>
               </div>
               <p className="text-[11px] text-muted-foreground max-w-xs leading-relaxed">
-                Canadian compliance automation for SMBs. 13 laws, one platform.
+                Canadian compliance automation for SMBs. 16 modules, one platform.
               </p>
             </div>
             <div className="flex gap-12">

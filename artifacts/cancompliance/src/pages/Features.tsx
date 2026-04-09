@@ -112,7 +112,7 @@ const HOW_IT_WORKS = [
 
 const PLATFORM_FEATURES = [
   { icon: Bot, title: "AI Copilot — Claude & GPT", desc: "Ask any compliance question, get statute-cited answers from Claude Sonnet or GPT-5.2. Persistent conversation history. Jurisdiction-aware responses." },
-  { icon: BarChart3, title: "Live Compliance Score", desc: "Your real-time score updates as you run checks. Export a compliance certificate showing your status across all 14 modules." },
+  { icon: BarChart3, title: "Live Compliance Score", desc: "Your real-time score updates as you run checks. Export a compliance certificate showing your status across all 16 modules." },
   { icon: Lock, title: "CASL Consent Ledger", desc: "Tamper-evident consent records with automatic 3-year expiry tracking. Express and implied consent history — CRTC-ready export." },
   { icon: Clock, title: "Compliance Deadlines", desc: "Personal compliance calendar — T4 deadlines, FINTRAC filings, WSIB renewals, remittance dates — with 30-day advance alerts." },
   { icon: MapPin, title: "Jurisdiction Intelligence", desc: "Set your province and size once. Only the rules that apply to your business and your province are surfaced — no noise." },
@@ -136,13 +136,13 @@ export default function Features() {
         <div className="relative text-center">
           <div className="inline-flex items-center gap-2 font-mono text-[10px] text-primary tracking-[3px] uppercase mb-6 border border-primary/20 rounded-full px-3 py-1 bg-primary/5">
             <Zap className="w-3 h-3" />
-            14 laws · 7 intelligence tools · AI Copilot
+            16 modules · 7 intelligence tools · AI Copilot
           </div>
           <h1 className="font-serif italic text-5xl md:text-6xl text-foreground leading-tight mb-5">
             One platform.<br /><span style={{ color: "#c8f135" }}>Every Canadian law.</span>
           </h1>
           <p className="text-[15px] text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
-            CanCompliance checks your business against 14 Canadian laws in under 3 minutes.
+            CanCompliance checks your business against 16 compliance modules in under 3 minutes.
             Every result cites the exact statute, the maximum penalty, and the specific steps to fix it.
             Built for Canadian SMBs — not compliance consultants.
           </p>
@@ -167,7 +167,7 @@ export default function Features() {
           {/* Stats */}
           <div className="grid grid-cols-4 gap-4 max-w-3xl mx-auto">
             {[
-              { value: "14", label: "Compliance Modules" },
+              { value: "16", label: "Compliance Modules" },
               { value: "$51.5B", label: "Fines issued annually" },
               { value: "735h", label: "Avg hours wasted/yr" },
               { value: "3 min", label: "Average check time" },
@@ -204,7 +204,7 @@ export default function Features() {
       <section className="py-20 px-6 max-w-5xl mx-auto w-full">
         <div className="mb-12">
           <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-3">The compliance engine</div>
-          <h2 className="font-serif italic text-4xl text-foreground mb-3">14 Canadian laws. Checked in seconds.</h2>
+          <h2 className="font-serif italic text-4xl text-foreground mb-3">16 compliance modules. Checked in seconds.</h2>
           <p className="text-[14px] text-muted-foreground max-w-2xl leading-relaxed">
             Every module cites the exact statute section, the maximum penalty, and the remediation steps.
             Not vague advice — precise answers with statute numbers.
@@ -328,7 +328,7 @@ export default function Features() {
         <div className="rounded-2xl p-14 border relative overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(200,241,53,0.06) 0%, rgba(18,183,106,0.03) 100%)", borderColor: "rgba(200,241,53,0.18)" }}>
           <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 w-[500px] h-[200px] rounded-full opacity-[0.04]" style={{ background: "radial-gradient(ellipse at center, #c8f135 0%, transparent 70%)" }} />
           <div className="relative">
-            <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-4">14 laws · 3 minutes</div>
+            <div className="font-mono text-[10px] text-primary uppercase tracking-widest mb-4">16 modules · 3 minutes</div>
             <h2 className="font-serif italic text-4xl text-foreground mb-4">Start your free compliance check today</h2>
             <p className="text-[14px] text-muted-foreground mb-8 max-w-lg mx-auto">3 free checks every month. No credit card. No lawyers. Just answers with statute citations.</p>
             <div className="flex items-center justify-center gap-4">

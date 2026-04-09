@@ -390,7 +390,7 @@ export default function RedTapeCalculator() {
                   { module: "AI Copilot", desc: "Get instant answers to compliance questions — avoid hiring a lawyer for every question", href: "/ai-copilot", savings: "~12 hrs/yr" },
                   { module: "Payroll Calculator", desc: "Automate CPP, EI, and income tax deductions — no more manual CRA tables", href: "/payroll", savings: "~18 hrs/yr" },
                   { module: "CASL Ledger", desc: "Track consent records automatically — CRTC audit-ready in seconds", href: "/casl-ledger", savings: "~8 hrs/yr" },
-                  { module: "Deadline Tracker", desc: "Never miss a filing deadline — all 13 modules tracked in one place", href: "/deadlines", savings: "~6 hrs/yr" },
+                  { module: "Deadline Tracker", desc: "Never miss a filing deadline — all 16 modules tracked in one place", href: "/deadlines", savings: "~6 hrs/yr" },
                 ].map(item => (
                   <a key={item.module} href={item.href} className="border border-border rounded-lg p-4 hover:border-primary/40 transition-colors block">
                     <div className="flex items-center justify-between mb-1">

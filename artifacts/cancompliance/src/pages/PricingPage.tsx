@@ -140,7 +140,7 @@ const FAQS = [
 ];
 
 const ADDONS = [
-  { name: "Compliance Certificate", desc: "Dated PDF certificate showing your compliance status across all 14 modules.", price: "Included in Professional+", available: false },
+  { name: "Compliance Certificate", desc: "Dated PDF certificate showing your compliance status across all 16 modules.", price: "Included in Professional+", available: false },
   { name: "Website Compliance Badge", desc: "Verified 'CanCompliance Certified' badge to embed on your website and proposals.", price: "Included in Professional+", available: false },
   { name: "Custom Module", desc: "Need a compliance check for a specific industry regulation? We'll build it.", price: "Contact Sales", available: true },
   { name: "API Access", desc: "Programmatic access to compliance checks and results via REST API.", price: "Coming Q3 2025", available: true },

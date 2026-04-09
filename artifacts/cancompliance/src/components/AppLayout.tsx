@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import {
@@ -109,6 +110,10 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
   const { signOut } = useClerk();
   const [location] = useLocation();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [location]);
+
   // Demo session takes precedence over Clerk user
   const demoUser = getDemoUser();
   const isDemoMode = !!demoUser;
@@ -154,9 +159,9 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           </div>
           <div className="flex items-center gap-2 mt-1">
             <span className="font-mono text-[9px] text-muted-foreground">{metrics.total} checks</span>
-            <span className="font-mono text-[9px]" style={{ color: "var(--green)" }}>{metrics.pass}P</span>
-            <span className="font-mono text-[9px]" style={{ color: "var(--amber)" }}>{metrics.fail}F</span>
-            <span className="font-mono text-[9px]" style={{ color: "var(--red)" }}>{metrics.flag}X</span>
+            <span className="font-mono text-[9px]" style={{ color: "var(--green)" }}>{metrics.pass} pass</span>
+            <span className="font-mono text-[9px]" style={{ color: "var(--amber)" }}>{metrics.fail} fail</span>
+            <span className="font-mono text-[9px]" style={{ color: "var(--red)" }}>{metrics.flag} flag</span>
           </div>
         </div>
 
@@ -164,9 +169,15 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           <Link href="/dashboard">
             <div
               data-testid="nav-dashboard"
-              className="sidebar-nav-item flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] font-semibold transition-all duration-150 ease-out border hover:translate-x-0.5 hover:bg-muted hover:text-foreground border-transparent text-muted-foreground mb-1"
+              className={cn(
+                "sidebar-nav-item flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] font-semibold transition-all duration-150 ease-out border hover:translate-x-0.5 mb-1",
+                location === "/dashboard"
+                  ? "bg-muted text-foreground border-border nav-active-glow"
+                  : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border-transparent"
+              )}
             >
-              <LayoutDashboard className="w-3 h-3" />
+              <div className={cn("w-1 h-1 rounded-full flex-shrink-0 transition-all duration-200", location === "/dashboard" ? "bg-primary scale-125 shadow-[0_0_4px_rgba(200,241,53,0.6)]" : "bg-muted-foreground/20")} />
+              <LayoutDashboard className={cn("w-3 h-3 flex-shrink-0 transition-all duration-150", location === "/dashboard" ? "text-primary" : "")} />
               Dashboard
             </div>
           </Link>

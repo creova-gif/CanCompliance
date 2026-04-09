@@ -46,7 +46,7 @@ const ROLE_CONFIG: Record<string, {
     bg: "rgba(200,241,53,0.06)",
     border: "rgba(200,241,53,0.2)",
     welcome: "Compliance Officer view",
-    subtitle: "Full platform — all 14 modules, AI Copilot, score engine, policy generator",
+    subtitle: "Full platform — all 16 modules, AI Copilot, score engine, policy generator",
     pinnedLabel: "Your pinned tools",
     pinned: [
       { label: "AI Copilot", href: "/copilot", badge: "AI" },
@@ -101,16 +101,14 @@ const DEFAULT_QUICK_ACTIONS = [
 export default function Dashboard() {
   const [digest] = useState(() => DIGEST_UPDATES[Math.floor(Math.random() * DIGEST_UPDATES.length)]);
   const [streak] = useState(3);
+  const [paywallVisible, setPaywallVisible] = useState(false);
   const today = new Date().getDay();
   const { user } = useUser();
   const role = getDemoRole() ?? (user?.unsafeMetadata?.role as string) ?? "";
   const roleConfig = ROLE_CONFIG[role] ?? null;
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const el = document.getElementById("paywall-notification");
-      if (el) el.style.display = "flex";
-    }, 3000);
+    const timer = setTimeout(() => setPaywallVisible(true), 8000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -192,7 +190,13 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody>
-              {RECENT_CHECKS.map((check, i) => {
+              {RECENT_CHECKS.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-5 py-10 text-center text-[12px] text-muted-foreground">
+                    No compliance checks yet — run your first check from the sidebar to get started.
+                  </td>
+                </tr>
+              ) : RECENT_CHECKS.map((check, i) => {
                 const s = STATUS_CONFIG[check.status as keyof typeof STATUS_CONFIG];
                 return (
                   <tr key={i} className="border-t border-border hover:bg-muted/30 transition-colors">
@@ -253,9 +257,9 @@ export default function Dashboard() {
                 <Link key={a.label} href={a.href}>
                   <div
                     data-testid={`quick-action-${a.label.toLowerCase().replace(/\s+/g, "-")}`}
-                    className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-muted transition-colors cursor-pointer"
+                    className="group flex items-center justify-between px-3 py-2 rounded-lg hover:bg-muted transition-colors cursor-pointer"
                   >
-                    <span className="text-[12px] text-muted-foreground hover:text-foreground">{a.label}</span>
+                    <span className="text-[12px] text-muted-foreground group-hover:text-foreground transition-colors">{a.label}</span>
                     <div className="flex items-center gap-2">
                       {"badge" in a && a.badge && (
                         <span className="font-mono text-[9px] px-1.5 py-0.5 rounded"
@@ -263,7 +267,7 @@ export default function Dashboard() {
                           {a.badge}
                         </span>
                       )}
-                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50" />
+                      <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-foreground/60 transition-colors" />
                     </div>
                   </div>
                 </Link>
@@ -276,7 +280,7 @@ export default function Dashboard() {
       {/* Intelligence section */}
       <div className="mt-7">
         <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest mb-3">Intelligence Tools — New</div>
-        <div className="grid grid-cols-7 gap-3">
+        <div className="grid grid-cols-4 gap-3">
           {[
             { icon: Inbox, label: "Compliance Inbox", sub: "Today's regulatory updates", href: "/compliance-inbox", badge: "8 NEW" },
             { icon: Gavel, label: "Legislation Tracker", sub: "12 bills in progress", href: "/legislation-tracker", badge: "CRITICAL" },
@@ -319,7 +323,7 @@ export default function Dashboard() {
             </span>
           </Link>
         </div>
-        <div className="grid grid-cols-6 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           {[
             { name: "Privacy", detail: "PIPEDA · Law 25 · GDPR", score: 62, risk: "medium", href: "/privacy", color: "#c8f135" },
             { name: "Cybersecurity", detail: "SOC 2 · ISO 27001", score: 0, risk: "high", href: "/soc2", color: "#7F77DD" },
@@ -360,21 +364,30 @@ export default function Dashboard() {
       </div>
 
       {/* Paywall notification */}
-      <div
-        id="paywall-notification"
-        data-testid="paywall-notification"
-        style={{ display: "none" }}
-        className="fixed bottom-5 right-5 z-50 bg-card border border-primary/30 rounded-xl px-5 py-4 max-w-xs shadow-2xl flex items-start gap-3"
-      >
-        <div className="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-        <div className="flex-1">
-          <div className="text-[13px] font-medium text-foreground mb-1">3 free checks used</div>
-          <div className="text-[12px] text-muted-foreground mb-3">Upgrade to see your full remediation plan.</div>
-          <Link href="/pricing">
-            <button className="text-[12px] text-primary font-medium hover:underline">Upgrade now →</button>
-          </Link>
+      {paywallVisible && (
+        <div
+          data-testid="paywall-notification"
+          className="fixed bottom-5 right-5 z-50 bg-card border border-primary/30 rounded-xl px-5 py-4 max-w-xs shadow-2xl flex items-start gap-3 alert-slide"
+        >
+          <div className="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0" />
+          <div className="flex-1">
+            <div className="text-[13px] font-medium text-foreground mb-1">3 free checks used</div>
+            <div className="text-[12px] text-muted-foreground mb-3">Upgrade to see your full remediation plan.</div>
+            <Link href="/pricing">
+              <button className="text-[12px] text-primary font-medium hover:underline">Upgrade now →</button>
+            </Link>
+          </div>
+          <button
+            onClick={() => setPaywallVisible(false)}
+            className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 -mt-0.5"
+            aria-label="Dismiss"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </button>
         </div>
-      </div>
+      )}
     </AppLayout>
   );
 }
