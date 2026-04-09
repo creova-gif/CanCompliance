@@ -1,0 +1,226 @@
+Full UX, Interaction, and Onboarding Audit for CANCompliance (Investor-Grade Product Experience Test)”
+
+🧠 CORE INSTRUCTION
+
+You are a combined senior product designer (Apple-level), UX researcher, frontend engineer, and YC partner.
+Your task is to brutally audit the entire CANCompliance product experience for:
+
+visual quality
+interaction smoothness
+onboarding clarity
+usability across all user types
+
+You must simulate real users and identify ANY friction, confusion, misalignment, or broken interaction.
+The product must feel fast, intuitive, premium, and trustworthy.
+
+1️⃣ 🧭 ONBOARDING EXPERIENCE (CRITICAL)
+
+Simulate:
+
+First-time user (no knowledge)
+Compliance Officer
+Auditor
+Business Owner
+Test:
+Landing → Signup → Dashboard
+Evaluate:
+Is onboarding clear in <30 seconds?
+Does user understand what to do next?
+Is there guidance or is it confusing?
+Check:
+Role selection clarity
+Form simplicity
+Loading states after submit
+Redirect behavior
+
+👉 Flag:
+
+hesitation moments
+confusion points
+unnecessary steps
+2️⃣ 🖱️ SCROLL BEHAVIOR & PAGE FLOW
+
+For EVERY page:
+
+Test:
+Scroll slowly
+Scroll fast
+Jump sections
+Evaluate:
+Does content appear smoothly?
+Any lag or stutter?
+Do elements overlap?
+Check:
+Sticky headers behaving correctly?
+Sections snapping awkwardly?
+Scroll resets on navigation?
+
+👉 Critical:
+
+New page → does it load at top or random position?
+3️⃣ 🎨 LAYOUT, ALIGNMENT & VISUAL CONSISTENCY
+
+Audit EVERY component:
+
+Check:
+Grid alignment (8px system?)
+Spacing consistency
+Card alignment
+Button placement
+Detect:
+Misaligned text
+Uneven padding
+Crooked icons
+4️⃣ 🔤 TYPOGRAPHY & TEXT BEHAVIOR
+Test:
+Long text
+Small screens
+Different roles/content
+Check:
+Text overflow?
+Wrapping issues?
+Line height readable?
+
+👉 Detect:
+
+overlapping text
+clipped content
+inconsistent font sizes
+5️⃣ 🧩 COMPONENT INTERACTION TEST
+
+For ALL UI elements:
+
+Buttons:
+Do ALL buttons work?
+Any dead clicks?
+Tabs:
+Clear active state?
+Smooth switching?
+Dropdowns:
+Close properly?
+Overlap content?
+Modals:
+Centered?
+Close on ESC?
+Scroll locked behind?
+6️⃣ ⚡ PAGE TRANSITIONS & FEEL
+Test:
+Navigate between pages
+Evaluate:
+Does it feel:
+instant?
+smooth?
+laggy?
+Check:
+Does page flicker?
+Does layout jump?
+Is there a loading state?
+
+👉 Ideal:
+
+subtle animation
+no jarring transitions
+7️⃣ 📱 RESPONSIVENESS & ADAPTIVITY
+
+Test:
+
+Desktop
+Tablet
+Mobile
+Check:
+Does layout break?
+Do buttons remain clickable?
+Does text resize properly?
+
+👉 Detect:
+
+overflow issues
+hidden elements
+unusable UI
+8️⃣ 🎯 USER FLOW COMPLETENESS
+
+For each persona:
+
+Compliance Officer:
+Setup → run compliance → fix issue
+Auditor:
+Review → verify → export
+Business Owner:
+Understand → act → improve score
+
+👉 Check:
+
+Can user complete task without confusion?
+9️⃣ 🧠 MICRO-INTERACTIONS (THIS IS WHAT MAKES IT “POP”)
+Test:
+Hover states
+Button press feedback
+Loading animations
+Evaluate:
+Does UI feel alive?
+Or static and dull?
+
+👉 Look for:
+
+missing feedback
+inconsistent animations
+🔟 ♿ ACCESSIBILITY TEST
+Check:
+Color contrast (readable?)
+Keyboard navigation
+Focus states
+Screen reader basics
+
+👉 Detect:
+
+invisible text
+inaccessible buttons
+1️⃣1️⃣ ⚠️ ERROR & EDGE CASE UX
+
+Simulate:
+
+Empty data
+Failed API
+Slow loading
+Check:
+Does user see:
+loading?
+error?
+empty state?
+
+👉 NEVER allow:
+❌ blank screen
+❌ silent failure
+
+1️⃣2️⃣ 🔍 FINAL EXPERIENCE TEST
+
+Ask:
+
+Does this feel premium?
+Does it feel fast?
+Would a CEO trust this?
+Would a non-technical user survive onboarding?
+1️⃣3️⃣ OUTPUT FORMAT
+
+For every issue:
+
+CATEGORY: UX / UI / Interaction / Onboarding
+
+ISSUE:
+Text overlaps on dashboard cards on smaller screens
+
+IMPACT:
+Reduces readability and professionalism
+
+SEVERITY:
+Medium
+
+FIX:
+Apply responsive text wrapping + max-width constraints
+🚨 EXTRA BRUTE MODE
+Scroll while data loads
+Spam click buttons
+Switch tabs rapidly
+Resize window continuously
+
+👉 App must remain stable and smooth

@@ -6,7 +6,7 @@ import {
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
   TrendingUp, BookOpen, LogOut, UserCircle, Shield,
   Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2, FlaskConical,
-  Layers, Heart, Megaphone, Languages, Fingerprint
+  Layers, Heart, Megaphone, Languages, Fingerprint, Code2
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -44,6 +44,7 @@ const TOOLS = [
   { href: "/document-scanner", label: "Doc Scanner", icon: ScanLine, badge: "AI" },
   { href: "/policy-generator", label: "Policy Gen.", icon: Wand2, badge: "NEW" },
   { href: "/growth", label: "Growth Tools", icon: TrendingUp },
+  { href: "/developer", label: "API Portal", icon: Code2, badge: "NEW" },
 ];
 
 const INTELLIGENCE = [
