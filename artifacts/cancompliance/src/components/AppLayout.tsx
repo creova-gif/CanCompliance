@@ -59,6 +59,8 @@ const GLOBAL_FRAMEWORKS = [
   { href: "/iso27001", label: "ISO 27001", sub: "ISMS", icon: ShieldCheck },
   { href: "/gdpr", label: "GDPR", sub: "EU Data Protection", icon: Globe },
   { href: "/hipaa", label: "HIPAA", sub: "Health Data (PHI)", icon: Heart },
+  { href: "/nist-ai-rmf", label: "NIST AI RMF", sub: "AI Risk Framework", icon: Brain },
+  { href: "/eu-ai-act", label: "EU AI Act", sub: "Regulation (EU) 2024/1689", icon: Globe },
 ];
 
 function NavItem({ href, label, sub, icon: Icon, badge }: { href: string; label: string; sub?: string; icon: any; badge?: string }) {

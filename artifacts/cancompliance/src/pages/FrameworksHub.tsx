@@ -22,8 +22,8 @@ const FRAMEWORKS = [
       { id: "iso27001", name: "ISO 27001", full: "Information Security Management System", region: "International", type: "Security", score: 0, status: "new", href: "/iso27001", controls: 93, key: ["Risk register", "Statement of Applicability", "Access control policy", "Incident response plan"] },
       { id: "gdpr", name: "GDPR", full: "General Data Protection Regulation (EU)", region: "European Union", type: "Privacy", score: 0, status: "new", href: "/gdpr", controls: 18, key: ["Lawful basis for processing", "Data subject rights", "DPA appointment", "72-hr breach reporting"] },
       { id: "hipaa", name: "HIPAA", full: "Health Insurance Portability and Accountability Act", region: "USA", type: "Healthcare", score: 0, status: "new", href: "/hipaa", controls: 42, key: ["PHI safeguards", "Minimum necessary rule", "BAA agreements", "Audit logs for PHI"] },
-      { id: "nist-ai", name: "NIST AI RMF", full: "NIST AI Risk Management Framework (1.0)", region: "USA / International", type: "AI Governance", score: 0, status: "new", href: "/ai-governance", controls: 20, key: ["GOVERN function", "MAP risk categories", "MEASURE performance", "MANAGE & monitor"] },
-      { id: "eu-ai", name: "EU AI Act", full: "Regulation on Artificial Intelligence (EU 2024/1689)", region: "European Union", type: "AI Governance", score: 0, status: "new", href: "/ai-governance", controls: 16, key: ["High-risk AI classification", "Conformity assessment", "Data governance", "Human oversight"] },
+      { id: "nist-ai", name: "NIST AI RMF", full: "NIST AI Risk Management Framework (1.0)", region: "USA / International", type: "AI Governance", score: 0, status: "new", href: "/nist-ai-rmf", controls: 20, key: ["GOVERN function", "MAP risk categories", "MEASURE performance", "MANAGE & monitor"] },
+      { id: "eu-ai", name: "EU AI Act", full: "Regulation on Artificial Intelligence (EU 2024/1689)", region: "European Union", type: "AI Governance", score: 0, status: "new", href: "/eu-ai-act", controls: 16, key: ["High-risk AI classification", "Conformity assessment", "Data governance", "Human oversight"] },
     ],
   },
 ];

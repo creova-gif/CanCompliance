@@ -54,6 +54,8 @@ import SocTwo from "@/pages/SocTwo";
 import IsoISMS from "@/pages/IsoISMS";
 import Gdpr from "@/pages/Gdpr";
 import Hipaa from "@/pages/Hipaa";
+import NistAiRmf from "@/pages/NistAiRmf";
+import EuAiAct from "@/pages/EuAiAct";
 
 // ─── Global Error Boundary ────────────────────────────────────────────────────
 interface EBState { hasError: boolean; message: string }
@@ -673,6 +675,8 @@ function AppBody() {
       <Route path="/iso27001" component={() => <ProtectedRoute component={IsoISMS} />} />
       <Route path="/gdpr" component={() => <ProtectedRoute component={Gdpr} />} />
       <Route path="/hipaa" component={() => <ProtectedRoute component={Hipaa} />} />
+      <Route path="/nist-ai-rmf" component={() => <ProtectedRoute component={NistAiRmf} />} />
+      <Route path="/eu-ai-act" component={() => <ProtectedRoute component={EuAiAct} />} />
       <Route component={NotFound} />
     </Switch>
   );
