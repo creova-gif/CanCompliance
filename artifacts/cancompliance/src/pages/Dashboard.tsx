@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import AppLayout from "@/components/AppLayout";
-import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine, Inbox, Share2, Scale, ClipboardCheck, Building2 } from "lucide-react";
+import { ArrowRight, Flame, Gavel, Calculator, BarChart3, Lightbulb, ScanLine, Inbox, Share2, Scale, ClipboardCheck, Building2, Layers, Shield } from "lucide-react";
 import { useUser } from "@clerk/react";
 import { getDemoRole } from "@/lib/demoSession";
 
@@ -306,6 +306,56 @@ export default function Dashboard() {
               </div>
             </Link>
           ))}
+        </div>
+      </div>
+
+      {/* Risk Heat Map */}
+      <div className="mt-7">
+        <div className="flex items-center justify-between mb-3">
+          <div className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Risk Heat Map — By Category</div>
+          <Link href="/frameworks">
+            <span className="font-mono text-[10px] text-primary hover:underline flex items-center gap-1">
+              <Layers size={10} /> Multi-Framework View
+            </span>
+          </Link>
+        </div>
+        <div className="grid grid-cols-6 gap-3">
+          {[
+            { name: "Privacy", detail: "PIPEDA · Law 25 · GDPR", score: 62, risk: "medium", href: "/privacy", color: "#c8f135" },
+            { name: "Cybersecurity", detail: "SOC 2 · ISO 27001", score: 0, risk: "high", href: "/soc2", color: "#7F77DD" },
+            { name: "Employment", detail: "ESA · Pay Equity · OHS", score: 74, risk: "low", href: "/employment", color: "#12b76a" },
+            { name: "Marketing", detail: "CASL · Consent Records", score: 70, risk: "low", href: "/casl-ledger", color: "#12b76a" },
+            { name: "AI Governance", detail: "AIDA · NIST RMF · EU AI Act", score: 30, risk: "high", href: "/ai-governance", color: "#f04438" },
+            { name: "Trade & Tax", detail: "CBSA · FINTRAC · GST", score: 55, risk: "medium", href: "/customs", color: "#f5a623" },
+          ].map(r => {
+            const riskBg = r.risk === "high" ? "rgba(240,68,56,0.07)" : r.risk === "medium" ? "rgba(245,166,35,0.06)" : "rgba(18,183,106,0.06)";
+            const riskBorder = r.risk === "high" ? "rgba(240,68,56,0.22)" : r.risk === "medium" ? "rgba(245,166,35,0.2)" : "rgba(18,183,106,0.2)";
+            return (
+              <Link key={r.name} href={r.href}>
+                <div className="rounded-xl p-4 cursor-pointer hover:opacity-90 transition-opacity" style={{ background: riskBg, border: `1px solid ${riskBorder}` }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-mono text-[8px] uppercase tracking-widest"
+                      style={{ color: r.risk === "high" ? "#f04438" : r.risk === "medium" ? "#f5a623" : "#12b76a" }}>
+                      {r.risk.toUpperCase()} RISK
+                    </span>
+                    <Shield size={12} style={{ color: r.risk === "high" ? "#f04438" : r.risk === "medium" ? "#f5a623" : "#12b76a" }} />
+                  </div>
+                  <div className="text-[13px] font-semibold text-foreground mb-0.5">{r.name}</div>
+                  <div className="text-[9px] text-muted-foreground mb-3">{r.detail}</div>
+                  {r.score > 0 ? (
+                    <>
+                      <div className="h-1 bg-muted rounded-full overflow-hidden mb-1">
+                        <div className="h-full rounded-full" style={{ width: `${r.score}%`, background: r.color }} />
+                      </div>
+                      <div className="font-mono text-[10px]" style={{ color: r.color }}>{r.score}%</div>
+                    </>
+                  ) : (
+                    <div className="font-mono text-[9px] text-muted-foreground">Not assessed</div>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
 

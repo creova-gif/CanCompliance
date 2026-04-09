@@ -5,7 +5,8 @@ import {
   DollarSign, Receipt, Users, Lock, HardHat, Package, Brain,
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
   TrendingUp, BookOpen, LogOut, UserCircle, Shield,
-  Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2, FlaskConical
+  Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2, FlaskConical,
+  Layers, Heart
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -49,6 +50,15 @@ const INTELLIGENCE = [
   { href: "/benchmarking", label: "Benchmarking", icon: BarChart3, sub: "Sector compare" },
   { href: "/sandbox-advisor", label: "Gov. Programs", icon: Lightbulb, sub: "Grants & sandboxes" },
   { href: "/trust-network", label: "Trust Network", icon: Share2, sub: "Supplier proofs" },
+];
+
+const GLOBAL_FRAMEWORKS = [
+  { href: "/frameworks", label: "Frameworks Hub", sub: "All 12 frameworks", icon: Layers, badge: "12" },
+  { href: "/control-library", label: "Control Library", sub: "50 universal controls", icon: BookOpen },
+  { href: "/soc2", label: "SOC 2", sub: "Trust Services Criteria", icon: Shield },
+  { href: "/iso27001", label: "ISO 27001", sub: "ISMS", icon: ShieldCheck },
+  { href: "/gdpr", label: "GDPR", sub: "EU Data Protection", icon: Globe },
+  { href: "/hipaa", label: "HIPAA", sub: "Health Data (PHI)", icon: Heart },
 ];
 
 function NavItem({ href, label, sub, icon: Icon, badge }: { href: string; label: string; sub?: string; icon: any; badge?: string }) {
@@ -163,6 +173,11 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Intelligence</div>
           <div className="space-y-0.5">
             {INTELLIGENCE.map(t => <NavItem key={t.href} {...t} />)}
+          </div>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Global Frameworks</div>
+          <div className="space-y-0.5">
+            {GLOBAL_FRAMEWORKS.map(t => <NavItem key={t.href} {...t} />)}
           </div>
         </nav>
 

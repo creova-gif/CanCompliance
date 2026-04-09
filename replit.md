@@ -2,7 +2,7 @@
 
 ## Overview
 
-**CanCompliance v5.0** — a full-stack Canadian compliance SaaS web app for SMBs. 13 compliance modules with live score engine, CASL consent ledger, audit trail, deadlines calendar, jurisdiction intelligence, and control mapper. Full security hardening: Clerk auth, user-scoped DB persistence, CORS/rate limiting, privacy policy, AI consent gate, and PIPEDA-compliant data rights.
+**CanCompliance v5.0** — a full-stack Canadian + global compliance SaaS web app for SMBs. 13 Canadian compliance modules + 6 global frameworks (SOC 2, ISO 27001, GDPR, HIPAA, NIST AI RMF, EU AI Act), universal control library (50 controls), frameworks hub, risk heat map dashboard, and multi-framework cross-control mapping. Full security hardening: Clerk auth, user-scoped DB persistence, CORS/rate limiting, privacy policy, AI consent gate, and PIPEDA-compliant data rights.
 
 **v5.0 Intelligence Layer (7 features fully implemented):**
 1. **Compliance Inbox** — 8 real regulatory updates (CRTC $1.1M CASL fine, CPPA Senate reading, BC Pay Transparency, Quebec Law 25 audits, etc.), filterable by tag/jurisdiction/severity, email subscription, links to modules

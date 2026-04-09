@@ -48,6 +48,12 @@ import SandboxAdvisor from "@/pages/SandboxAdvisor";
 import ComplianceInbox from "@/pages/ComplianceInbox";
 import TrustNetwork from "@/pages/TrustNetwork";
 import PolicyGenerator from "@/pages/PolicyGenerator";
+import FrameworksHub from "@/pages/FrameworksHub";
+import ControlLibrary from "@/pages/ControlLibrary";
+import SocTwo from "@/pages/SocTwo";
+import IsoISMS from "@/pages/IsoISMS";
+import Gdpr from "@/pages/Gdpr";
+import Hipaa from "@/pages/Hipaa";
 
 // ─── Global Error Boundary ────────────────────────────────────────────────────
 interface EBState { hasError: boolean; message: string }
@@ -661,6 +667,12 @@ function AppBody() {
       <Route path="/compliance-inbox" component={() => <ProtectedRoute component={ComplianceInbox} />} />
       <Route path="/trust-network" component={() => <ProtectedRoute component={TrustNetwork} />} />
       <Route path="/policy-generator" component={() => <ProtectedRoute component={PolicyGenerator} />} />
+      <Route path="/frameworks" component={() => <ProtectedRoute component={FrameworksHub} />} />
+      <Route path="/control-library" component={() => <ProtectedRoute component={ControlLibrary} />} />
+      <Route path="/soc2" component={() => <ProtectedRoute component={SocTwo} />} />
+      <Route path="/iso27001" component={() => <ProtectedRoute component={IsoISMS} />} />
+      <Route path="/gdpr" component={() => <ProtectedRoute component={Gdpr} />} />
+      <Route path="/hipaa" component={() => <ProtectedRoute component={Hipaa} />} />
       <Route component={NotFound} />
     </Switch>
   );
