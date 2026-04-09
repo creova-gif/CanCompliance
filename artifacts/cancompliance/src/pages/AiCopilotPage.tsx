@@ -74,47 +74,128 @@ export default function AiCopilotPage() {
       <PublicNav />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20 px-6 max-w-5xl mx-auto w-full">
-        <div className="pointer-events-none absolute left-1/2 top-16 -translate-x-1/2 w-[800px] h-[500px] rounded-full opacity-[0.05]" style={{ background: "radial-gradient(ellipse at center, #c8f135 0%, transparent 70%)" }} />
-        <div className="relative">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #c8f135 0%, #12b76a 100%)" }}>
-              <Bot className="w-8 h-8 text-[#09090a]" />
+      <section className="relative pt-28 pb-20 px-6 max-w-5xl mx-auto w-full">
+        {/* Background glow */}
+        <div className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 w-[900px] h-[600px] opacity-[0.055]"
+          style={{ background: "radial-gradient(ellipse at 50% 30%, #c8f135 0%, transparent 60%)" }} />
+
+        <div className="relative flex flex-col items-center">
+
+          {/* ── Dual-model visual lockup ── */}
+          <div className="flex items-center gap-5 mb-8">
+
+            {/* Claude chip */}
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full border text-[11px] font-mono font-medium shadow-sm"
+              style={{ borderColor: "rgba(200,241,53,0.3)", background: "rgba(200,241,53,0.06)", color: "#c8f135" }}>
+              <span style={{ fontSize: 9, letterSpacing: 1 }}>◆</span>
+              Claude Sonnet
+            </div>
+
+            {/* Connector line left */}
+            <div className="w-8 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(200,241,53,0.3))" }} />
+
+            {/* Center icon with rings */}
+            <div className="relative flex items-center justify-center" style={{ width: 72, height: 72 }}>
+              {/* Slow-spinning outer ring */}
+              <div className="absolute inset-0 rounded-full border border-dashed opacity-25"
+                style={{ borderColor: "#c8f135", animation: "spin 16s linear infinite" }} />
+              {/* Static inner ring */}
+              <div className="absolute rounded-full border opacity-15"
+                style={{ inset: 10, borderColor: "#c8f135" }} />
+              {/* Glow */}
+              <div className="absolute inset-0 rounded-full opacity-10 blur-md"
+                style={{ background: "#c8f135" }} />
+              {/* Icon */}
+              <div className="relative z-10 w-11 h-11 rounded-full flex items-center justify-center"
+                style={{ background: "linear-gradient(135deg, rgba(200,241,53,0.18) 0%, rgba(18,183,106,0.12) 100%)", border: "1px solid rgba(200,241,53,0.35)", boxShadow: "0 0 16px rgba(200,241,53,0.12)" }}>
+                <Bot className="w-5 h-5" style={{ color: "#c8f135" }} />
+              </div>
+            </div>
+
+            {/* Connector line right */}
+            <div className="w-8 h-px" style={{ background: "linear-gradient(to left, transparent, rgba(127,119,221,0.3))" }} />
+
+            {/* GPT chip */}
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-full border text-[11px] font-mono font-medium shadow-sm"
+              style={{ borderColor: "rgba(127,119,221,0.3)", background: "rgba(127,119,221,0.06)", color: "#9490e8" }}>
+              <span style={{ fontSize: 9 }}>●</span>
+              GPT-5.2
             </div>
           </div>
-          <div className="text-center">
-            <div className="inline-flex items-center gap-2 font-mono text-[10px] text-primary tracking-[3px] uppercase mb-4 border border-primary/20 rounded-full px-3 py-1 bg-primary/5">
-              <Sparkles className="w-3 h-3" />
-              Claude Sonnet + GPT-5.2 · Statute-cited answers
-            </div>
-            <h1 className="font-serif italic text-5xl md:text-6xl text-foreground leading-tight mb-5">
-              Your compliance lawyer,<br /><span style={{ color: "#c8f135" }}>on demand.</span>
-            </h1>
-            <p className="text-[15px] text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
-              Ask any Canadian compliance question — CASL, PIPEDA, Bill 96, Employment Standards, FINTRAC, GST/HST — and get a precise answer with the exact statute section, penalty amount, and step-by-step fix.
-              Powered by Claude Sonnet and GPT-5.2.
-            </p>
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <Link href="/sign-up">
-                <button data-testid="btn-copilot-signup" className="px-7 py-3.5 rounded-lg text-[13px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-2" style={{ background: "#c8f135", color: "#09090a" }}>
-                  Try AI Copilot Free <ArrowRight className="w-4 h-4" />
-                </button>
-              </Link>
-              <Link href="/sign-in">
-                <button className="px-7 py-3.5 rounded-lg text-[13px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
-                  Sign In to Ask
-                </button>
-              </Link>
-              <Link href="/dashboard">
-                <button className="px-7 py-3.5 rounded-lg text-[13px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors flex items-center gap-1.5">
-                  Dashboard <ChevronRight className="w-4 h-4" />
-                </button>
-              </Link>
-            </div>
-            <p className="text-[11px] text-muted-foreground font-mono">Available on Professional and Agency plans · Not legal advice</p>
+
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 font-mono text-[10px] text-primary tracking-[2.5px] uppercase mb-5 border border-primary/20 rounded-full px-3.5 py-1.5 bg-primary/5">
+            <Sparkles className="w-3 h-3 flex-shrink-0" />
+            Statute-cited answers · Real Canadian law
           </div>
+
+          {/* Heading */}
+          <h1 className="font-serif italic text-5xl md:text-[62px] text-foreground leading-tight mb-5 text-center">
+            Your compliance lawyer,<br />
+            <span style={{ color: "#c8f135" }}>on demand.</span>
+          </h1>
+
+          <p className="text-[15px] text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10 text-center">
+            Ask any Canadian compliance question — CASL, PIPEDA, Bill 96, Employment Standards, FINTRAC, GST/HST — and get a precise answer with the exact statute section, penalty amount, and step-by-step fix.
+          </p>
+
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
+            <Link href="/sign-up">
+              <button data-testid="btn-copilot-signup"
+                className="px-7 py-3.5 rounded-lg text-[13px] font-semibold hover:opacity-90 transition-opacity flex items-center gap-2"
+                style={{ background: "#c8f135", color: "#09090a" }}>
+                Try AI Copilot Free <ArrowRight className="w-4 h-4" />
+              </button>
+            </Link>
+            <Link href="/sign-in">
+              <button className="px-7 py-3.5 rounded-lg text-[13px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
+                Sign In to Ask
+              </button>
+            </Link>
+            <Link href="/dashboard">
+              <button className="px-7 py-3.5 rounded-lg text-[13px] border border-border text-muted-foreground hover:bg-muted hover:text-foreground transition-colors flex items-center gap-1.5">
+                Dashboard <ChevronRight className="w-4 h-4" />
+              </button>
+            </Link>
+          </div>
+
+          <p className="text-[11px] text-muted-foreground font-mono">Available on Professional and Agency plans · Not legal advice</p>
+
+          {/* Mini live preview strip */}
+          <div className="mt-10 w-full max-w-2xl rounded-2xl border overflow-hidden shadow-xl"
+            style={{ borderColor: "rgba(200,241,53,0.12)", background: "rgba(255,255,255,0.02)" }}>
+            <div className="flex items-center gap-2 px-4 py-2.5 border-b"
+              style={{ borderColor: "rgba(255,255,255,0.05)", background: "rgba(255,255,255,0.03)" }}>
+              <div className="w-4 h-4 rounded-full flex items-center justify-center" style={{ background: "rgba(200,241,53,0.15)" }}>
+                <Bot className="w-2.5 h-2.5" style={{ color: "#c8f135" }} />
+              </div>
+              <span className="font-mono text-[9px] text-muted-foreground">AI Copilot · Claude Sonnet · CASL S.10(1)</span>
+              <div className="ml-auto flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-400 opacity-70" />
+                <span className="font-mono text-[9px] text-muted-foreground">Live</span>
+              </div>
+            </div>
+            <div className="p-4 space-y-3">
+              <div className="flex justify-end">
+                <div className="max-w-[72%] rounded-xl px-3.5 py-2.5 text-[12px] font-medium leading-snug"
+                  style={{ background: "#c8f135", color: "#09090a" }}>
+                  Is a pre-checked checkbox valid for CASL consent?
+                </div>
+              </div>
+              <div className="flex justify-start">
+                <div className="max-w-[80%] rounded-xl px-3.5 py-2.5 text-[12px] text-foreground leading-relaxed bg-muted">
+                  No — CASL s.10(1) requires <span style={{ color: "#c8f135" }}>express opt-in</span>. A pre-checked box does not qualify.
+                  Maximum penalty: <span className="text-red-400">$10M/day</span> (s.20). Fix: Use an unchecked checkbox with a plain-language consent description.
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
+
+      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
 
       {/* Quick questions preview */}
       <section className="py-10 px-6 max-w-5xl mx-auto w-full">
