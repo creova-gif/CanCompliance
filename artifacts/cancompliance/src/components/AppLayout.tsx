@@ -122,7 +122,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
 
   return (
     <div className="flex min-h-screen bg-background">
-      <aside className="w-52 min-h-screen bg-sidebar border-r border-sidebar-border fixed top-0 left-0 z-50 flex flex-col">
+      <aside className="w-52 h-screen bg-sidebar border-r border-sidebar-border fixed top-0 left-0 z-50 flex flex-col">
         <Link href="/">
           <div className="px-4 py-4 border-b border-sidebar-border cursor-pointer hover:bg-muted/40 transition-colors">
             <div className="font-mono text-[9px] text-primary tracking-widest uppercase mb-0.5">CANCOMPLIANCE v2</div>
