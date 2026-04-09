@@ -6,7 +6,7 @@ import {
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
   TrendingUp, BookOpen, LogOut, UserCircle, Shield,
   Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2, FlaskConical,
-  Layers, Heart
+  Layers, Heart, Megaphone, Languages, Fingerprint
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -15,6 +15,9 @@ import PredictiveAlerts from "./PredictiveAlerts";
 import { getDemoRole, getDemoUser, clearDemoRole } from "@/lib/demoSession";
 
 const MODULES = [
+  { href: "/casl", label: "CASL", sub: "Anti-Spam Checker", icon: Megaphone },
+  { href: "/pipeda", label: "PIPEDA", sub: "Privacy Checker", icon: Fingerprint },
+  { href: "/bill96", label: "Bill 96", sub: "Quebec French Law", icon: Languages },
   { href: "/ccpsa", label: "CCPSA", sub: "Product Safety", icon: ShieldCheck },
   { href: "/cpla", label: "CPLA", sub: "Packaging / Bilingualism", icon: Globe },
   { href: "/fintrac", label: "FINTRAC", sub: "AML / KYC", icon: Search },
@@ -53,7 +56,7 @@ const INTELLIGENCE = [
 ];
 
 const GLOBAL_FRAMEWORKS = [
-  { href: "/frameworks", label: "Frameworks Hub", sub: "All 12 frameworks", icon: Layers, badge: "12" },
+  { href: "/frameworks", label: "Frameworks Hub", sub: "All 13 frameworks", icon: Layers, badge: "13" },
   { href: "/control-library", label: "Control Library", sub: "50 universal controls", icon: BookOpen },
   { href: "/soc2", label: "SOC 2", sub: "Trust Services Criteria", icon: Shield },
   { href: "/iso27001", label: "ISO 27001", sub: "ISMS", icon: ShieldCheck },
@@ -167,7 +170,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
             </div>
           </Link>
 
-          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-2 mb-1">13 Compliance Modules</div>
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-2 mb-1">16 Compliance Modules</div>
           <div className="space-y-0.5">
             {MODULES.map(m => <NavItem key={m.href} {...m} />)}
           </div>

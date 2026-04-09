@@ -9,6 +9,7 @@ const FRAMEWORKS = [
     items: [
       { id: "pipeda", name: "PIPEDA", full: "Personal Information Protection and Electronic Documents Act", region: "Canada", type: "Privacy", score: 62, status: "partial", href: "/privacy", controls: 12, key: ["Consent collection", "Data access rights", "Breach notification", "Accountability principle"] },
       { id: "casl", name: "CASL", full: "Canada's Anti-Spam Legislation", region: "Canada", type: "Marketing", score: 74, status: "partial", href: "/casl", controls: 8, key: ["Express consent", "Unsubscribe mechanism", "Sender identification", "Consent records"] },
+      { id: "bill96", name: "Bill 96", full: "Loi sur la langue officielle et commune du Québec, le français", region: "Quebec", type: "Language", score: 0, status: "new", href: "/bill96", controls: 6, key: ["French-only contracts", "French product labels", "French signage", "Employee rights in French"] },
       { id: "law25", name: "Quebec Law 25", full: "Act Respecting the Protection of Personal Information in the Private Sector", region: "Quebec", type: "Privacy", score: 48, status: "risk", href: "/privacy", controls: 14, key: ["Privacy Impact Assessment", "72-hr breach notification", "French privacy notices", "Data transfer assessment"] },
       { id: "casl-fintrac", name: "FINTRAC", full: "Financial Transactions and Reports Analysis Centre", region: "Canada", type: "AML/KYC", score: 55, status: "partial", href: "/fintrac", controls: 10, key: ["Transaction reporting", "KYC identity verification", "$10K threshold", "PCMLTFA compliance"] },
       { id: "s211", name: "S-211", full: "Fighting Against Forced Labour and Child Labour in Supply Chains Act", region: "Canada", type: "Supply Chain", score: 40, status: "risk", href: "/supply-chain", controls: 6, key: ["Annual reporting", "Due diligence steps", "Remediation plans", "Board approval"] },
@@ -61,7 +62,7 @@ export default function FrameworksHub() {
       {/* Stats Row */}
       <div className="grid grid-cols-4 gap-4 mb-7">
         {[
-          { label: "Frameworks Supported", value: "12", unit: "& growing", color: "text-primary" },
+          { label: "Frameworks Supported", value: "13", unit: "& growing", color: "text-primary" },
           { label: "Avg Compliance Score", value: Math.round(avgScore).toString(), unit: "/ 100", color: avgScore >= 70 ? "text-pass" : avgScore >= 50 ? "text-flag" : "text-fail" },
           { label: "Frameworks Active", value: (inProgress + withGaps).toString(), unit: "in use", color: "text-foreground" },
           { label: "Action Required", value: (withGaps).toString(), unit: "frameworks", color: "text-fail" },
