@@ -369,3 +369,91 @@
     inset: -1px;
   }
 }
+
+/* ─── Smooth scroll everywhere ─────────────────────────────────────────────── */
+* {
+  scroll-behavior: smooth;
+}
+
+/* ─── Custom scrollbar — sidebar & all overflow-y-auto areas ───────────────── */
+.sidebar-nav::-webkit-scrollbar,
+nav::-webkit-scrollbar,
+[class*="overflow-y-auto"]::-webkit-scrollbar,
+[class*="overflow-y-scroll"]::-webkit-scrollbar {
+  width: 3px;
+}
+.sidebar-nav::-webkit-scrollbar-track,
+nav::-webkit-scrollbar-track,
+[class*="overflow-y-auto"]::-webkit-scrollbar-track,
+[class*="overflow-y-scroll"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb,
+nav::-webkit-scrollbar-thumb,
+[class*="overflow-y-auto"]::-webkit-scrollbar-thumb,
+[class*="overflow-y-scroll"]::-webkit-scrollbar-thumb {
+  background: rgba(200, 241, 53, 0.18);
+  border-radius: 99px;
+  transition: background 0.2s ease;
+}
+.sidebar-nav::-webkit-scrollbar-thumb:hover,
+nav::-webkit-scrollbar-thumb:hover,
+[class*="overflow-y-auto"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 241, 53, 0.45);
+}
+
+/* Firefox scrollbar */
+nav, [class*="overflow-y-auto"] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200, 241, 53, 0.18) transparent;
+}
+
+/* ─── Sidebar nav item entrance animation ──────────────────────────────────── */
+@keyframes nav-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sidebar-nav-item {
+  animation: nav-slide-in 0.22s ease both;
+}
+
+/* stagger each item using nth-child */
+.sidebar-nav > *:nth-child(1)  { animation-delay: 0.03s; }
+.sidebar-nav > *:nth-child(2)  { animation-delay: 0.06s; }
+.sidebar-nav > *:nth-child(3)  { animation-delay: 0.09s; }
+.sidebar-nav > *:nth-child(4)  { animation-delay: 0.12s; }
+.sidebar-nav > *:nth-child(5)  { animation-delay: 0.14s; }
+.sidebar-nav > *:nth-child(6)  { animation-delay: 0.16s; }
+.sidebar-nav > *:nth-child(7)  { animation-delay: 0.18s; }
+.sidebar-nav > *:nth-child(8)  { animation-delay: 0.20s; }
+.sidebar-nav > *:nth-child(n+9){ animation-delay: 0.22s; }
+
+/* ─── Active nav item glow pulse ──────────────────────────────────────────── */
+@keyframes active-nav-glow {
+  0%, 100% { box-shadow: 0 0 0px rgba(200,241,53,0); }
+  50%       { box-shadow: 0 0 8px rgba(200,241,53,0.15); }
+}
+.nav-active-glow {
+  animation: active-nav-glow 2.5s ease-in-out infinite;
+}
+
+/* ─── Sidebar scroll fade gradient ─────────────────────────────────────────── */
+.sidebar-scroll-fade::after {
+  content: "";
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: block;
+  pointer-events: none;
+  background: linear-gradient(to top, hsl(var(--sidebar)) 10%, transparent 100%);
+  flex-shrink: 0;
+}

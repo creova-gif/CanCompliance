@@ -69,17 +69,21 @@ function NavItem({ href, label, sub, icon: Icon, badge }: { href: string; label:
       <div
         data-testid={`nav-${label.toLowerCase().replace(/[\s/.]+/g, "-")}`}
         className={cn(
-          "flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] transition-all duration-100 border",
+          "sidebar-nav-item flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] border",
+          "transition-all duration-150 ease-out",
+          "hover:translate-x-0.5",
           isActive
-            ? "bg-muted text-foreground border-border"
-            : "text-muted-foreground hover:bg-muted hover:text-foreground border-transparent"
+            ? "bg-muted text-foreground border-border nav-active-glow"
+            : "text-muted-foreground hover:bg-muted/60 hover:text-foreground border-transparent"
         )}
       >
-        <div className={cn("w-1 h-1 rounded-full flex-shrink-0", isActive ? "bg-primary" : "bg-muted-foreground/20")} />
-        <Icon className="w-3 h-3 flex-shrink-0" />
-        <span className="font-medium">{label}</span>
-        {sub && <span className="text-muted-foreground text-[10px] truncate hidden xl:block">{sub}</span>}
-        {badge && <span className="ml-auto font-mono text-[9px] px-1.5 py-0.5 rounded bg-primary/10 text-primary">{badge}</span>}
+        <div className={cn(
+          "w-1 h-1 rounded-full flex-shrink-0 transition-all duration-200",
+          isActive ? "bg-primary scale-125 shadow-[0_0_4px_rgba(200,241,53,0.6)]" : "bg-muted-foreground/20"
+        )} />
+        <Icon className={cn("w-3 h-3 flex-shrink-0 transition-all duration-150", isActive ? "text-primary" : "")} />
+        <span className="font-medium truncate">{label}</span>
+        {badge && <span className="ml-auto font-mono text-[9px] px-1.5 py-0.5 rounded bg-primary/10 text-primary flex-shrink-0">{badge}</span>}
       </div>
     </Link>
   );
@@ -149,11 +153,11 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           </div>
         </div>
 
-        <nav className="flex-1 px-2 py-3 overflow-y-auto">
+        <nav className="sidebar-nav sidebar-scroll-fade flex-1 px-2 py-3 overflow-y-auto">
           <Link href="/dashboard">
             <div
               data-testid="nav-dashboard"
-              className="flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] font-semibold transition-all duration-100 border border-transparent hover:bg-muted hover:text-foreground text-muted-foreground mb-1"
+              className="sidebar-nav-item flex items-center gap-2 px-2.5 py-1.5 rounded-md cursor-pointer text-[12px] font-semibold transition-all duration-150 ease-out border hover:translate-x-0.5 hover:bg-muted hover:text-foreground border-transparent text-muted-foreground mb-1"
             >
               <LayoutDashboard className="w-3 h-3" />
               Dashboard
