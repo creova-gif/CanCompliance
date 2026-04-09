@@ -1,7 +1,8 @@
-import { useEffect, useRef, Component, ReactNode } from "react";
-import { Switch, Route, Router as WouterRouter, Redirect, useLocation } from "wouter";
+import { useEffect, useRef, Component, ReactNode, useState } from "react";
+import { Switch, Route, Router as WouterRouter, Redirect, useLocation, Link } from "wouter";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
-import { ClerkProvider, SignIn, SignUp, useAuth, useClerk } from "@clerk/react";
+import { ClerkProvider, useAuth, useClerk, useSignIn, useSignUp, AuthenticateWithRedirectCallback } from "@clerk/react";
+import { Eye, EyeOff } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuditProvider } from "./context/AuditContext";
@@ -230,44 +231,152 @@ const DEMO_PERSONAS = [
   },
 ];
 
+// ─── Shared input style ───────────────────────────────────────────────────────
+const inputCls = "w-full px-3 py-2.5 rounded-xl border border-border bg-muted/30 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/20 transition-colors";
+const btnPrimary = { background: "#c8f135", color: "#09090a" };
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 48 48" fill="none">
+      <path d="M43.6 20.5h-1.6V20H24v8h11.3C33.6 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.3 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z" fill="#FFC107"/>
+      <path d="M6.3 14.7l6.6 4.8C14.5 16 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34 6.3 29.3 4 24 4c-7.7 0-14.4 4.4-17.7 10.7z" fill="#FF3D00"/>
+      <path d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.3 35.3 26.8 36 24 36c-5.3 0-9.6-3.3-11.3-8H6.3C9.6 38.1 16.3 44 24 44z" fill="#4CAF50"/>
+      <path d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.2 5.2C37 38.8 44 34 44 24c0-1.2-.1-2.3-.4-3.5z" fill="#1976D2"/>
+    </svg>
+  );
+}
+
+function AuthFieldset({ label, type = "text", value, onChange, placeholder, children }: {
+  label: string; type?: string; value: string; onChange: (v: string) => void;
+  placeholder?: string; children?: React.ReactNode;
+}) {
+  const [show, setShow] = useState(false);
+  const isPassword = type === "password";
+  return (
+    <div>
+      <label className="block text-[13px] font-medium text-foreground mb-1.5">{label}</label>
+      <div className="relative">
+        <input
+          type={isPassword && show ? "text" : type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          required
+          autoComplete={isPassword ? "current-password" : type === "email" ? "email" : "off"}
+          className={inputCls + (isPassword ? " pr-10" : "")}
+        />
+        {isPassword && (
+          <button type="button" tabIndex={-1}
+            onClick={() => setShow(s => !s)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors">
+            {show ? <EyeOff size={15} /> : <Eye size={15} />}
+          </button>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function AuthError({ msg }: { msg: string }) {
+  if (!msg) return null;
+  return (
+    <div className="px-3 py-2.5 rounded-xl text-[12px] text-red-300 border border-red-500/20 bg-red-500/8">
+      {msg}
+    </div>
+  );
+}
+
 function SignInPage() {
+  const { signIn, setActive, isLoaded } = useSignIn();
   const [, setLocation] = useLocation();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoaded || loading) return;
+    setLoading(true); setError("");
+    try {
+      const result = await signIn!.create({ identifier: email, password });
+      if (result.status === "complete") {
+        await setActive!({ session: result.createdSessionId });
+        setLocation("/dashboard");
+      }
+    } catch (err: any) {
+      setError(err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message || "Sign in failed. Check your credentials.");
+    } finally { setLoading(false); }
+  };
+
+  const handleGoogle = async () => {
+    if (!isLoaded) return;
+    try {
+      await signIn!.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: `${basePath}/sso-callback`,
+        redirectUrlComplete: `${basePath}/dashboard`,
+      });
+    } catch { setError("Google sign-in unavailable. Use email below."); }
+  };
+
   return (
     <PublicRoute>
       <AuthLayout>
         <div className="w-full max-w-sm">
-          <SignIn
-            routing="path"
-            path={`${basePath}/sign-in`}
-            signUpUrl={`${basePath}/sign-up`}
-            forceRedirectUrl={`${basePath}/dashboard`}
-          />
+          <div className="mb-7">
+            <h1 className="font-serif italic text-2xl text-foreground mb-1">Sign in to CanCompliance</h1>
+            <p className="text-[13px] text-muted-foreground">Welcome back! Please sign in to continue.</p>
+          </div>
 
-          {/* Demo persona section */}
-          <div className="mt-6 pt-6 border-t border-border">
-            <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground text-center mb-4">
+          <button onClick={handleGoogle} type="button"
+            className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors mb-4 text-[13px] font-medium text-foreground">
+            <GoogleIcon /> Continue with Google
+          </button>
+
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-[11px] text-muted-foreground">or</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <AuthFieldset label="Email address" type="email" value={email} onChange={setEmail} placeholder="you@company.com" />
+            <AuthFieldset label="Password" type="password" value={password} onChange={setPassword} placeholder="Your password" />
+            <AuthError msg={error} />
+            <button type="submit" disabled={loading || !isLoaded}
+              className="w-full py-2.5 rounded-xl text-[13px] font-semibold transition-opacity disabled:opacity-60"
+              style={btnPrimary} data-testid="sign-in-submit">
+              {loading ? "Signing in…" : "Continue"}
+            </button>
+          </form>
+
+          <p className="text-center text-[12px] text-muted-foreground mt-4">
+            Don't have an account?{" "}
+            <Link href="/sign-up" className="text-foreground hover:underline font-medium">Sign up</Link>
+          </p>
+
+          <div className="mt-6 pt-5 border-t border-border">
+            <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground text-center mb-3">
               Or explore as a demo persona
             </div>
             <div className="space-y-2">
               {DEMO_PERSONAS.map((p) => (
-                <button
-                  key={p.role}
-                  data-testid={`demo-${p.role.toLowerCase().replace(/\s+/g, "-")}`}
-                  onClick={() => setLocation(`/sign-up?role=${encodeURIComponent(p.role)}`)}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/20 hover:bg-muted/50 transition-all text-left group"
-                >
-                  <span className="text-base flex-shrink-0">{p.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[12px] font-semibold text-foreground group-hover:text-primary transition-colors">{p.role}</div>
-                    <div className="text-[10px] text-muted-foreground truncate">{p.desc}</div>
+                <Link key={p.role} href={`/sign-up?role=${encodeURIComponent(p.role)}`}>
+                  <div data-testid={`demo-${p.role.toLowerCase().replace(/\s+/g, "-")}`}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/20 hover:bg-muted/50 transition-all text-left group cursor-pointer">
+                    <span className="text-base flex-shrink-0">{p.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[12px] font-semibold text-foreground group-hover:text-primary transition-colors">{p.role}</div>
+                      <div className="text-[10px] text-muted-foreground truncate">{p.desc}</div>
+                    </div>
+                    <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: p.color }} />
                   </div>
-                  <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: p.color }} />
-                </button>
+                </Link>
               ))}
             </div>
-            <p className="text-center text-[10px] text-muted-foreground mt-3">
-              Demo sign-up is free — no credit card needed
-            </p>
+            <p className="text-center text-[10px] text-muted-foreground mt-3">Demo sign-up is free — no credit card needed</p>
           </div>
         </div>
       </AuthLayout>
@@ -276,15 +385,138 @@ function SignInPage() {
 }
 
 function SignUpPage() {
+  const { signUp, setActive, isLoaded } = useSignUp();
+  const [, setLocation] = useLocation();
+  const [step, setStep] = useState<"form" | "verify">("form");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoaded || loading) return;
+    setLoading(true); setError("");
+    try {
+      await signUp!.create({ emailAddress: email, password });
+      await signUp!.prepareEmailAddressVerification({ strategy: "email_code" });
+      setStep("verify");
+    } catch (err: any) {
+      setError(err?.errors?.[0]?.longMessage || err?.errors?.[0]?.message || "Sign up failed. Try a different email or stronger password.");
+    } finally { setLoading(false); }
+  };
+
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoaded || loading) return;
+    setLoading(true); setError("");
+    try {
+      const result = await signUp!.attemptEmailAddressVerification({ code });
+      if (result.status === "complete") {
+        await setActive!({ session: result.createdSessionId });
+        setLocation("/dashboard");
+      }
+    } catch (err: any) {
+      setError(err?.errors?.[0]?.longMessage || "Invalid code. Please check your email and try again.");
+    } finally { setLoading(false); }
+  };
+
+  const handleGoogle = async () => {
+    if (!isLoaded) return;
+    try {
+      await signUp!.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: `${basePath}/sso-callback`,
+        redirectUrlComplete: `${basePath}/dashboard`,
+      });
+    } catch { setError("Google sign-up unavailable. Use email below."); }
+  };
+
+  if (step === "verify") {
+    return (
+      <PublicRoute>
+        <AuthLayout>
+          <div className="w-full max-w-sm">
+            <div className="mb-7">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center mb-4"
+                style={{ background: "rgba(200,241,53,0.12)", border: "1px solid rgba(200,241,53,0.3)" }}>
+                <span style={{ color: "#c8f135", fontSize: 18 }}>✉</span>
+              </div>
+              <h1 className="font-serif italic text-2xl text-foreground mb-1">Check your email</h1>
+              <p className="text-[13px] text-muted-foreground">
+                We sent a 6-digit code to <span className="text-foreground font-medium">{email}</span>. Enter it below to verify your account.
+              </p>
+            </div>
+            <form onSubmit={handleVerify} className="space-y-4">
+              <div>
+                <label className="block text-[13px] font-medium text-foreground mb-1.5">Verification code</label>
+                <input type="text" inputMode="numeric" maxLength={6}
+                  value={code} onChange={e => setCode(e.target.value.replace(/\D/g, ""))}
+                  placeholder="123456" required autoFocus
+                  className={inputCls + " text-center text-lg tracking-[0.3em] font-mono"}
+                  data-testid="verify-code-input"
+                />
+              </div>
+              <AuthError msg={error} />
+              <button type="submit" disabled={loading || code.length < 6}
+                className="w-full py-2.5 rounded-xl text-[13px] font-semibold transition-opacity disabled:opacity-60"
+                style={btnPrimary} data-testid="verify-submit">
+                {loading ? "Verifying…" : "Verify Email"}
+              </button>
+            </form>
+            <button onClick={() => { setStep("form"); setError(""); setCode(""); }}
+              className="w-full text-center text-[12px] text-muted-foreground hover:text-foreground mt-4 transition-colors">
+              ← Back to sign up
+            </button>
+          </div>
+        </AuthLayout>
+      </PublicRoute>
+    );
+  }
+
   return (
     <PublicRoute>
       <AuthLayout>
-        <SignUp
-          routing="path"
-          path={`${basePath}/sign-up`}
-          signInUrl={`${basePath}/sign-in`}
-          forceRedirectUrl={`${basePath}/dashboard`}
-        />
+        <div className="w-full max-w-sm">
+          <div className="mb-7">
+            <h1 className="font-serif italic text-2xl text-foreground mb-1">Create your account</h1>
+            <p className="text-[13px] text-muted-foreground">Welcome! Please fill in the details to get started.</p>
+          </div>
+
+          <button onClick={handleGoogle} type="button"
+            className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl border border-border bg-card hover:bg-muted/40 transition-colors mb-4 text-[13px] font-medium text-foreground">
+            <GoogleIcon /> Continue with Google
+          </button>
+
+          <div className="flex items-center gap-3 mb-5">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-[11px] text-muted-foreground">or</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          <form onSubmit={handleSignUp} className="space-y-4">
+            <AuthFieldset label="Email address" type="email" value={email} onChange={setEmail} placeholder="you@company.com" />
+            <AuthFieldset label="Password" type="password" value={password} onChange={setPassword} placeholder="Create a password (min 8 chars)" />
+            <AuthError msg={error} />
+            <button type="submit" disabled={loading || !isLoaded}
+              className="w-full py-2.5 rounded-xl text-[13px] font-semibold transition-opacity disabled:opacity-60"
+              style={btnPrimary} data-testid="sign-up-submit">
+              {loading ? "Creating account…" : "Continue"}
+            </button>
+          </form>
+
+          <p className="text-center text-[12px] text-muted-foreground mt-4">
+            Already have an account?{" "}
+            <Link href="/sign-in" className="text-foreground hover:underline font-medium">Sign in</Link>
+          </p>
+
+          <p className="text-center text-[10px] text-muted-foreground mt-4 leading-relaxed">
+            By continuing, you agree to our{" "}
+            <Link href="/privacy-policy" className="underline hover:text-foreground transition-colors">Privacy Policy</Link>.
+            Not legal advice.
+          </p>
+        </div>
       </AuthLayout>
     </PublicRoute>
   );
@@ -319,6 +551,16 @@ function AppBody() {
       <Route path="/" component={HomeRoute} />
       <Route path="/sign-in/*?" component={SignInPage} />
       <Route path="/sign-up/*?" component={SignUpPage} />
+      <Route path="/sso-callback" component={() => (
+        <AuthLayout>
+          <div className="w-full max-w-sm flex flex-col items-center gap-4">
+            <div className="w-8 h-8 rounded-full border-2 border-transparent animate-spin"
+              style={{ borderTopColor: "#c8f135", borderRightColor: "rgba(200,241,53,0.3)" }} />
+            <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">Completing sign-in…</p>
+            <AuthenticateWithRedirectCallback />
+          </div>
+        </AuthLayout>
+      )} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/features" component={Features} />
       <Route path="/pricing" component={PricingPage} />
