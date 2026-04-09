@@ -101,13 +101,14 @@ export default function PredictiveAlerts() {
   return (
     <div className="space-y-2 mb-5">
       <div className="flex items-center gap-2 mb-2">
+        <div className="live-dot w-1.5 h-1.5 rounded-full" style={{ background: "#c8f135" }} />
         <TrendingUp className="w-3 h-3" style={{ color: "#c8f135" }} />
         <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">System 2 — Predictive Compliance Alert Engine · {visible.length} alert{visible.length !== 1 ? "s" : ""} active</span>
       </div>
-      {visible.map(alert => {
+      {visible.map((alert, i) => {
         const cfg = COLORS[alert.type];
         return (
-          <div key={alert.id} className="rounded-xl p-4 relative" style={{ background: cfg.bg, border: `1px solid ${cfg.border}` }}>
+          <div key={alert.id} className="alert-animate rounded-xl p-4 relative card-hover" style={{ background: cfg.bg, border: `1px solid ${cfg.border}`, animationDelay: `${i * 0.08}s` }}>
             <button
               onClick={() => setDismissed(p => new Set([...p, alert.id]))}
               className="absolute top-3 right-3 text-muted-foreground/40 hover:text-muted-foreground transition-colors"

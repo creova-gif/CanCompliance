@@ -172,7 +172,7 @@ export default function AiCopilotPage() {
               </div>
               <span className="font-mono text-[9px] text-muted-foreground">AI Copilot · Claude Sonnet · CASL S.10(1)</span>
               <div className="ml-auto flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-400 opacity-70" />
+                <div className="live-dot w-1.5 h-1.5 rounded-full bg-green-400 opacity-70" />
                 <span className="font-mono text-[9px] text-muted-foreground">Live</span>
               </div>
             </div>

@@ -101,6 +101,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
   const score = computeScore();
   const { user } = useUser();
   const { signOut } = useClerk();
+  const [location] = useLocation();
 
   // Demo session takes precedence over Clerk user
   const demoUser = getDemoUser();
@@ -270,7 +271,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           </div>
         </header>
 
-        <main className="flex-1 p-6">
+        <main key={location} className="flex-1 p-6 page-enter">
           <PredictiveAlerts />
           {children}
         </main>
