@@ -150,10 +150,10 @@ function AuthLayout({ children }: { children: React.ReactNode }) {
 }
 
 // PublicRoute: if already signed in, skip auth pages and go straight to dashboard
+// While Clerk is loading we render children immediately so there's no blank flash
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isSignedIn, isLoaded } = useAuth();
-  if (!isLoaded) return null;
-  if (isSignedIn) return <Redirect to="/dashboard" />;
+  if (isLoaded && isSignedIn) return <Redirect to="/dashboard" />;
   return <>{children}</>;
 }
 
