@@ -2,7 +2,7 @@
 
 ## Overview
 
-**CanCompliance v5.0** — a full-stack Canadian + global compliance SaaS web app for SMBs. 13 Canadian compliance modules + 6 global frameworks (SOC 2, ISO 27001, GDPR, HIPAA, NIST AI RMF, EU AI Act), universal control library (50 controls), frameworks hub, risk heat map dashboard, and multi-framework cross-control mapping. Full security hardening: Clerk auth, user-scoped DB persistence, CORS/rate limiting, privacy policy, AI consent gate, and PIPEDA-compliant data rights.
+**CanCompliance v5.0** — a full-stack Canadian + global compliance SaaS web app for SMBs. **21 Canadian compliance modules** (including CPPA/Bill C-27, AODA, Beneficial Ownership, Digital Platform/CRA DAC-7, Pay Equity) + 6 global frameworks (SOC 2, ISO 27001, GDPR, HIPAA, NIST AI RMF, EU AI Act). Universal control library (50 controls), frameworks hub, risk heat map dashboard, and multi-framework cross-control mapping. Role-based tool sections: Compliance Officer (Policy Attestation, Vendor Risk, Board Report), Auditor (Finding Tracker, Evidence Portal), Business Owner (Industry Pack, Fine Exposure Calculator, Scale Advisor, Grant Finder). Full security hardening: Clerk auth, user-scoped DB persistence, CORS/rate limiting, privacy policy, AI consent gate, and PIPEDA-compliant data rights.
 
 **v5.0 Intelligence Layer (7 features fully implemented):**
 1. **Compliance Inbox** — 8 real regulatory updates (CRTC $1.1M CASL fine, CPPA Senate reading, BC Pay Transparency, Quebec Law 25 audits, etc.), filterable by tag/jurisdiction/severity, email subscription, links to modules

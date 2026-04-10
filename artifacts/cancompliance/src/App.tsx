@@ -57,6 +57,20 @@ import Hipaa from "@/pages/Hipaa";
 import NistAiRmf from "@/pages/NistAiRmf";
 import EuAiAct from "@/pages/EuAiAct";
 import DeveloperPortal from "@/pages/DeveloperPortal";
+import CPPA from "@/pages/CPPA";
+import AODA from "@/pages/AODA";
+import BeneficialOwnership from "@/pages/BeneficialOwnership";
+import DigitalPlatform from "@/pages/DigitalPlatform";
+import PayEquity from "@/pages/PayEquity";
+import PolicyAttestation from "@/pages/PolicyAttestation";
+import FineExposure from "@/pages/FineExposure";
+import ScaleAdvisor from "@/pages/ScaleAdvisor";
+import GrantFinder from "@/pages/GrantFinder";
+import VendorRisk from "@/pages/VendorRisk";
+import FindingTracker from "@/pages/FindingTracker";
+import EvidencePortal from "@/pages/EvidencePortal";
+import IndustryPack from "@/pages/IndustryPack";
+import BoardReport from "@/pages/BoardReport";
 
 // ─── Global Error Boundary ────────────────────────────────────────────────────
 interface EBState { hasError: boolean; message: string }
@@ -146,6 +160,20 @@ const WrappedCustoms = withLayout(Customs, "Customs / CBSA", "CARM · duty rates
 const WrappedAiGovernance = withLayout(AiGovernance, "AI Governance", "AIDA · Workers IV · Quebec Law 25 s.12.1");
 const WrappedEPR = withLayout(EPR, "EPR / Environmental", "Blue Box · ÉEQ · CEPA · battery & electronics stewardship");
 const WrappedComplianceScore = withLayout(ComplianceScore, "Live Compliance Score", "Real-time score from all checks this session");
+const WrappedCPPA = withLayout(CPPA, "CPPA — Bill C-27 Privacy", "Consumer Privacy Protection Act — replaces PIPEDA · imminent Royal Assent");
+const WrappedAODA = withLayout(AODA, "AODA — Accessibility", "Accessibility for Ontarians with Disabilities Act · WCAG 2.0 Level AA");
+const WrappedBeneficialOwnership = withLayout(BeneficialOwnership, "Beneficial Ownership Registry", "CBCA s.21.1 · Corporations Canada · mandatory since 2023");
+const WrappedDigitalPlatform = withLayout(DigitalPlatform, "Digital Platform Reporting", "CRA DAC-7 · T4A filing · gig economy · marketplace sellers");
+const WrappedPayEquity = withLayout(PayEquity, "Pay Equity & Transparency", "Ontario Pay Equity Act · Federal Pay Equity Act 2021 · BC Pay Transparency Act");
+const WrappedPolicyAttestation = withLayout(PolicyAttestation, "Policy Attestation Engine", "Track employee policy sign-off · compliance officer tool");
+const WrappedFineExposure = withLayout(FineExposure, "Total Fine Exposure Calculator", "Your maximum fine exposure across all Canadian compliance modules");
+const WrappedScaleAdvisor = withLayout(ScaleAdvisor, "Ready to Scale? Advisor", "Compliance obligations triggered at each business milestone");
+const WrappedGrantFinder = withLayout(GrantFinder, "Government Grant Finder", "Canadian federal & provincial grants for compliance investments");
+const WrappedVendorRisk = withLayout(VendorRisk, "Vendor Risk Scorecard", "Third-party vendor compliance assessment · OSFI B-10 · PIPEDA");
+const WrappedFindingTracker = withLayout(FindingTracker, "Finding Tracker", "Audit findings through full remediation lifecycle");
+const WrappedEvidencePortal = withLayout(EvidencePortal, "Evidence Collection Portal", "Upload and track audit evidence tied to compliance controls");
+const WrappedIndustryPack = withLayout(IndustryPack, "Industry Compliance Pack", "Pre-configured compliance modules by industry type");
+const WrappedBoardReport = withLayout(BoardReport, "Board Reporting Pack", "Executive compliance status report for board of directors");
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isSignedIn, isLoaded } = useAuth();
@@ -679,6 +707,20 @@ function AppBody() {
       <Route path="/nist-ai-rmf" component={() => <ProtectedRoute component={NistAiRmf} />} />
       <Route path="/eu-ai-act" component={() => <ProtectedRoute component={EuAiAct} />} />
       <Route path="/developer" component={() => <ProtectedRoute component={DeveloperPortal} />} />
+      <Route path="/cppa" component={() => <ProtectedRoute component={WrappedCPPA} />} />
+      <Route path="/aoda" component={() => <ProtectedRoute component={WrappedAODA} />} />
+      <Route path="/beneficial-ownership" component={() => <ProtectedRoute component={WrappedBeneficialOwnership} />} />
+      <Route path="/digital-platform" component={() => <ProtectedRoute component={WrappedDigitalPlatform} />} />
+      <Route path="/pay-equity" component={() => <ProtectedRoute component={WrappedPayEquity} />} />
+      <Route path="/policy-attestation" component={() => <ProtectedRoute component={WrappedPolicyAttestation} />} />
+      <Route path="/fine-exposure" component={() => <ProtectedRoute component={WrappedFineExposure} />} />
+      <Route path="/scale-advisor" component={() => <ProtectedRoute component={WrappedScaleAdvisor} />} />
+      <Route path="/grant-finder" component={() => <ProtectedRoute component={WrappedGrantFinder} />} />
+      <Route path="/vendor-risk" component={() => <ProtectedRoute component={WrappedVendorRisk} />} />
+      <Route path="/finding-tracker" component={() => <ProtectedRoute component={WrappedFindingTracker} />} />
+      <Route path="/evidence-portal" component={() => <ProtectedRoute component={WrappedEvidencePortal} />} />
+      <Route path="/industry-pack" component={() => <ProtectedRoute component={WrappedIndustryPack} />} />
+      <Route path="/board-report" component={() => <ProtectedRoute component={WrappedBoardReport} />} />
       <Route component={NotFound} />
     </Switch>
   );

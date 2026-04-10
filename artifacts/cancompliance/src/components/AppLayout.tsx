@@ -7,7 +7,9 @@ import {
   Recycle, Mail, Target, FileText, Clock, MapPin, Bot,
   TrendingUp, BookOpen, LogOut, UserCircle, Shield,
   Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2, FlaskConical,
-  Layers, Heart, Megaphone, Languages, Fingerprint, Code2
+  Layers, Heart, Megaphone, Languages, Fingerprint, Code2,
+  ShieldAlert, Accessibility, Building, Monitor, Scale, CheckSquare, AlertTriangle,
+  ClipboardCheck, Upload, Coffee, CandlestickChart, BadgeDollarSign, Zap, Network as NetworkIcon
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -32,6 +34,29 @@ const MODULES = [
   { href: "/customs", label: "Customs", sub: "CBSA / CARM", icon: Package },
   { href: "/ai-governance", label: "AI Gov.", sub: "AIDA / Workers IV", icon: Brain },
   { href: "/epr", label: "EPR", sub: "Environmental", icon: Recycle },
+  { href: "/cppa", label: "CPPA", sub: "Bill C-27 Privacy", icon: ShieldAlert, badge: "NEW" },
+  { href: "/aoda", label: "AODA", sub: "Accessibility", icon: Users },
+  { href: "/beneficial-ownership", label: "Beneficial Owner.", sub: "CBCA Registry", icon: Building, badge: "NEW" },
+  { href: "/digital-platform", label: "Digital Platform", sub: "CRA DAC-7", icon: Monitor, badge: "NEW" },
+  { href: "/pay-equity", label: "Pay Equity", sub: "Multi-Province", icon: Scale },
+];
+
+const OFFICER_TOOLS = [
+  { href: "/policy-attestation", label: "Policy Attestation", icon: CheckSquare, badge: "NEW" },
+  { href: "/vendor-risk", label: "Vendor Risk", icon: AlertTriangle, badge: "NEW" },
+  { href: "/board-report", label: "Board Report", icon: BarChart3, badge: "NEW" },
+];
+
+const AUDITOR_TOOLS = [
+  { href: "/finding-tracker", label: "Finding Tracker", icon: ClipboardCheck, badge: "NEW" },
+  { href: "/evidence-portal", label: "Evidence Portal", icon: Upload, badge: "NEW" },
+];
+
+const OWNER_TOOLS = [
+  { href: "/industry-pack", label: "Industry Pack", icon: Coffee, badge: "NEW" },
+  { href: "/fine-exposure", label: "Fine Exposure", icon: BadgeDollarSign, badge: "NEW" },
+  { href: "/scale-advisor", label: "Scale Advisor", icon: TrendingUp, badge: "NEW" },
+  { href: "/grant-finder", label: "Grant Finder", icon: Lightbulb, badge: "NEW" },
 ];
 
 const TOOLS = [
@@ -182,7 +207,7 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
             </div>
           </Link>
 
-          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-2 mb-1">16 Compliance Modules</div>
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-2 mb-1">21 Compliance Modules</div>
           <div className="space-y-0.5">
             {MODULES.map(m => <NavItem key={m.href} {...m} />)}
           </div>
@@ -190,6 +215,21 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Tools &amp; Reporting</div>
           <div className="space-y-0.5">
             {TOOLS.map(t => <NavItem key={t.href} {...t} />)}
+          </div>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1" style={{ color: "#c8f135", opacity: 0.7 }}>Compliance Officer</div>
+          <div className="space-y-0.5">
+            {OFFICER_TOOLS.map(t => <NavItem key={t.href} {...t} />)}
+          </div>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1" style={{ color: "#12b76a", opacity: 0.7 }}>Auditor Tools</div>
+          <div className="space-y-0.5">
+            {AUDITOR_TOOLS.map(t => <NavItem key={t.href} {...t} />)}
+          </div>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1" style={{ color: "#f5a623", opacity: 0.7 }}>Business Owner</div>
+          <div className="space-y-0.5">
+            {OWNER_TOOLS.map(t => <NavItem key={t.href} {...t} />)}
           </div>
 
           <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Intelligence</div>
