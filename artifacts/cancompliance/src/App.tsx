@@ -71,6 +71,10 @@ import FindingTracker from "@/pages/FindingTracker";
 import EvidencePortal from "@/pages/EvidencePortal";
 import IndustryPack from "@/pages/IndustryPack";
 import BoardReport from "@/pages/BoardReport";
+import AiRemediation from "@/pages/AiRemediation";
+import MonitoringCenter from "@/pages/MonitoringCenter";
+import IntegrationsHub from "@/pages/IntegrationsHub";
+import WorkforceCompliance from "@/pages/WorkforceCompliance";
 
 // ─── Global Error Boundary ────────────────────────────────────────────────────
 interface EBState { hasError: boolean; message: string }
@@ -174,6 +178,10 @@ const WrappedFindingTracker = withLayout(FindingTracker, "Finding Tracker", "Aud
 const WrappedEvidencePortal = withLayout(EvidencePortal, "Evidence Collection Portal", "Upload and track audit evidence tied to compliance controls");
 const WrappedIndustryPack = withLayout(IndustryPack, "Industry Compliance Pack", "Pre-configured compliance modules by industry type");
 const WrappedBoardReport = withLayout(BoardReport, "Board Reporting Pack", "Executive compliance status report for board of directors");
+const WrappedAiRemediation = withLayout(AiRemediation, "AI Remediation Engine", "AI-generated code fixes and policy templates for compliance violations");
+const WrappedMonitoringCenter = withLayout(MonitoringCenter, "Monitoring Center", "Continuous automated compliance checks · live status · alerts");
+const WrappedIntegrationsHub = withLayout(IntegrationsHub, "Integrations Hub", "Connect cloud & HR tools for automated evidence collection");
+const WrappedWorkforceCompliance = withLayout(WorkforceCompliance, "Workforce Compliance", "Security training · onboarding · offboarding — Canadian statutory obligations");
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isSignedIn, isLoaded } = useAuth();
@@ -721,6 +729,10 @@ function AppBody() {
       <Route path="/evidence-portal" component={() => <ProtectedRoute component={WrappedEvidencePortal} />} />
       <Route path="/industry-pack" component={() => <ProtectedRoute component={WrappedIndustryPack} />} />
       <Route path="/board-report" component={() => <ProtectedRoute component={WrappedBoardReport} />} />
+      <Route path="/ai-remediation" component={() => <ProtectedRoute component={WrappedAiRemediation} />} />
+      <Route path="/monitoring" component={() => <ProtectedRoute component={WrappedMonitoringCenter} />} />
+      <Route path="/integrations" component={() => <ProtectedRoute component={WrappedIntegrationsHub} />} />
+      <Route path="/workforce" component={() => <ProtectedRoute component={WrappedWorkforceCompliance} />} />
       <Route component={NotFound} />
     </Switch>
   );

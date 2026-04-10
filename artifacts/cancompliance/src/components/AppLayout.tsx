@@ -9,7 +9,8 @@ import {
   Calculator, Gavel, ScanLine, BarChart3, Lightbulb, Inbox, Share2, Wand2, FlaskConical,
   Layers, Heart, Megaphone, Languages, Fingerprint, Code2,
   ShieldAlert, Accessibility, Building, Monitor, Scale, CheckSquare, AlertTriangle,
-  ClipboardCheck, Upload, Coffee, CandlestickChart, BadgeDollarSign, Zap, Network as NetworkIcon
+  ClipboardCheck, Upload, Coffee, CandlestickChart, BadgeDollarSign, Zap, Network as NetworkIcon,
+  Activity, Link2
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -57,6 +58,13 @@ const OWNER_TOOLS = [
   { href: "/fine-exposure", label: "Fine Exposure", icon: BadgeDollarSign, badge: "NEW" },
   { href: "/scale-advisor", label: "Scale Advisor", icon: TrendingUp, badge: "NEW" },
   { href: "/grant-finder", label: "Grant Finder", icon: Lightbulb, badge: "NEW" },
+];
+
+const PLATFORM_TOOLS = [
+  { href: "/monitoring", label: "Monitoring Center", icon: Activity, badge: "NEW" },
+  { href: "/integrations", label: "Integrations Hub", icon: Link2, badge: "NEW" },
+  { href: "/workforce", label: "Workforce", icon: Users, badge: "NEW" },
+  { href: "/ai-remediation", label: "AI Remediation", icon: Wand2, badge: "AI" },
 ];
 
 const TOOLS = [
@@ -230,6 +238,11 @@ export default function AppLayout({ children, title, subtitle, actions }: AppLay
           <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1" style={{ color: "#f5a623", opacity: 0.7 }}>Business Owner</div>
           <div className="space-y-0.5">
             {OWNER_TOOLS.map(t => <NavItem key={t.href} {...t} />)}
+          </div>
+
+          <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1" style={{ color: "#00BCF2", opacity: 0.7 }}>Platform</div>
+          <div className="space-y-0.5">
+            {PLATFORM_TOOLS.map(t => <NavItem key={t.href} {...t} />)}
           </div>
 
           <div className="font-mono text-[9px] text-muted-foreground uppercase tracking-widest px-2 mt-3 mb-1">Intelligence</div>

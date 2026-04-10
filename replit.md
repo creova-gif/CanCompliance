@@ -4,6 +4,15 @@
 
 **CanCompliance v5.0** — a full-stack Canadian + global compliance SaaS web app for SMBs. **21 Canadian compliance modules** (including CPPA/Bill C-27, AODA, Beneficial Ownership, Digital Platform/CRA DAC-7, Pay Equity) + 6 global frameworks (SOC 2, ISO 27001, GDPR, HIPAA, NIST AI RMF, EU AI Act). Universal control library (50 controls), frameworks hub, risk heat map dashboard, and multi-framework cross-control mapping. Role-based tool sections: Compliance Officer (Policy Attestation, Vendor Risk, Board Report), Auditor (Finding Tracker, Evidence Portal), Business Owner (Industry Pack, Fine Exposure Calculator, Scale Advisor, Grant Finder). Full security hardening: Clerk auth, user-scoped DB persistence, CORS/rate limiting, privacy policy, AI consent gate, and PIPEDA-compliant data rights.
 
+**v5.0 Enterprise Platform Layer (4 new pages + sidebar + dashboard updates):**
+- `MonitoringCenter.tsx` — 12-module continuous monitoring, 3 tabs (Module Status/Alerts/Activity Feed), Run All Now, alert dismiss, data-alert-read/data-alert-id attributes
+- `IntegrationsHub.tsx` — 12 integrations (GitHub/AWS/GW/Slack/Jira/BambooHR/M365/Okta/ServiceNow/DocuSign/Snowflake/Salesforce), connect/sync/disconnect, evidence auto-collection, data-integration/data-connected attributes
+- `WorkforceCompliance.tsx` — Security Training matrix (8 employees × 6 modules), Onboarding/Offboarding checklists with Canadian statutes (PIPEDA, ESA, PCMLTFA)
+- `AiRemediation.tsx` — 8 violation templates with generated code snippets, tabs (React/SQL/Policy/etc), Copy Fix button (data-action="copy-fix"), data-violation buttons
+- **AppLayout.tsx Platform section** — "Platform" sidebar section in cyan (#00BCF2) with NEW/AI badges for all 4 pages
+- **Dashboard.tsx pinned tools** — Compliance Officer: Monitoring+AI Remediation; Auditor: Integrations+AI Remediation; Business Owner: Workforce added
+- Routes: /monitoring /integrations /workforce /ai-remediation (all ProtectedRoute with demo session support)
+
 **v5.0 Intelligence Layer (7 features fully implemented):**
 1. **Compliance Inbox** — 8 real regulatory updates (CRTC $1.1M CASL fine, CPPA Senate reading, BC Pay Transparency, Quebec Law 25 audits, etc.), filterable by tag/jurisdiction/severity, email subscription, links to modules
 2. **Trust Network** — B2B compliance proof requests from suppliers via email, trust profile builds as you run passing checks, network score, verified badge pills, viral loop mechanic

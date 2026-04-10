@@ -49,12 +49,12 @@ const ROLE_CONFIG: Record<string, {
     subtitle: "Full platform — 21 modules, AI Copilot, score engine, policy generator, board reports",
     pinnedLabel: "Your pinned tools",
     pinned: [
-      { label: "AI Copilot", href: "/copilot", badge: "AI" },
+      { label: "Monitoring Center", href: "/monitoring", badge: "NEW" },
+      { label: "AI Remediation", href: "/ai-remediation", badge: "AI" },
       { label: "Policy Attestation", href: "/policy-attestation", badge: "NEW" },
       { label: "Vendor Risk Scorecard", href: "/vendor-risk", badge: "NEW" },
       { label: "Board Report", href: "/board-report", badge: "NEW" },
-      { label: "Policy Generator", href: "/policy-generator" },
-      { label: "Compliance Score", href: "/compliance-score" },
+      { label: "AI Copilot", href: "/copilot", badge: "AI" },
     ],
   },
   "Auditor": {
@@ -68,8 +68,9 @@ const ROLE_CONFIG: Record<string, {
     pinned: [
       { label: "Finding Tracker", href: "/finding-tracker", badge: "NEW" },
       { label: "Evidence Portal", href: "/evidence-portal", badge: "NEW" },
+      { label: "Integrations Hub", href: "/integrations", badge: "NEW" },
+      { label: "AI Remediation", href: "/ai-remediation", badge: "AI" },
       { label: "Audit Trail", href: "/audit-trail" },
-      { label: "Control Mapper", href: "/control-mapper" },
       { label: "Document Scanner", href: "/document-scanner", badge: "AI" },
     ],
   },
@@ -83,6 +84,7 @@ const ROLE_CONFIG: Record<string, {
     pinnedLabel: "Your key actions",
     pinned: [
       { label: "Industry Pack", href: "/industry-pack", badge: "NEW" },
+      { label: "Workforce", href: "/workforce", badge: "NEW" },
       { label: "Fine Exposure", href: "/fine-exposure", badge: "NEW" },
       { label: "Scale Advisor", href: "/scale-advisor", badge: "NEW" },
       { label: "Grant Finder", href: "/grant-finder", badge: "NEW" },
