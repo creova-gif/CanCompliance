@@ -1,0 +1,21 @@
+CANCompliance powers modern compliance with intelligence, scale, and speed.
+
+Driven by 2,000+ automated tests running continuously, and connected through a growing ecosystem of 400+ integrations, CANCompliance gives organizations real-time visibility into their compliance posture. The platform automatically gathers audit-ready evidence, centralizes collaboration across teams, and accelerates remediation with AI-generated, environment-specific code recommendations tailored to your infrastructure.
+
+From the moment you log in, CANCompliance equips you with the technology, workflows, and expert-backed guidance needed to move from zero to audit-ready efficiently. A dynamic, in-app compliance roadmap walks you through every stage — from initial setup to passing audits — ensuring nothing is missed.
+
+🔧 Core Capabilities
+
+Policy Management
+Create, customize, and manage policies effortlessly using a comprehensive library of framework-aligned templates. A guided policy builder simplifies editing, while automated tracking ensures employees review and acknowledge required policies in real time.
+
+Workforce Compliance Management
+Keep your team aligned with compliance standards through integrated security training modules, optional background verification workflows, and fully configurable onboarding and offboarding processes.
+
+Control Mapping & Continuous Monitoring
+Adopt pre-configured controls or introduce your own. CANCompliance AI intelligently maps controls to its expanding library of automated tests, enabling continuous validation and real-time compliance tracking across multiple frameworks.
+
+Audit & Issue Management
+Handle the entire audit lifecycle within a single platform. Prepare documentation, track findings, resolve issues efficiently, and collaborate directly with auditors — reducing friction and increasing audit success rates.
+
+CANCompliance goes beyond checklists — it enables continuous, real-time compliance, empowering organizations to proactively manage risk, maintain trust, and scale with confidence.
