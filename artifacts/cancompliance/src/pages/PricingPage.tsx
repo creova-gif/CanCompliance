@@ -264,7 +264,7 @@ export default function PricingPage() {
                   {tier.href.startsWith("mailto:") ? (
                     <button
                       data-testid={`btn-cta-${tier.id}`}
-                      onClick={() => { window.location.href = tier.href; }}
+                      onClick={() => { if (tier.href.startsWith("mailto:sales@cancompliance.ca")) window.location.href = tier.href; }}
                       className="w-full py-3 rounded-xl text-[12px] font-semibold transition-colors border border-border text-muted-foreground hover:bg-muted hover:text-foreground"
                     >
                       {tier.cta}

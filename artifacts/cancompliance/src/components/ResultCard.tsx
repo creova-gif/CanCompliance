@@ -53,8 +53,9 @@ export default function ResultCard({ result, title, statute, action, meta }: Res
 
       <div
         style={{ fontSize: 12.5, color: "var(--text2)", lineHeight: 1.7, marginBottom: meta && meta.length ? 16 : 0 }}
-        dangerouslySetInnerHTML={{ __html: action }}
-      />
+      >
+        {action}
+      </div>
 
       {meta && meta.length > 0 && (
         <div style={{

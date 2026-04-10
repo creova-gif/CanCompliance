@@ -159,10 +159,11 @@ export default function Pricing() {
                   <button
                     data-testid={`btn-cta-${tier.id}`}
                     onClick={() => {
-                      if (tier.ctaHref.startsWith("mailto:")) {
-                        window.location.href = tier.ctaHref;
-                      } else {
-                        setLocation(tier.ctaHref);
+                      const href = tier.ctaHref;
+                      if (href.startsWith("mailto:sales@cancompliance.ca")) {
+                        window.location.href = href;
+                      } else if (href.startsWith("/")) {
+                        setLocation(href);
                       }
                     }}
                     className={`w-full py-2.5 rounded-lg text-[12px] font-semibold transition-colors ${
