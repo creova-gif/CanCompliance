@@ -65,12 +65,15 @@ export default function FineExposure() {
                   <div style={{ display: "flex", gap: 6 }}>
                     {(["pass", "flag", "fail"] as const).map(v => (
                       <button key={v} onClick={() => toggle(m.id, v)}
-                        style={{ padding: "4px 10px", borderRadius: 6, fontSize: 9, fontWeight: 700, cursor: "pointer", border: "1px solid", fontFamily: "var(--mono)", textTransform: "uppercase", letterSpacing: "0.5px",
+                        aria-label={`${v} ${m.label}`}
+                        data-module={m.id}
+                        data-status={v}
+                        style={{ padding: "4px 10px", borderRadius: 6, fontSize: 9, fontWeight: 700, cursor: "pointer", border: "1px solid", fontFamily: "var(--mono)", letterSpacing: "0.5px",
                           background: status === v ? (v === "pass" ? "rgba(18,183,106,0.2)" : v === "flag" ? "rgba(245,166,35,0.2)" : "rgba(240,68,56,0.2)") : "transparent",
                           borderColor: status === v ? (v === "pass" ? "var(--green)" : v === "flag" ? "var(--amber)" : "var(--red)") : "var(--border)",
                           color: status === v ? (v === "pass" ? "var(--green)" : v === "flag" ? "var(--amber)" : "var(--red)") : "var(--text3)",
                         }}>
-                        {v}
+                        {v.toUpperCase()}
                       </button>
                     ))}
                   </div>
