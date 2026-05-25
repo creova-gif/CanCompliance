@@ -2,7 +2,9 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { conversations as conversationsTable, messages as messagesTable, auditEvents } from "@workspace/db";
 import { anthropic } from "@workspace/integrations-anthropic-ai";
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
+import { knowledgeChunks } from "@workspace/db";
+import { KNOWLEDGE_BASE } from "../../data/knowledge-base";
 import {
   CreateAnthropicConversationBody,
   SendAnthropicMessageBody,
@@ -14,6 +16,39 @@ import {
 import { requireAuth } from "../../middlewares/requireAuth";
 
 const router = Router();
+
+/* ── RAG helpers ────────────────────────────────────────────────────────── */
+let kbSeeded = false;
+async function ensureKbSeeded() {
+  if (kbSeeded) return;
+  const [existing] = await db.select({ id: knowledgeChunks.id }).from(knowledgeChunks).limit(1);
+  if (!existing) {
+    await db.insert(knowledgeChunks).values(KNOWLEDGE_BASE);
+  }
+  kbSeeded = true;
+}
+
+async function retrieveRagContext(query: string): Promise<string> {
+  try {
+    await ensureKbSeeded();
+    const rows = await db.execute(sql`
+      SELECT source, title, content,
+        ts_rank(to_tsvector('english', title || ' ' || content),
+                plainto_tsquery('english', ${query})) AS rank
+      FROM knowledge_chunks
+      WHERE to_tsvector('english', title || ' ' || content) @@
+            plainto_tsquery('english', ${query})
+      ORDER BY rank DESC
+      LIMIT 5
+    `);
+    const chunks = rows.rows as Array<{ source: string; title: string; content: string }>;
+    if (!chunks.length) return "";
+    const lines = chunks.map((c, i) => `[${i + 1}] ${c.title} (${c.source})\n${c.content}`);
+    return `\n\n--- RETRIEVED KNOWLEDGE (use these facts to ground your answer) ---\n${lines.join("\n\n")}\n--- END KNOWLEDGE ---`;
+  } catch {
+    return "";
+  }
+}
 
 const CANADA_COMPLIANCE_SYSTEM_PROMPT = `You are CanCompliance AI — a specialized Canadian compliance assistant powered by Claude. You are an expert in all major Canadian federal and provincial regulatory frameworks.
 
@@ -188,6 +223,12 @@ router.post("/anthropic/conversations/:id/messages", requireAuth, async (req, re
     content: m.content,
   }));
 
+  // RAG: retrieve relevant knowledge chunks for the user's question
+  const ragContext = await retrieveRagContext(userContent);
+  const systemWithRag = ragContext
+    ? CANADA_COMPLIANCE_SYSTEM_PROMPT + ragContext
+    : CANADA_COMPLIANCE_SYSTEM_PROMPT;
+
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -197,7 +238,7 @@ router.post("/anthropic/conversations/:id/messages", requireAuth, async (req, re
   const stream = anthropic.messages.stream({
     model: "claude-sonnet-4-6",
     max_tokens: 8192,
-    system: CANADA_COMPLIANCE_SYSTEM_PROMPT,
+    system: systemWithRag,
     messages: chatMessages,
   });
 

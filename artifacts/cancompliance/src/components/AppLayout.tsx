@@ -10,7 +10,7 @@ import {
   Layers, Heart, Megaphone, Languages, Fingerprint, Code2,
   ShieldAlert, Accessibility, Building, Monitor, Scale, CheckSquare, AlertTriangle,
   ClipboardCheck, Upload, Coffee, CandlestickChart, BadgeDollarSign, Zap, Network as NetworkIcon,
-  Activity, Link2
+  Activity, Link2, Database
 } from "lucide-react";
 import { useAudit } from "../context/AuditContext";
 import { useUser, useClerk } from "@clerk/react";
@@ -76,6 +76,7 @@ const TOOLS = [
   { href: "/control-mapper", label: "Control Mapper", icon: BookOpen },
   { href: "/copilot", label: "AI Copilot", icon: Bot, badge: "AI" },
   { href: "/document-scanner", label: "Doc Scanner", icon: ScanLine, badge: "AI" },
+  { href: "/document-qa", label: "Doc Library", icon: Database, badge: "RAG" },
   { href: "/policy-generator", label: "Policy Gen.", icon: Wand2, badge: "NEW" },
   { href: "/growth", label: "Growth Tools", icon: TrendingUp },
   { href: "/developer", label: "API Portal", icon: Code2, badge: "NEW" },

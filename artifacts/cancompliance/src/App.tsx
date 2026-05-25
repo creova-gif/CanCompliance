@@ -75,6 +75,7 @@ import AiRemediation from "@/pages/AiRemediation";
 import MonitoringCenter from "@/pages/MonitoringCenter";
 import IntegrationsHub from "@/pages/IntegrationsHub";
 import WorkforceCompliance from "@/pages/WorkforceCompliance";
+import DocumentQA from "@/pages/DocumentQA";
 
 // ─── Global Error Boundary ────────────────────────────────────────────────────
 interface EBState { hasError: boolean; message: string }
@@ -182,6 +183,7 @@ const WrappedAiRemediation = withLayout(AiRemediation, "AI Remediation Engine", 
 const WrappedMonitoringCenter = withLayout(MonitoringCenter, "Monitoring Center", "Continuous automated compliance checks · live status · alerts");
 const WrappedIntegrationsHub = withLayout(IntegrationsHub, "Integrations Hub", "Connect cloud & HR tools for automated evidence collection");
 const WrappedWorkforceCompliance = withLayout(WorkforceCompliance, "Workforce Compliance", "Security training · onboarding · offboarding — Canadian statutory obligations");
+const WrappedDocumentQA = withLayout(DocumentQA, "Document Library & RAG", "Upload documents · ask questions · RAG retrieval from compliance knowledge base");
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isSignedIn, isLoaded } = useAuth();
@@ -733,6 +735,7 @@ function AppBody() {
       <Route path="/monitoring" component={() => <ProtectedRoute component={WrappedMonitoringCenter} />} />
       <Route path="/integrations" component={() => <ProtectedRoute component={WrappedIntegrationsHub} />} />
       <Route path="/workforce" component={() => <ProtectedRoute component={WrappedWorkforceCompliance} />} />
+      <Route path="/document-qa" component={() => <ProtectedRoute component={WrappedDocumentQA} />} />
       <Route component={NotFound} />
     </Switch>
   );
