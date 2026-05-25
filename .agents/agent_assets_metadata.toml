@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "p72VeZRa5ieF3gun1EKDB"
+uri = "file://docs/PRD.md"
+type = "text"
+title = "CanCompliance PRD v5.0"
+
+[[outputs]]
+id = "AL2g_CRMXSB1_fQXeIG3c"
+uri = "file://docs/USER_STORIES.md"
+type = "text"
+title = "User Stories — 8 Epics · 32 Stories"
