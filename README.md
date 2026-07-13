@@ -80,10 +80,12 @@ CanCompliance/
 ### Installation
 
 ```bash
-git clone https://github.com/creova-gif/CanCompliance.git
-cd CanCompliance
+git clone https://github.com/creova-gif/can-compliance.git
+cd can-compliance
 pnpm install
 ```
+
+Run the app locally with `pnpm --filter @workspace/cancompliance run dev` and the API server with `pnpm --filter @workspace/api-server run dev`.
 
 ### Environment Variables
 
